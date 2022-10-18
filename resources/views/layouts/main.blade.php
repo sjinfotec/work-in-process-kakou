@@ -9,6 +9,7 @@
     <!-- Scripts -->
     <!--<script src="{{ mix('js/app.js') }}" defer></script>-->
     <!--<script src="{{ asset('js/bootstrap.min.js') }}" defer></script>-->
+    <script src="{{ asset('js/axios.min.js') }}" defer></script>
     <script src="{{ asset('js/jquery-3.6.0.min.js') }}" defer></script>
     <script src="{{ asset('js/gototop.js') }}" defer></script>
     <script src="{{ asset('js/offcanvas.js') }}" defer></script>

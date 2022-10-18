@@ -46,13 +46,15 @@ class HomeController extends Controller
     public function getRequestFunc(Request $request)
     {
 
+
+        
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $str1 = !empty($_GET["str1"]) ? $_GET['str1'] : "";
         $str2 = !empty($_POST["str2"]) ? $_POST['str2'] : "";
         $str3 = "変数の値";
 
 	        return view('home', [
-            	'smode' => $mode,
+            	'mode' => $mode,
             	'str1' => $str1,
             	'str2' => $str2,
             	'str3' => $str3,
@@ -61,6 +63,55 @@ class HomeController extends Controller
 
 
     }
+
+    public function postRequestFunc(Request $request)
+    {
+
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $wpdate = !empty($_POST["wpdate"]) ? $_POST['wpdate'] : "";
+        $str1 = !empty($_POST["str1"]) ? $_POST['str1'] : "";
+        $str2 = !empty($_POST["str2"]) ? $_POST['str2'] : "";
+        $str3 = "変数の値";
+
+	        return view('home', [
+            	'mode' => $mode,
+            	'wpdate' => $wpdate,
+            	'str1' => $str1,
+            	'str2' => $str2,
+            	'str3' => $str3,
+	        ]);
+
+
+
+    }
+
+
+    public function searchData(Request $request)
+    {
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        $ng_write = "";
+        
+        $str1 = isset($data['str1']) ? $data['str1'] : "";
+        $str2 = isset($data['str2']) ? $data['str2'] : "";
+        $str3 = isset($data['str3']) ? $data['str3'] : "";
+        $mode = isset($data['mode']) ? $data['mode'] : "";
+        $wpdate = isset($data['wpdate']) ? $data['wpdate'] : "";
+        $e_message = "検索 ： ".$str2." ＆ ".$str3."　日時 ： ".$wpdate;
+
+
+            $redata = array();
+            $redata[] = ['wpdate' => $wpdate, 'str1' => $str1, 'str2' => $str2, 'str3' => $str3, 'mode' => $mode, 'e_message' => $e_message];
+            if(!empty($redata)) {
+                echo json_encode($redata, JSON_UNESCAPED_UNICODE);
+            }
+//, 'chk_status' => $chk_status, 'e_message' => $e_message, 'result_msg' => $result_msg, 'acmsg' => $action_msg            
+
+    }
+
+
 
 
     public function topView()

@@ -5,11 +5,12 @@
                         <div id="menu_li">
                             <!--<h3 class="side-head p-3 font-size-rg">在庫管理システム</h3>-->
                                 <ul>
-                                        <li class="gc1"><a class="" href="{{ url('/view_inventory_a') }}"><img class="iconsize_sm" src="{{ asset('images/round-add-circle-w.svg') }}" alt="">作業工程一覧</a></li>
-                                        <li class="gc1"><a class="" href="{{ url('/view_inventory_z') }}"><img class="iconsize_sm" src="{{ asset('images/round-add-circle-w.svg') }}" alt="">作業工程編集</a></li>
-                                        <li class="gc1"><a class="" href="{{ url('/stock_a') }}"><img class="iconsize_sm" src="{{ asset('images/round-add-circle-w.svg') }}" alt=""></a></li>
-                                        <li class="gc1"><a class="" href="{{ url('/view_inventory_dust') }}"><img class="iconsize_sm" src="{{ asset('images/round-add-circle-w.svg') }}" alt=""></a></li>
+                                        <li class="gc1"><a class="" href="{{ url('/list') }}">作業工程一覧</a></li>
+                                        <li class="gc1"><a class="" href="{{ url('/edit') }}">作業工程編集</a></li>
+                                        <li class="gc1"><a class="" href="" onClick="return false;"></a></li>
+                                        <li class="gc1"><a class="" href="" onClick="return false;"></a></li>
                                         <!--
+                                        <li class="gc1"><a class="" href="{{ url('/view_inventory_dust') }}"><img class="iconsize_sm" src="{{ asset('images/round-add-circle-w.svg') }}" alt=""></a></li>
                                         <li><a class="" href="{{ url('/') }}"><img class="iconsize_sm" src="{{ asset('images/round-business-w.svg') }}" alt=""><span>検索</span></a></li>
                                         -->
                                         <!--

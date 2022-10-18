@@ -37,6 +37,8 @@ Route::get('/home', [HomeController::class,'index']);
 //Route::get('/home', [HomeController::class,'index'])->middleware('auth');
 //Route::get('/base', [BaseController::class,'base'])->middleware('auth');
 Route::get('/list', [HomeController::class,'getRequestFunc']);
+Route::post('/list', [HomeController::class,'postRequestFunc']);
+Route::post('/list/search', [HomeController::class,'searchData']);
 
 Route::get('login', 'App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login'); // view は auth.login
 Route::post('login', 'App\Http\Controllers\Auth\LoginController@login');
