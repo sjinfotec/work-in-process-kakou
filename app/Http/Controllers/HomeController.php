@@ -33,10 +33,17 @@ class HomeController extends Controller
          $authusers = Auth::user();
          $data = $request->session()->all();
          $value = $request->session()->get('code');
+         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+         $str1 = !empty($_GET["str1"]) ? $_GET['str1'] : "";
+         $str2 = !empty($_POST["str2"]) ? $_POST['str2'] : "";
+         $str3 = "デフォルトファンクション function index()";
+         $action_msg = "";
+          
 
         return view('home',
             compact(
-                'authusers','data','value'
+                'authusers','data','value',
+                'mode','str1','str2','str3','action_msg',
 
             ));
 
@@ -52,26 +59,84 @@ class HomeController extends Controller
         $str1 = !empty($_GET["str1"]) ? $_GET['str1'] : "";
         $str2 = !empty($_POST["str2"]) ? $_POST['str2'] : "";
         $str3 = "変数の値";
+        $action_msg = "";
 
 	        return view('home', [
             	'mode' => $mode,
             	'str1' => $str1,
             	'str2' => $str2,
             	'str3' => $str3,
+                'action_msg' => $action_msg,
+
 	        ]);
 
 
 
     }
 
+
+
+        
+
+    
+
+ 
+
     public function postRequestFunc(Request $request)
     {
 
+	
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $wpdate = !empty($_POST["wpdate"]) ? $_POST['wpdate'] : "";
+        $product_id = !empty($_POST["product_id"]) ? $_POST['product_id'] : "";
         $str1 = !empty($_POST["str1"]) ? $_POST['str1'] : "";
         $str2 = !empty($_POST["str2"]) ? $_POST['str2'] : "";
         $str3 = "変数の値";
+        $action_msg = "";
+        $result = "";
+
+
+
+        try {
+
+
+            if(isset($product_id)) {
+                $data = DB::connection('nippou')->table('product_details')
+                ->select(
+                    'product_id',
+                    'customer',
+                    'product_name',
+                    'end_user',
+                    'quantity',
+                    'after_due_date'
+                );
+                //$data->where('product_id', $product_id);
+                $data->where('before_due_date', '2022/10/24');
+                $result = $data
+                ->get();
+
+            }
+
+            //return $result;
+
+
+
+
+
+
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+
+        
+
+
+
+
 
 	        return view('home', [
             	'mode' => $mode,
@@ -79,6 +144,8 @@ class HomeController extends Controller
             	'str1' => $str1,
             	'str2' => $str2,
             	'str3' => $str3,
+                'action_msg' => $action_msg,
+                'result' => $result,
 	        ]);
 
 

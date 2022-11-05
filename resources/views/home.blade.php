@@ -1,17 +1,47 @@
 <?php
-//echo "<pre>\n";
-//var_dump($authusers);
-//echo "<br><br>\n";
-//var_dump($data);
-//echo "<br>\n";
-//var_dump($value);
-//echo "</pre>\n";
+$html_result = "";
+if(isset($result)) {
+		var_dump($result);
+	
+	if(isset($result[0])) {
+		foreach($result as $key => $val) {
 
-//echo "<pre>\n";
-//var_dump($str1);
-//var_dump($str2);
-//var_dump($str3);
-//echo "</pre>\n";
+			//echo "key".$key."<br>\n";
+			//$res = $result[$key];
+			$number = 1 + $key;
+			$product_id = $val->product_id;
+			$customer = $val->customer;
+			$product_name = $val->product_name;
+			$end_user = $val->end_user;
+			$after_due_date = $val->after_due_date;
+			$quantity = $val->quantity;
+			$html_after_due_date = !empty($after_due_date) ? date('y年n月j日', strtotime($after_due_date)) : "";
+			$html_result .= <<<EOF
+				<tr>
+					<td>{$number}</td>
+					<td>{$product_id}</td>
+					<td>{$html_after_due_date}</td>
+					<td>{$customer}</td>
+					<td>{$product_name}</td>
+					<td>{$end_user}</td>
+					<td>{$quantity}</td>
+				</tr>
+
+			EOF;
+
+		}
+	}
+	else {
+		$action_msg .= "returnがありません";
+	}
+
+
+} else {
+	$action_msg .= "resultにデータがありません";
+}
+
+//var_dump($result[0]);
+//echo $result[0]->customer;
 
 
 
@@ -21,25 +51,26 @@
 
 <div id="home_cnt">
 					<div class="">
-						<h1>ホーム</h1>
+						<h1>伝票番号登録</h1>
 					</div>
 					<!-- main contentns row -->
 					<div id="maincontents">
 
 					<form id="searchform" name="payform" method="POST">
-					<input type="hidden" name="mode" id="mode" value="payview">
-					<input type="hidden" name="submode" id="submode" value="chkwrite">
-					<input type="hidden" name="motion" id="motion" value="">
+						<input type="hidden" name="mode" id="mode" value="payview">
+						<input type="hidden" name="submode" id="submode" value="chkwrite">
+						<input type="hidden" name="motion" id="motion" value="">
 				
 
-					<input type="text" name="str1" id="str1" value="">
-					<input type="text" name="str2" id="str2" value="">
-					<input type="text" name="str3" id="str3" value="">
+						<input type="number" name="product_id" id="product_id" value="">
+						<input type="text" name="str1" id="str1" value="">
+						<input type="text" name="str2" id="str2" value="">
+						<input type="text" name="str3" id="str3" value="">
 
-					<input type="date" class="form_style w8" id="today" name="wpdate" value="">&emsp;
-					<button class="btn_style" type="button" onClick="clickEvent('searchform','','1','confirm','『 検索 』 します。','payview','chkwrite')">検索</button>
-					<button class="btn_style" type="button" onClick="UPDATEcollect()">axios検索</button>
-					@csrf 
+						<input type="date" class="form_style w8" id="today" name="wpdate" value="">&emsp;
+						<button class="btn_style" type="button" onClick="clickEvent('searchform','','1','confirm','『 検索 』 します。','payview','chkwrite')">検索</button>
+						<button class="btn_style" type="button" onClick="UPDATEcollect()">axios検索</button>
+						@csrf 
 					</form>
 
 
@@ -53,7 +84,28 @@
 						<div>変数の値2：{{ $str2 }}</div>
 						<div>変数の値3：{{ $str3 }}</div>
 					</div>
+					<div>{{ $action_msg }}</div>
 
+					<div id="tbl_1">
+						<table>
+							<thead>
+							<tr>
+								<th>&emsp;</th>
+								<th>伝票番号</th>
+								<th>納期</th>
+								<th>得意先</th>
+								<th>品名</th>
+								<th>エンドユーザー</th>
+								<th>数量</th>
+
+							</tr>
+							</thead>
+							<tbody>
+							@php echo $html_result;
+							@endphp
+							</tbody>
+						</table>
+					</div>
 
 					<div id="resultupdate"></div>
 					<div id="resultlist"><ul class="list-group"></ul></div>

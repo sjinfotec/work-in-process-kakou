@@ -57,6 +57,7 @@
                     </div>
                     <!-- /.panel -->
                 </div>
+                <!-- end contents_area -->
                 
 		</div>
 		<!-- /.container-fluid -->

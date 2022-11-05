@@ -20,7 +20,7 @@ textarea{
 body  {
   font-size:1.4rem;
   margin:0;
-  min-width:1280px;
+  /*min-width:1280px;*/
 }
 .wrapper {
   width: 1920px;
@@ -167,9 +167,33 @@ header button {width:auto;}
 
 
 /*--------------------## コンテンツ共通 ##--------------------*/
+#title_cnt h1  {
+  color: #578a3d;
+}
+.tstyle::before {
+  content: "";
+  display:inline-block;
+  width:  14px;
+  height:  50px;
+  background-color: #eecc33;
+  /*border-radius:  50%;*/
+  line-height: 28px;
+  text-align: center;
+  position:  relative;
+  left:0px;
+  top: 3px;
+  margin-right:10px;
+/*
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+*/
+}
+
 #maincontents {
   padding:8px;
 }
+
 .gotop{
   position: fixed;
   box-sizing: border-box;
@@ -225,9 +249,30 @@ header button {width:auto;}
 }
 #page_top:hover{opacity: 0.9;}
 
+.form_style1 {
+  font-size:2rem;
+  height:3rem;
+  /*width:calc(100% - 8px);*/
+  padding:0 4px;
+  /*width:50%;*/
+  box-sizing: border-box;
+  /*margin-right:10px;*/
+}
+
+.color_green  {color: green;}
+.color_red  {color: red;}
+.color1 {color:#33aa55;}
+.color2 {color:#cc3333;}
+
 .mgt10  {margin-top:10px;}
 .mgt20  {margin-top:20px;}
 .mgt40  {margin-top:40px;}
+
+.w4e  {width: 4em;}
+.w10e {width: 10em;}
+
+
+
 
 
 /*--------------------## TOP page ##--------------------*/
@@ -270,7 +315,30 @@ header button {width:auto;}
 }
 
 
-/*--------------------## 預かり在庫 / 一覧 ##--------------------*/
+/*--------------------## 登録検索 / 一覧 ##--------------------*/
+
+#form1  {
+  display:flex;
+  align-items: center;
+  /*justify-content: space-between;*/
+  gap:0 20px;
+
+}
+#form1 .form_style {
+  font-size:2rem;
+  height:3rem;
+  /*width:calc(100% - 8px);*/
+  padding:0 4px;
+  width:50%;
+  box-sizing: border-box;
+  margin-right:10px;
+}
+
+
+
+
+
+
 #top_cnt  {
   display:flex;
   width:100%;
@@ -287,21 +355,7 @@ header button {width:auto;}
   background:#FFF;
   width:auto;
 }
-#form1  {
-  display:flex;
-  align-items: center;
-  /*justify-content: space-between;*/
 
-}
-#form1 .form_style {
-  font-size:2rem;
-  height:3rem;
-  /*width:calc(100% - 8px);*/
-  padding:0 4px;
-  width:50%;
-  box-sizing: border-box;
-  margin-right:10px;
-}
 
 #btn_cnt1 {
   display:flex;
@@ -341,8 +395,9 @@ header button {width:auto;}
   border-spacing:0;
   border-left:1px solid #888888;
   border-top:1px solid #888888;
+  font-size:1.2rem;
 }
-#tbl_1 thead th{
+#tbl_1 th {
   /* 縦スクロール時に固定する */
   position: -webkit-sticky;
   position: sticky;
@@ -350,7 +405,7 @@ header button {width:auto;}
   /* tbody内のセルより手前に表示する */
   z-index: 1;
   white-space: nowrap;
-  /*background:#ccbb55;*/
+  background:#eecc33;
   border-right:1px solid #888888;
   padding:5px 5px;
 }
@@ -365,28 +420,14 @@ header button {width:auto;}
 #tbl_1 .w1 {
   width:5em;
 }
-#tbl_1  button  {
+#tbl_1 .mg_r  {
+  margin-right:10px;
+}
+#tbl_1 button  {
   white-space:nowrap;
   border-radius: 5px;
   padding:2px 6px;
-  color:#FFF;
-  background:#bbaa88;
   width:auto;
-}
-#tbl_1  button:hover  {
-  background:#DDCCAA;
-}
-#tbl_1 button.style1  {
-  border:1px solid #888;
-  border-radius: 4px;
-  background:#8C8;
-}
-#tbl_1 button.style1:hover  {
-  color:#FFF;
-  background:#C88;
-}
-#tbl_1 .mg_r  {
-  margin-right:10px;
 }
 
 
@@ -412,7 +453,78 @@ header button {width:auto;}
   top:-120px; left:0px;
 }
 
-/*--------------------## 預かり在庫 / 編集追加登録 ##--------------------*/
+/*--------------------##  / 編集追加登録 ##--------------------*/
+
+
+#form2  {
+  display: flex;
+  align-items: center;
+  /*justify-content: space-between;*/
+  flex-wrap: wrap;
+  gap:10px 20px;
+
+}
+#form2 .form_style {
+  display: flex;
+  flex-direction: column;
+  /*width:calc(100% - 8px);*/
+  /*width:50%;*/
+  box-sizing: border-box;
+}
+#form2 .input_style {
+  font-size:2rem;
+  height:3rem;
+  padding:0 4px;
+}
+#form2 label {
+  background:#eecc33;
+}
+
+
+
+#form_cnt {
+  display: flex;
+}
+
+input[type=radio] {
+  display: none; /* ラジオボタンを非表示にする */
+}
+input[type="radio"]:checked + label {
+  background: #31A9EE;/* マウス選択時の背景色を指定する */
+  color: #ffffff; /* マウス選択時のフォント色を指定する */
+}
+.label:hover {
+  background-color: #E2EDF9; /* マウスオーバー時の背景色を指定する */
+}
+.label {
+  margin: 5px; /* ラベル外側の余白を指定する */
+  border: 1px solid #006DD9;/* ラベルの境界線を実線で指定する */
+  /*display: block; /* ブロックレベル要素化する */
+  /*float: left; /* 要素の左寄せ・回り込を指定する */
+  margin: 5px; /* ボックス外側の余白を指定する */
+  width: 100px; /* ボックスの横幅を指定する */
+  height: 45px; /* ボックスの高さを指定する */
+  padding-left: 5px; /* ボックス内左側の余白を指定する */
+  padding-right: 5px; /* ボックス内御右側の余白を指定する */
+  color: #b20000; /* フォントの色を指定 */
+  text-align: center; /* テキストのセンタリングを指定する */
+  line-height: 45px; /* 行の高さを指定する */
+  cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
+  border: 2px solid #006DD9;/* ボックスの境界線を実線で指定する */
+  border-radius: 5px; /* 角丸を指定する */
+}
+
+
+
+
+
+
+
+
+
+
+
+
 #cnt1 {
   display:flex;
   width:100%;
@@ -468,24 +580,6 @@ header button {width:auto;}
 #button1 button span{
   display:inline-block;
 }
-button.style1  {
-  border:1px solid #888;
-  border-radius: 4px;
-  background:#8C8;
-}
-button.style1:hover  {
-  color:#FFF;
-  background:#C88;
-}
-button.style2  {
-  border:1px solid #888;
-  border-radius: 4px;
-  background:#8CC;
-}
-button.style2:hover  {
-  color:#FFF;
-  background:#C88;
-}
 
 
 #cnt1 .w1{
@@ -531,7 +625,50 @@ button.style2:hover  {
 }
 
 
-/*--------------------## 棚卸 /  ##--------------------*/
+/*--------------------##  button  ##--------------------*/
+
+button.style1  {
+  border:1px solid #888;
+  border-radius: 4px;
+  background:#8C8;
+}
+button.style1:hover  {
+  color:#FFF;
+  background:#C88;
+}
+button.style2  {
+  border:1px solid #888;
+  border-radius: 4px;
+  background:#8CC;
+}
+button.style2:hover  {
+  color:#FFF;
+  background:#C88;
+}
+button.style3  {
+  color:#FFF;
+  background:#bbaa88;
+}
+button.style3:hover  {
+  background:#DDCCAA;
+}
+button.style4  {
+  background:#FFF;
+  color: #888;
+}
+button.style5  {
+  background:#FFF;
+  color: green;
+}
+
+
+
+/*--------------------##  /  ##--------------------*/
+
+
+
+
+
 #cnt3 {
   display:flex;
   /*width:100%;*/
@@ -638,8 +775,8 @@ button.style2:hover  {
 html { scroll-behavior: smooth;}
 
 
-/*------#### 1200px以下のとき ####------*/
-@media screen and (max-width: 1200px) {
+/*------#### 959px 以下のとき ####------*/
+@media screen and (max-width: 959px) {
   body  {
     font-size:1.4rem;
     margin:0;

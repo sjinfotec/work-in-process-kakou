@@ -34,8 +34,26 @@ Route::get('/', function () {
 Route::get('/', [HomeController::class,'index']);
 //Route::post('/home', [HomeController::class,'index'])->name('login');
 Route::get('/home', [HomeController::class,'index']);
-//Route::get('/home', [HomeController::class,'index'])->middleware('auth');
-//Route::get('/base', [BaseController::class,'base'])->middleware('auth');
+Route::get('/regi', [RegisterController::class,'getRequestFunc']);
+Route::post('/regi', [RegisterController::class,'postRequestFunc']);
+Route::post('/regi/search', [RegisterController::class,'searchData']);
+Route::post('/regi/new', [RegisterController::class,'newData']);
+
+// 工程編集
+Route::get('/process', [ProcessController::class,'index']);
+Route::post('/process', [ProcessController::class,'index']);
+Route::post('/process/get', [ProcessController::class,'getData']);
+Route::post('/process/getone', [ProcessController::class,'getDataOne']);
+Route::post('/process/update', [ProcessController::class,'fix']);
+Route::post('/process/insert', [ProcessController::class,'store']);
+Route::post('/process/search', [ProcessController::class,'postSearch']);
+
+
+
+
+
+
+
 Route::get('/list', [HomeController::class,'getRequestFunc']);
 Route::post('/list', [HomeController::class,'postRequestFunc']);
 Route::post('/list/search', [HomeController::class,'searchData']);
