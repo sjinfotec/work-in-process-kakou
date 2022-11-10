@@ -119,6 +119,10 @@ class ProcessController extends Controller
                     'product_name',
                     'end_user',
                     'quantity',
+                    'status',
+                    'process_1','departments_name_1','departments_code_1','work_name_1','work_code_1','start_process_date_1','end_process_date_1',
+                    'process_2','departments_name_2','departments_code_2','work_name_2','work_code_2','start_process_date_2','end_process_date_2',
+                    'process_3','departments_name_3','departments_code_3','work_name_3','work_code_3','start_process_date_3','end_process_date_3',
                     'comment'
                 );
                 $data->where('product_code', $s_product_code);

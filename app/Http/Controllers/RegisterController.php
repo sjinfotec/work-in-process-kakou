@@ -312,7 +312,13 @@ class RegisterController extends Controller
             'result_msg' => $result_msg
         ];
         if(!empty($redata)) {
-            echo json_encode($redata, JSON_UNESCAPED_UNICODE);
+            $jsondata = json_encode($redata, JSON_UNESCAPED_UNICODE);
+            $pattern = ['/"\s*"/', '/null/'];
+            $replace = ['""', '""'];
+            $jsonresult = preg_replace($pattern, $replace, $jsondata);
+
+            echo $jsonresult;
+            //echo json_encode($redata, JSON_UNESCAPED_UNICODE);
         }
 
     }
@@ -335,7 +341,8 @@ class RegisterController extends Controller
         $this->quantity = !empty($data['quantity']) ? $data['quantity'] : "";
         //$this->status = isset($data['status']) ? $data['status'] : "";
         $this->after_due_date = !empty($data['after_due_date']) ? $data['after_due_date'] : "";
-        $this->comment = $data['comment'] == 'null' ? "" : $data['comment'];
+        //$this->comment = $data['comment'] == 'null' ? "" : $data['comment'];
+        $this->comment = !empty($data['comment']) ? $data['comment'] : "";
 
         $mode = isset($data['mode']) ? $data['mode'] : "";
         $upkind = isset($data['upkind']) ? $data['upkind'] : "";

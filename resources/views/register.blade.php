@@ -74,8 +74,8 @@ if(isset($result)) {
 
 						<div id="form1">
 						<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
-						<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
 						<button class="" type="button" onClick="SEARCHcollect()">axios検索</button>
+						<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
 						</div>
 						@csrf 
 					</form>

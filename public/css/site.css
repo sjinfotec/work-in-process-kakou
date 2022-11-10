@@ -63,9 +63,9 @@ button:hover  {
 .gc2  {  background:#eee9e6;}
 .bc2  {  border:2px solid #ccbb55;}
 .bcc2 {  border-color:#ccbb55;}
-.gc3  {  background:#eee7e0;}
+.gc3  {  background:#e86;}
 .bc3  {  border:2px solid #ddaa88;}
-.gc4  {  background:#ede4e1;}
+.gc4  {  background:#9be;}
 .gc4b  {  background:linear-gradient(to bottom, #FFF 0%, #FFF 80%, #eecc55 80%,  #eecc55 100%);}
 .bc4  {  border:2px solid #eecc55;}
 .bcc4 {  border-color:#eecc55;}
@@ -453,8 +453,9 @@ header button {width:auto;}
   top:-120px; left:0px;
 }
 
-/*--------------------##  / 編集追加登録 ##--------------------*/
 
+
+/*--------------------##  / 編集 ##--------------------*/
 
 #form2  {
   display: flex;
@@ -484,7 +485,135 @@ header button {width:auto;}
 
 #form_cnt {
   display: flex;
+  align-items: center;
+  gap:0 20px;
+  font-size:1.6rem;
 }
+#form_cnt .datezone {
+  display: flex;
+  align-items: center;
+  gap:0 10px;
+}
+
+
+#calendar {
+  display: flex;
+}
+#calendar .ymstyle  {
+  padding:0 5px;
+  margin:0 5px 2px 5px;
+  white-space: nowrap;
+}
+
+#calendar_dayzone  {
+  display: flex;
+  
+  box-sizing: border-box;
+  border:#AAA solid;
+  border-width: 0px 0 0 0px;
+}
+#calendar_dayzone .day_cnt {
+  /*flex-grow: 1;*/
+  min-width:2.2rem;
+  border:#AAA solid;
+  border-width: 1px 1px 1px 1px;
+  padding:4px;
+  text-align: center;
+  margin-left:-1px;
+
+}
+#calendar_dayzone .datestyle {
+  box-sizing: border-box;
+  margin-top: 5px;
+  height:2.4rem;
+  /*line-height: 34px;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+#calendar_dayzone .datebox {
+  border:#578a3d solid;
+  border-width: 1px 1px 1px 1px;
+
+}
+#calendar_dayzone .today {
+  position: relative;
+  font-weight: bold;
+}
+#calendar_dayzone .today::after {
+  content: "";
+  display:block;
+  /*position:  relative;*/
+  position: absolute;
+  width:  22px;
+  height:  194px;
+  background-color: #f4c836;
+  /*border-radius:  50%;*/
+  line-height: 3px;
+  text-align: center;
+  left:0px;
+  top: 2rem;
+  z-index: 1;
+/*
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+*/
+}
+
+
+#workin {margin-top:10px;}
+#workin .line {
+  position: relative;
+  height:6rem;
+  z-index: 2;
+}
+  
+#workin .d1c1 {
+  background:#6fe0c7;
+}
+#workin .d2c1 {
+  background:#6fade0;
+}
+#workin .d3c1 {
+  background:#6f77e0;
+}
+#workin .d4c1 {
+  background:#e06fa4;
+}
+#workin .d5c1 {
+  background:#e0b36f;
+}
+#workin .d6c1 {
+  background:#a6e06f;
+}
+      
+
+#workin input[type="checkbox"]:checked + label {
+  background: #578a3d;/* マウス選択時の背景色を指定する */
+  color: #ffffff; /* マウス選択時のフォント色を指定する */
+}
+
+#workin .wclabel:hover {
+  background-color: #9cbb1c; /* マウスオーバー時の背景色を指定する */
+}
+#workin .wclabel {
+  margin-top: 5px;
+  display: block; /* ブロックレベル要素化する */
+  /*float: left; /* 要素の左寄せ・回り込を指定する */
+  width: 18px; /* ボックスの横幅を指定する */
+  height: 18px; /* ボックスの高さを指定する */
+  /*padding-left: 2px;*/ /* ボックス内左側の余白を指定する */
+  /*padding-right: 2px;*/ /* ボックス内御右側の余白を指定する */
+  color: #b20000; /* フォントの色を指定 */
+  text-align: center; /* テキストのセンタリングを指定する */
+  /*line-height: 45px;*/ /* 行の高さを指定する */
+  cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
+  border: 2px solid #e0b36f;/* ボックスの境界線を実線で指定する */
+  border-radius: 5px; /* 角丸を指定する */
+}
+
 
 input[type=radio] {
   display: none; /* ラジオボタンを非表示にする */
@@ -497,8 +626,6 @@ input[type="radio"]:checked + label {
   background-color: #E2EDF9; /* マウスオーバー時の背景色を指定する */
 }
 .label {
-  margin: 5px; /* ラベル外側の余白を指定する */
-  border: 1px solid #006DD9;/* ラベルの境界線を実線で指定する */
   /*display: block; /* ブロックレベル要素化する */
   /*float: left; /* 要素の左寄せ・回り込を指定する */
   margin: 5px; /* ボックス外側の余白を指定する */
@@ -513,6 +640,9 @@ input[type="radio"]:checked + label {
   border: 2px solid #006DD9;/* ボックスの境界線を実線で指定する */
   border-radius: 5px; /* 角丸を指定する */
 }
+
+
+
 
 
 

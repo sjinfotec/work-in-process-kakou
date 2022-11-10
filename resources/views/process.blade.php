@@ -1,5 +1,9 @@
 <?php
+use Illuminate\Support\Facades\Storage;
+
 $html_result = "";
+$cal_start_ym = "";
+$ymd_after_due_date = "";
 if(isset($result)) {
 		var_dump($result);
 	
@@ -17,6 +21,7 @@ if(isset($result)) {
 			$quantity = $val->quantity;
 			$comment = $val->comment;
 			$html_after_due_date = !empty($after_due_date) ? date('n月j日', strtotime($after_due_date)) : "";
+			$ymd_after_due_date = !empty($after_due_date) ? date('Y-m-d', strtotime($after_due_date)) : "";
 			$html_result .= <<<EOF
 				<tr>
 					<td>{$number} <span id="btn_cnt_new"><button class="" type="button" onClick="NEWcollect()">axios登録</button></span></td>
@@ -29,6 +34,13 @@ if(isset($result)) {
 				</tr>
 
 			EOF;
+			//指定日時を月はじめに変換する date("Y-m-d H:i:s")
+			//$after_due_date = "";
+			$target_day = !empty($after_due_date) ? date("Y-m-1", strtotime($after_due_date)) : date("Y-m-d");
+			//echo "targetday = ".$target_day."<br>\n";
+			$cal_start_ym = !empty($target_day) ? date('Y-n', strtotime($target_day . ' -1 month')) : "";
+			
+			
 
 		}
 	}
@@ -44,6 +56,383 @@ if(isset($result)) {
 //var_dump($result[0]);
 //echo $result[0]->customer;
 
+//$datetest = new DateTime($after_due_date);
+//echo $datetest->format('Y-m-d');
+
+$csvfile = Storage::get('schedule.csv');	// /storage/app/schedule.csv にアクセス
+//$csvfile = Storage::disk('public')->get('sample.txt');	// /storage/app/public/sample.txt にアクセス
+/*
+//行で分割
+$csvfile_data = explode("\n", $csvfile);
+// foreachで行単位でループ処理
+foreach($csvfile_data as $key => $value){
+	// 空行の場合飛ばす
+	if( !$value ) continue;
+	// 行をカンマで分割
+	$company_schedule_arr[] = explode(",", $value);
+}
+*/
+
+//行で分割
+//$csvfile_arr = explode("\n", $csvfile);
+//$csvfile_join = join(',', $csvfile_arr);
+//$company_schedule_arr = explode(",", $csvfile_join);	//カンマで配列
+//var_dump($company_schedule_arr);
+
+function scheduleDays($check_date,$company_schedule_arr) {
+	$schedulearr = Array(
+		'2022-01-01','2022-01-02','2022-01-03','2022-01-04','2022-01-09','2022-01-10','2022-01-16','2022-01-22','2022-01-23','2022-01-30',
+		'2020-01-05','2020-01-11','2020-01-12','2020-01-19','2020-01-25','2020-01-26'
+	);
+	return $result_chk = in_array($check_date, $company_schedule_arr);
+}
+
+
+
+
+function calendar2($result,$after_due_date) {
+	//DateTimeインスタンスを作成
+	$today = new DateTime();
+	$due_date = new DateTime($after_due_date);
+	$f_today = $today->format('Y-m-d');
+	$f_due_date = $due_date->format('Y-m-d');
+
+	$res = $result[0];
+	$start_process_date_1 = !empty($res->start_process_date_1) ? date("Y-m-d", strtotime($res->start_process_date_1)) : '';
+	$end_process_date_1 = !empty($res->end_process_date_1) ? date("Y-m-d", strtotime($res->end_process_date_1)) : '';
+	$start_process_date_2 = !empty($res->start_process_date_2) ? date("Y-m-d", strtotime($res->start_process_date_2)) : '';
+	$end_process_date_2 = !empty($res->end_process_date_2) ? date("Y-m-d", strtotime($res->end_process_date_2)) : '';
+	$start_process_date_3 = !empty($res->start_process_date_3) ? date("Y-m-d", strtotime($res->start_process_date_3)) : '';
+	$end_process_date_3 = !empty($res->end_process_date_3) ? date("Y-m-d", strtotime($res->end_process_date_3)) : '';
+	echo '<br>process date 1 : '. $start_process_date_1 .'～'. $end_process_date_1 .'<br>';
+	echo 'process date 2 : '. $start_process_date_2 .'～'. $end_process_date_2 .'<br>';
+	echo 'process date 3 : '. $start_process_date_3 .'～'. $end_process_date_3 .'<br>';
+
+	/*
+	if(isset($_GET['t']) && preg_match('/\A\d{4}-\d{2}\z/', $_GET['t'])) {
+	//クエリ情報を基にしてDateTimeインスタンスを作成
+	$start_day = new DateTime($_GET['t'] . '-01');
+	} else {
+	//当月初日のDateTimeインスタンスを作成
+	$start_day = new DateTime('first day of this month');
+	}
+	*/
+	
+	//該当日（納品日・納期）
+	$start_day =  !empty($after_due_date) ? $due_date : $today;
+
+	
+
+	//カレンダー表示月の前月の年月を取得
+	$dt = clone($start_day);
+	$prev_month =  $dt->modify('-1 month')->format('Y-m');
+
+	//カレンダー表示月の翌月の年月を取得
+	$dt = clone($start_day);
+	$next_month =  $dt->modify('+1 month')->format('Y-m');
+
+
+	//カレンダー表示月の年と月を取得
+	$year_month = $start_day->format('Y-m');
+
+	//表示月初日の曜日を数値で取得
+	//$w = $start_day->format('w');
+	$w = 40;
+
+	//表示月初日をカレンダーの開始日に変更する
+	$start_day->modify('-' . $w . ' day');
+
+	//表示月末日のDateTimeインスタンスを作成
+	//$end_day = new DateTime('last day of ' . $year_month);
+	$end_day = new DateTime($after_due_date);
+
+	//カレンダーの終了日を取得するため月末の曜日を数値で取得
+	$w = $end_day->format('w');
+
+	//土曜日を数値にすると6。そこから月末の曜日に対応する数を引いてやれば、カレンダー末尾に追加すべき日数が判明する。
+	//+1しているのはDatePeriodの特性を考慮するため
+	$w = 6 - $w + 1;
+
+	//月末をカレンダーの終了日の翌日に変更する
+	$end_day->modify('+' . $w . ' day');
+
+	//カレンダーに表示する期間のインスタンスを作成する
+	$period = new DatePeriod(
+	$start_day,
+	new DateInterval('P1D'),
+	$end_day
+	);
+
+
+	$weekarr = Array('日', '月', '火', '水', '木', '金', '土');	//曜日
+
+	// 休日データの読み込み
+	$csvfile = Storage::get('schedule.csv');
+	$csvfile_arr = explode("\n", $csvfile);	//行で分割
+	$csvfile_join = join(',', $csvfile_arr);	//配列をカンマで連結（一列のカンマ付き文字列）
+	$company_schedule_arr = explode(",", $csvfile_join);	//カンマで配列
+
+
+	//htmlに描写するための変数
+	$ym_html = '';
+	$body = '<div id="calendar">';
+	$ym_judge = '';
+	$tag_on = 0;
+	//$ym_html .= '<span>'.$prev_month.'</span>';
+	//$ym_html .= '<span>'.$year_month.'</span>';
+
+//var_dump($period);
+
+	foreach ($period as $day) {
+		$ymd_day =  $day->format('Y-m-d');
+		//当月以外の日付はgreyクラスを付与してCSSで色をグレーにする
+		$grey_class = $day->format('Y-m') === $year_month ? '' : 'grey';
+
+		$ym_date = $day->format('Y年n月') ;
+		if($ym_date !== $ym_judge)  {
+			if($tag_on > 0) $body .= '</div></div><!--end class f-->';
+			//$flex_jc = $tag_on > 0 ? 'flex_jc_s' : 'flex_jc_e';
+			$flex_jc = $tag_on > 0 ? 'justify-content: start;' : 'justify-content: end;';
+			$body .= '<div class="f"><div class="ymstyle gc1"><b>'.$ym_date.'</b></div><div id="calendar_dayzone" style="'.$flex_jc.'">';
+
+		}
+
+		
+		//本日にはtodayクラスを付与してCSSで数字の見た目を変える due_date $html_due_date $today->format('Y-m-d')
+		$today_class = $day->format('Y-m-d') === $f_today ? 'today' : '';
+		$due_class = $day->format('Y-m-d') == $f_due_date ? 'background:red; color:#FFF; font-weight:bold;' : '';
+		//会社の休日
+		$company_class = scheduleDays($day->format('Y-m-d'),$company_schedule_arr) ? "datebox" : "";
+
+		
+		$pd1_class =  ($start_process_date_1 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_1 ?  'd1c1' : '';
+		$pd2_class =  ($start_process_date_2 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_2 ?  'd2c1' : '';
+		$pd3_class =  ($start_process_date_3 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_3 ?  'd3c1' : '';
+
+		$fdw = $day->format('w');
+		
+		//その曜日が日曜日ならタグを挿入する
+		if ($day->format('w') == 0) {
+			//$body .= '<tr>';
+			$style_bg = 'background:#e86;';
+		}
+		elseif ($day->format('w') == 6) {
+			$style_bg = 'background:#9be;';
+		}
+		else {
+			$style_bg = '';
+		}
+		$checked = '';
+
+		$workspace = sprintf('
+			<div id="workin">
+				<div class="line"><div class="%s">%s</div></div>
+				<div class="line"><div class="%s">%s</div></div>
+				<div class="line"><div class="%s">%s</div></div>
+				<div class="line">
+					<input type="checkbox" name="workchk['.$ymd_day.']" value="1" id="work'.$ymd_day.'" '.$checked.'>
+					<label for="work'.$ymd_day.'" class="wclabel transition2"></label>
+				</div>
+				<div>
+					<input type="hidden" name="work_date" value="'.$ymd_day.'">
+				</div>
+			</div>
+			',
+			$pd1_class,
+			'&ensp;',
+			$pd2_class,
+			'&ensp;',
+			$pd3_class,
+			'&ensp;',
+			$day->format('j')
+		);
+
+
+
+		//sprintfを使って整形しながらhtml部分を作成する
+		//'<td style="%s %s %s"><div>%s</div><div>%s</div></td>',
+		/*
+		$body .= sprintf(
+			'<td class="youbi_%d %s %s">%d</td>',
+			$day->format('w'),
+			$today_class,
+			$grey_class,
+			$day->format('d')
+		);
+		*/
+		$body .= sprintf(
+			'<div class="day_cnt" style="%s"><div style="%s">%s</div><div class="datestyle %s %s"><span>%s</span></div>'.$workspace.'</div>',
+			$due_class,
+			$style_bg,
+			$weekarr[$fdw],
+			$company_class,
+			$today_class,
+			$day->format('j')
+		);
+
+		
+		//その曜日が土曜日なら</tr>タグを挿入する
+		if ($day->format('w') == 6) {
+			//$body .= '</tr>';
+		}
+
+		if($ym_date !== $ym_judge) {
+
+		  //$body .= '</div>';
+
+		}
+		$ym_judge = $ym_date;
+		$tag_on += 1;
+
+	}
+
+$body .= '</div></div><!--end class f--></div>';
+
+$cal_htmlxxx = <<<EOF
+	<table class="calendar">
+		<thead class="calendar-head">
+		<tr class="calendar-row">
+			<!-- リンクにクエリ情報を設定する -->
+			<th><a href="?t={$prev_month}">&laquo;</a></th>
+			<th colspan="5"><a href="">{$year_month}</a></th>
+			<th><a href="?t={$next_month}">&raquo;</a></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr class="calendar-row">
+			<td>日</td>
+			<td>月</td>
+			<td>火</td>
+			<td>水</td>
+			<td>木</td>
+			<td>金</td>
+			<td>土</td>
+		</tr>
+			{$body}
+		</tbody>
+		<tfoot>
+		<tr class="calendar-row">
+			<th colspan="7"><a href="">today</a></th>
+		</tr>
+		</tfoot>
+	</table>
+	{$f_due_date}
+	
+EOF;
+$cal_html = <<<EOF
+	{$ym_html}
+	{$body}
+	{$f_due_date}
+
+EOF;
+
+	return $cal_html;
+}
+$html_cal2 = calendar2($result,$after_due_date);	//開始年月～何か月分
+
+
+// カレンダー表示
+function create_calendar( $num = 1, $set = false, $after_due_date) {
+	
+	$cal_parts = "";
+	//今日
+	$date = new DateTime();
+	$today = $date->format( 'Y-n-j' );
+	//該当日（納品日）
+	$today =  !empty($after_due_date) ? date('Y-n-j', strtotime($after_due_date)) : $today;
+ 
+	//最初の月
+	if( $set ) {
+		$date = new DateTime( $set );
+	}
+ 
+	for( $i = 0; $i < $num; ++$i ) {
+		$month = $date->format( 'Y-n' );	//描画する月
+		$date->modify( '+1 months' );	//1ヶ月すすめる
+		list( $y, $m ) = explode( '-', $month );	//年-月の分離
+		//月の初めの曜日
+		$start_date = new DateTime( 'first day of ' .$month );
+		$week = $start_date->format( 'w' );
+		//月の終わりの日
+		$end_date  = new DateTime( 'last day of ' .$month );
+		$end = $end_date->format( 'j' );
+		//カレンダーテーブル
+		$cal_parts .= '<table>';
+		$cal_parts .= '<thead><tr><th colspan="7" class="month">'.$y.'年'.$m.'月</tr></thead>';
+		$cal_parts .= '<tbody>';
+		$cal_parts .= '<tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>';
+		//週の数
+		$week_line = 0;
+ 
+		for( $day = 1; $day <= $end; ++$day ) {
+			//1日、もしくは日曜日
+			if( $day == 1 || $week == 0 ) {
+				$cal_parts .= '<tr>';
+				++$week_line;
+			}
+			//1日かつ日曜日ではない
+			if( $day == 1 && $week != 0 ) {
+				for( $c = 0; $c < $week; ++$c ) {
+					$cal_parts .= '<td class="blank">&ensp;</td>';
+				}
+			}
+			//曜日の色
+			if($week == 0) {
+				$stylecss = "gc3";
+			}
+			elseif($week == 6) {
+				$stylecss = "gc4";
+			}
+			else {
+				$stylecss = "";
+			}
+			//日
+			if ( $month.'-'.$day == $today ) {
+				$cal_parts .= '<td class="'.$stylecss.'"><strong>'.$day.'</strong></td>';	
+			} else {
+				$cal_parts .= '<td class="'.$stylecss.'">'.$day.'</td>';
+			}
+			//最終日かつ土曜日ではない
+			if( $day == $end && $week != 6 ) {
+				for( $c = $week; $c < 6; ++$c ) {
+					$cal_parts .= '<td class="blank">&ensp;</td>';
+				}
+			}
+ 			//最終日、もしくは土曜日
+			if( $day == $end || $week == 6 ) {
+				$cal_parts .= '</tr>';
+			}
+ 			//曜日をすすめる
+			if( $week == 6 ) {
+				$week = 0;
+			} else {
+				++$week;
+			}
+		}
+ 
+		//表示するカレンダーが複数かつ週の数が6未満の場合
+		if( $num != 1 && $week_line < 6 ) {
+			for( $n = $week_line; $n < 6; ++$n ) {
+				$cal_parts .= '<tr>';
+				for( $c = 0; $c < 7; ++$c ) {
+					$cal_parts .= '<td class="blank">&ensp;</td>';
+				}
+				$cal_parts .= '</tr>';
+			}
+		}
+ 
+		$cal_parts .= '</tbody>';
+		$cal_parts .= '</table>';
+ 
+	}
+	return $cal_parts;
+	 
+}
+//$html_cal = create_calendar();	//今月
+//$html_cal = create_calendar( 12 );	//何か月分
+//$html_cal = create_calendar( 2, '2020-1' );	//開始年月～何か月分
+
+$html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月～何か月分
 
 
 ?>
@@ -100,7 +489,7 @@ if(isset($result)) {
 								</div>
 								<div class="form_style">
 									<label for="after_due_date" class="">納期</label>
-									<input type="text" class="input_style" name="after_due_date" id="after_due_date" value="{{ $after_due_date }}">
+									<input type="date" class="input_style" name="after_due_date" id="after_due_date" value="{{ $ymd_after_due_date }}">
 								</div>
 								<div class="form_style">
 									<label for="customer" class="">得意先</label>
@@ -139,22 +528,52 @@ if(isset($result)) {
 							<div>modeの値：{{ $mode }}</div>
 						</div>
 
-
-
-
 						<form id="addprocessform" name="addprocessform" method="POST">
+							<input type="hidden" name="mode" id="mode" value="product_search">
+							<input type="hidden" name="submode" id="submode" value="chkwrite">
+							<input type="hidden" name="motion" id="motion" value="">
+							<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
 
+
+						@php
+							echo $html_cal2;
+						@endphp
 						
+							<!--
 							<div id="form_cnt">
-								<div>
-									<input type="date" name="start_process_date_1" value="101" id="start_process_date_1">
-									<label for="start_process_date_1" class="transition2">工程１ 開始日</label>
+								<div>工程表１</div>
+								<div class="datezone">
+									<label for="start_process_date_1" class="transition2">開始日</label>
+									<input type="date" class="form_style1" name="start_process_date_1" value="" id="start_process_date_1">
 								</div>
-								<div>
-									<input type="date" name="end_process_date_1" value="101" id="end_process_date_1">
-									<label for="end_process_date_1" class="transition2">工程１ 終了日</label>
+								<div class="datezone">
+									<label for="end_process_date_1" class="transition2">終了日</label>
+									<input type="date" class="form_style1" name="end_process_date_1" value="" id="end_process_date_1">
 								</div>
 							</div>
+							<div id="form_cnt">
+								<div>工程表２</div>
+								<div class="datezone">
+									<label for="start_process_date_1" class="transition2">開始日</label>
+									<input type="date" class="form_style1" name="start_process_date_2" value="" id="start_process_date_2">
+								</div>
+								<div class="datezone">
+									<label for="end_process_date_1" class="transition2">終了日</label>
+									<input type="date" class="form_style1" name="end_process_date_2" value="" id="end_process_date_2">
+								</div>
+							</div>
+							<div id="form_cnt">
+								<div>工程表３</div>
+								<div class="datezone">
+									<label for="start_process_date_1" class="transition2">開始日</label>
+									<input type="date" class="form_style1" name="start_process_date_3" value="" id="start_process_date_3">
+								</div>
+								<div class="datezone">
+									<label for="end_process_date_1" class="transition2">終了日</label>
+									<input type="date" class="form_style1" name="end_process_date_3" value="" id="end_process_date_3">
+								</div>
+							</div>
+							-->
 
 							<div id="form_cnt">
 								<div>
@@ -170,7 +589,16 @@ if(isset($result)) {
 									<label for="workin103" class="label transition2">部署1 - 作業C</label>
 								</div>
 							</div>
+
+
+							<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm','『 登録 』','product_search','chkwrite')">登録</button>
+
+
 						</form>
+
+						@php
+							echo $html_cal;
+						@endphp
 
 					</div>
 					<!-- /main contentns row -->
