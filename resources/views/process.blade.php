@@ -96,17 +96,12 @@ function calendar2($result,$after_due_date) {
 	$due_date = new DateTime($after_due_date);
 	$f_today = $today->format('Y-m-d');
 	$f_due_date = $due_date->format('Y-m-d');
+	$ym_html = '';
+	$body = '';
 
-	$res = $result[0];
-	$start_process_date_1 = !empty($res->start_process_date_1) ? date("Y-m-d", strtotime($res->start_process_date_1)) : '';
-	$end_process_date_1 = !empty($res->end_process_date_1) ? date("Y-m-d", strtotime($res->end_process_date_1)) : '';
-	$start_process_date_2 = !empty($res->start_process_date_2) ? date("Y-m-d", strtotime($res->start_process_date_2)) : '';
-	$end_process_date_2 = !empty($res->end_process_date_2) ? date("Y-m-d", strtotime($res->end_process_date_2)) : '';
-	$start_process_date_3 = !empty($res->start_process_date_3) ? date("Y-m-d", strtotime($res->start_process_date_3)) : '';
-	$end_process_date_3 = !empty($res->end_process_date_3) ? date("Y-m-d", strtotime($res->end_process_date_3)) : '';
-	echo '<br>process date 1 : '. $start_process_date_1 .'～'. $end_process_date_1 .'<br>';
-	echo 'process date 2 : '. $start_process_date_2 .'～'. $end_process_date_2 .'<br>';
-	echo 'process date 3 : '. $start_process_date_3 .'～'. $end_process_date_3 .'<br>';
+
+	
+
 
 	/*
 	if(isset($_GET['t']) && preg_match('/\A\d{4}-\d{2}\z/', $_GET['t'])) {
@@ -174,119 +169,133 @@ function calendar2($result,$after_due_date) {
 
 
 	//htmlに描写するための変数
-	$ym_html = '';
-	$body = '<div id="calendar">';
 	$ym_judge = '';
 	$tag_on = 0;
 	//$ym_html .= '<span>'.$prev_month.'</span>';
 	//$ym_html .= '<span>'.$year_month.'</span>';
 
-//var_dump($period);
+	if(isset($result[0])) {
+		$res = $result[0];
+		$start_process_date_1 = !empty($res->start_process_date_1) ? date("Y-m-d", strtotime($res->start_process_date_1)) : '';
+		$end_process_date_1 = !empty($res->end_process_date_1) ? date("Y-m-d", strtotime($res->end_process_date_1)) : '';
+		$start_process_date_2 = !empty($res->start_process_date_2) ? date("Y-m-d", strtotime($res->start_process_date_2)) : '';
+		$end_process_date_2 = !empty($res->end_process_date_2) ? date("Y-m-d", strtotime($res->end_process_date_2)) : '';
+		$start_process_date_3 = !empty($res->start_process_date_3) ? date("Y-m-d", strtotime($res->start_process_date_3)) : '';
+		$end_process_date_3 = !empty($res->end_process_date_3) ? date("Y-m-d", strtotime($res->end_process_date_3)) : '';
+		echo '<br>process date 1 : '. $start_process_date_1 .'～'. $end_process_date_1 .'<br>';
+		echo 'process date 2 : '. $start_process_date_2 .'～'. $end_process_date_2 .'<br>';
+		echo 'process date 3 : '. $start_process_date_3 .'～'. $end_process_date_3 .'<br>';
 
-	foreach ($period as $day) {
-		$ymd_day =  $day->format('Y-m-d');
-		//当月以外の日付はgreyクラスを付与してCSSで色をグレーにする
-		$grey_class = $day->format('Y-m') === $year_month ? '' : 'grey';
+		$body = '<div id="calendar">';
+	
 
-		$ym_date = $day->format('Y年n月') ;
-		if($ym_date !== $ym_judge)  {
-			if($tag_on > 0) $body .= '</div></div><!--end class f-->';
-			//$flex_jc = $tag_on > 0 ? 'flex_jc_s' : 'flex_jc_e';
-			$flex_jc = $tag_on > 0 ? 'justify-content: start;' : 'justify-content: end;';
-			$body .= '<div class="f"><div class="ymstyle gc1"><b>'.$ym_date.'</b></div><div id="calendar_dayzone" style="'.$flex_jc.'">';
+		foreach ($period as $day) {
+			$ymd_day =  $day->format('Y-m-d');
+			//当月以外の日付はgreyクラスを付与してCSSで色をグレーにする
+			$grey_class = $day->format('Y-m') === $year_month ? '' : 'grey';
 
-		}
+			$ym_date = $day->format('Y年n月') ;
+			if($ym_date !== $ym_judge)  {
+				if($tag_on > 0) $body .= '</div></div><!--end class f-->';
+				//$flex_jc = $tag_on > 0 ? 'flex_jc_s' : 'flex_jc_e';
+				$flex_jc = $tag_on > 0 ? 'justify-content: start;' : 'justify-content: end;';
+				$body .= '<div class="f"><div class="ymstyle gc1"><b>'.$ym_date.'</b></div><div id="calendar_dayzone" style="'.$flex_jc.'">';
 
-		
-		//本日にはtodayクラスを付与してCSSで数字の見た目を変える due_date $html_due_date $today->format('Y-m-d')
-		$today_class = $day->format('Y-m-d') === $f_today ? 'today' : '';
-		$due_class = $day->format('Y-m-d') == $f_due_date ? 'background:red; color:#FFF; font-weight:bold;' : '';
-		//会社の休日
-		$company_class = scheduleDays($day->format('Y-m-d'),$company_schedule_arr) ? "datebox" : "";
+			}
 
-		
-		$pd1_class =  ($start_process_date_1 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_1 ?  'd1c1' : '';
-		$pd2_class =  ($start_process_date_2 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_2 ?  'd2c1' : '';
-		$pd3_class =  ($start_process_date_3 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_3 ?  'd3c1' : '';
+			
+			//本日にはtodayクラスを付与してCSSで数字の見た目を変える due_date $html_due_date $today->format('Y-m-d')
+			$today_class = $day->format('Y-m-d') === $f_today ? 'today' : '';
+			$due_class = $day->format('Y-m-d') == $f_due_date ? 'background:red; color:#FFF; font-weight:bold;' : '';
+			//会社の休日
+			$company_class = scheduleDays($day->format('Y-m-d'),$company_schedule_arr) ? "datebox" : "";
 
-		$fdw = $day->format('w');
-		
-		//その曜日が日曜日ならタグを挿入する
-		if ($day->format('w') == 0) {
-			//$body .= '<tr>';
-			$style_bg = 'background:#e86;';
-		}
-		elseif ($day->format('w') == 6) {
-			$style_bg = 'background:#9be;';
-		}
-		else {
-			$style_bg = '';
-		}
-		$checked = '';
 
-		$workspace = sprintf('
-			<div id="workin">
-				<div class="line"><div class="%s">%s</div></div>
-				<div class="line"><div class="%s">%s</div></div>
-				<div class="line"><div class="%s">%s</div></div>
-				<div class="line">
-					<input type="checkbox" name="workchk['.$ymd_day.']" value="1" id="work'.$ymd_day.'" '.$checked.'>
-					<label for="work'.$ymd_day.'" class="wclabel transition2"></label>
+			$pd1_class =  ($start_process_date_1 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_1 ?  'd1c1' : '';
+			$pd2_class =  ($start_process_date_2 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_2 ?  'd2c1' : '';
+			$pd3_class =  ($start_process_date_3 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_3 ?  'd3c1' : '';
+
+
+			$fdw = $day->format('w');
+			
+			//その曜日が日曜日ならタグを挿入する
+			if ($day->format('w') == 0) {
+				//$body .= '<tr>';
+				$style_bg = 'background:#e86;';
+			}
+			elseif ($day->format('w') == 6) {
+				$style_bg = 'background:#9be;';
+			}
+			else {
+				$style_bg = '';
+			}
+			$checked = '';
+
+			$workspace = sprintf('
+				<div id="workin">
+					<div class="line"><div class="%s">%s</div></div>
+					<div class="line"><div class="%s">%s</div></div>
+					<div class="line"><div class="%s">%s</div></div>
+					<div class="line">
+						<input type="checkbox" name="workchk['.$ymd_day.']" value="1" id="work'.$ymd_day.'" '.$checked.'>
+						<label for="work'.$ymd_day.'" class="wclabel transition2"></label>
+					</div>
+					<div>
+						<input type="hidden" name="work_date" value="'.$ymd_day.'">
+					</div>
 				</div>
-				<div>
-					<input type="hidden" name="work_date" value="'.$ymd_day.'">
-				</div>
-			</div>
-			',
-			$pd1_class,
-			'&ensp;',
-			$pd2_class,
-			'&ensp;',
-			$pd3_class,
-			'&ensp;',
-			$day->format('j')
-		);
+				',
+				$pd1_class,
+				'&ensp;',
+				$pd2_class,
+				'&ensp;',
+				$pd3_class,
+				'&ensp;',
+				$day->format('j')
+			);
 
 
 
-		//sprintfを使って整形しながらhtml部分を作成する
-		//'<td style="%s %s %s"><div>%s</div><div>%s</div></td>',
-		/*
-		$body .= sprintf(
-			'<td class="youbi_%d %s %s">%d</td>',
-			$day->format('w'),
-			$today_class,
-			$grey_class,
-			$day->format('d')
-		);
-		*/
-		$body .= sprintf(
-			'<div class="day_cnt" style="%s"><div style="%s">%s</div><div class="datestyle %s %s"><span>%s</span></div>'.$workspace.'</div>',
-			$due_class,
-			$style_bg,
-			$weekarr[$fdw],
-			$company_class,
-			$today_class,
-			$day->format('j')
-		);
+			//sprintfを使って整形しながらhtml部分を作成する
+			//'<td style="%s %s %s"><div>%s</div><div>%s</div></td>',
+			/*
+			$body .= sprintf(
+				'<td class="youbi_%d %s %s">%d</td>',
+				$day->format('w'),
+				$today_class,
+				$grey_class,
+				$day->format('d')
+			);
+			*/
+			$body .= sprintf(
+				'<div class="day_cnt" style="%s"><div style="%s">%s</div><div class="datestyle %s %s"><span>%s</span></div>'.$workspace.'</div>',
+				$due_class,
+				$style_bg,
+				$weekarr[$fdw],
+				$company_class,
+				$today_class,
+				$day->format('j')
+			);
 
-		
-		//その曜日が土曜日なら</tr>タグを挿入する
-		if ($day->format('w') == 6) {
-			//$body .= '</tr>';
+			
+			//その曜日が土曜日なら</tr>タグを挿入する
+			if ($day->format('w') == 6) {
+				//$body .= '</tr>';
+			}
+
+			if($ym_date !== $ym_judge) {
+
+			//$body .= '</div>';
+
+			}
+			$ym_judge = $ym_date;
+			$tag_on += 1;
+
 		}
 
-		if($ym_date !== $ym_judge) {
-
-		  //$body .= '</div>';
-
-		}
-		$ym_judge = $ym_date;
-		$tag_on += 1;
+	$body .= '</div></div><!--end class f--></div><!--end id calendar-->';
 
 	}
-
-$body .= '</div></div><!--end class f--></div>';
 
 $cal_htmlxxx = <<<EOF
 	<table class="calendar">
@@ -529,10 +538,13 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 						</div>
 
 						<form id="addprocessform" name="addprocessform" method="POST">
-							<input type="hidden" name="mode" id="mode" value="product_search">
-							<input type="hidden" name="submode" id="submode" value="chkwrite">
+							<input type="hidden" name="mode" id="mode" value="wp_search">
+							<input type="hidden" name="submode" id="submode" value="">
 							<input type="hidden" name="motion" id="motion" value="">
 							<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
+							<input type="hidden" name="work_name" id="work_name" value=""> 
+							<input type="hidden" name="departments_name" id="departments_name" value=""> 
+
 
 
 						@php
@@ -577,21 +589,34 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 
 							<div id="form_cnt">
 								<div>
-									<input type="radio" name="workin" value="101" id="workin101">
-									<label for="workin101" class="label transition2">部署1 - 作業A</label>
+									<input type="radio" name="departments_code" value="2" id="departments_code2">
+									<label for="departments_code2" class="label transition2" onclick="WORKcollect(2,'情報処理課［制作］')">情報処理 - 制作</label>
 								</div>
 								<div>
-									<input type="radio" name="workin" value="102" id="workin102">
-									<label for="workin102" class="label transition2">部署1 - 作業B</label>
+									<input type="radio" name="departments_code" value="3" id="departments_code3">
+									<label for="departments_code3" class="label transition2" onclick="WORKcollect(3,'情報処理課［データ］')">情報処理 - データ</label>
 								</div>
 								<div>
-									<input type="radio" name="workin" value="103" id="workin103">
-									<label for="workin103" class="label transition2">部署1 - 作業C</label>
+									<input type="radio" name="departments_code" value="4" id="departments_code4">
+									<label for="departments_code4" class="label transition2" onclick="WORKcollect(4,'印刷課1')">印刷 - 1</label>
+								</div>
+								<div>
+									<input type="radio" name="departments_code" value="5" id="departments_code5">
+									<label for="departments_code5" class="label transition2" onclick="WORKcollect(5,'印刷課2')">印刷 - 2</label>
+								</div>
+								<div>
+									<input type="radio" name="departments_code" value="6" id="departments_code6">
+									<label for="departments_code6" class="label transition2" onclick="WORKcollect(6,'加工課1')">加工 - 1</label>
+								</div>
+								<div>
+									<input type="radio" name="departments_code" value="7" id="departments_code7">
+									<label for="departments_code7" class="label transition2" onclick="WORKcollect(7,'加工課2')">加工 - 2</label>
 								</div>
 							</div>
+							<div id="resultwp"></div>
+							<div id="resultbtn"></div>
 
-
-							<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm','『 登録 』','product_search','chkwrite')">登録</button>
+							<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm_update','『 登録 』','product_search','chkwrite')">登録</button>
 
 
 						</form>
@@ -638,6 +663,24 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 			}
 		}
 		else if(cf == 'confirm_update') {
+			var Jwork_name = fm.work_name.value;
+			var Jdepartments_name = fm.departments_name.value;
+			//var Js_product_code = fm.s_product_code.value;
+			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
+			var result = window.confirm('部署名 : ' + Jdepartments_name + '\n工程 : ' + Jwork_name + '\n' + com1 + 'します');
+			//var result = val1;
+			if( result ) {
+				//document.defineedit.edit_id.value = val;
+				//document.defineedit.submit();
+				fm.mode.value = md;
+				fm.action = '/process/update';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
+		}
+		else if(cf == 'confirm_updatexx') {
 			var Jshop = fm.shop.value;
 			var Jshop_code = fm.sp.value;
 			var Jpay_month = fm.pay_month.value;
@@ -658,10 +701,89 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 			}
 
 		}
+		else if(cf == 'select_workname') {
+			document.getElementById('work_name').value = val1;
+
+		}
 		else {
 			fm.submit();
 		}
 	}
+
+
+
+
+
+
+	var addcount = Number('1');
+// 画面を更新する処理
+function appendListWORK(dataarr) {
+	$.each(dataarr, function(index, data) {
+		//console.log('appendList in 配列index = ' + index);
+		//console.log('appendList addcount ' + addcount);
+		const res = data.result[index];
+
+		document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data.e_message + '</div>\n';
+		var statusv = '<span style="color:green;">OK</span>';
+		if(data.result_msg === 'OK') {
+			if(data.chk_status === 'esse') {
+				statusv = '<span style="color:orange;">上書き</span>';
+			}
+			//$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
+			
+			//document.getElementById('resultwp').innerHTML = '<span class="color_green">' + '<button class="style5" type="button" disabled>' + res.name + '</button>' + '</span>';
+			//$('#result_new_view').prepend('<tr><td>' + data.listcount + '</td><td class="txtcolor1">&#10004;</td><td>No.&ensp;<span class="dtnum">' + data.product_code + '</span></td><td>' + statusv + '</td></tr>\n');
+			let text = [];
+			data.result.forEach(function(element, index2, array){
+				//$('#resultwp').prepend('<button class="style5" type="button" >' + element.name + '</button>\n');
+				//text.push('<button class="style5" type="button" >' + element.name + '</button>\n');
+
+				text.push(
+				'<div id="workname">\n' +
+				'	<input type="radio" name="work_code" value="' + element.id + '" id="work_code' + index2 + '">\n' + 
+				'	<label for="work_code' + index2 + '" class="label transition2" onclick="clickEvent(\'\',\'' + element.name + '\',\'\',\'select_workname\',\'\',\'\',\'\')">' + element.name + '</label>\n' +
+				'</div>\n'
+				);
+
+
+
+			});
+			document.getElementById('resultbtn').innerHTML = text.join('');
+
+
+		}
+		else {
+			statusv = '<span style="color:red;">NG</span>';
+			$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor3">&#10006;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
+		}
+		addcount = addcount + 1;
+	});
+}
+
+function WORKcollect(n,dn) {
+	var Mode = document.getElementById('mode').value;
+	//var Jdepartments_name = document.getElementById('departments_name' + n).value;
+	document.getElementById('departments_name').value = dn;
+	var details = {name: "pro", team: ""};
+	//var Wpdate = document.getElementById('today').value;
+	console.log("mode :" + Mode);
+	const res = axios.post("/process/workget", {
+		department: n,
+		departments_name: dn,
+		mode: Mode,
+		details: details,
+	})
+	.then(response => {
+		appendListWORK(response.data);
+		
+	})
+	.catch(error => {
+		window.error(error.response.data);
+	});
+}
+
+
+
 
 
 	var appendcount = Number('1');
@@ -754,6 +876,9 @@ function SEARCHcollect() {
 
 
 
+
+
+
 var addcount = Number('1');
 // 画面を更新する処理
 function appendListADD(dataarr) {
@@ -796,7 +921,6 @@ function appendListADD(dataarr) {
 		addcount = addcount + 1;
 	});
 }
-
 
 function NEWcollect(n) {
 	var Jlistcount = document.getElementById('listcount' + n).value;

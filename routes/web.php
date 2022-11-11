@@ -43,6 +43,7 @@ Route::post('/regi/new', [RegisterController::class,'newData']);
 Route::get('/process', [ProcessController::class,'index']);
 Route::post('/process', [ProcessController::class,'index']);
 Route::post('/process/get', [ProcessController::class,'getData']);
+Route::post('/process/workget', [ProcessController::class,'getWORK']);
 Route::post('/process/getone', [ProcessController::class,'getDataOne']);
 Route::post('/process/update', [ProcessController::class,'fix']);
 Route::post('/process/insert', [ProcessController::class,'store']);

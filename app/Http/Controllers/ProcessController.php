@@ -15,6 +15,7 @@ class ProcessController extends Controller
 {
 
     protected $table = 'process_details';
+    protected $table_process_date = 'process_date';
 
     private $id;
     private $product_code;          // 伝票番号
@@ -132,7 +133,6 @@ class ProcessController extends Controller
 
 
 
-
                 if($datacount > 0) {
                     $r_after_due_date = $result[0]->after_due_date;
                     $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
@@ -150,8 +150,6 @@ class ProcessController extends Controller
 
 
 
-
-
                 
             }
 
@@ -164,9 +162,6 @@ class ProcessController extends Controller
             //die();
         }
         
-
-
-
 
 
 	        return view('process', [
@@ -200,6 +195,259 @@ class ProcessController extends Controller
 
 
     }
+
+    public function getWORK()
+    {
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        $ng_write = "";
+
+
+        //$s_product_id = isset($data['s_product_id']) ? $data['s_product_id'] : "";
+        $department = isset($data['department']) ? $data['department'] : "";
+        $mode = isset($data['mode']) ? $data['mode'] : "";
+        $submode = isset($data['submode']) ? $data['submode'] : "";
+        $details = isset($data['details']) ? $data['details'] : "";
+
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $e_message = "検索 ： ".$department."";
+
+        try {
+
+            if(isset($department)) {
+                /*
+                $check_data = DB::table($this->table)
+                ->select(
+                    'product_code AS product_id',
+                    'serial_code AS serial_id',
+                    'rep_code AS rep_id',
+                    'after_due_date',
+                    'customer',
+                    'product_name',
+                    'end_user',
+                    'quantity',
+                    'comment'
+                );
+                $check_data->where('product_code', $s_product_id);
+                $check_count = $check_data->count();
+                */
+
+                //table('tasks')作業（掃除等含むのでそのままでは使えない）  table('equipments')機械
+                $data = DB::connection('nippou')->table('equipments')
+                ->select(
+                    'id',
+                    'name',
+                    'department_id'
+                );
+                $data->where('department_id', $department);
+                //$data->where('before_due_date', '2022/10/24');
+                $result = $data
+                ->get();
+                $count = $data->count();
+
+                    if($count > 0){
+                        //$r_after_due_date = $result[0]->after_due_date;
+                        //$html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
+                        //$e_message .= " 既に登録されています <> count = ".$count." <> date = ".$html_after_due_date;
+                        $result_msg = "OK";
+                    }
+                    else {
+
+                        /*
+                    $result = $check_data
+                    ->get();
+                    $r_after_due_date = $result[0]->after_due_date;
+                    $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
+                    $e_message .= " 日報に登録なし <> count = ".$count." <> date = ".$html_after_due_date;
+                    */
+                    $result_msg = "nothing";
+
+                    }
+
+                
+            }
+
+            //return $result;
+
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+
+
+        $redata = array();
+        $redata[] = [
+            'result' => $result,
+            'department' => $department,
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg
+        ];
+        if(!empty($redata)) {
+            $jsondata = json_encode($redata, JSON_UNESCAPED_UNICODE);
+            $pattern = ['/"\s*"/', '/null/'];
+            $replace = ['""', '""'];
+            $jsonresult = preg_replace($pattern, $replace, $jsondata);
+
+            echo $jsonresult;
+            //echo json_encode($redata, JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
+
+
+    public function newData(Request $request)
+    {
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        $listcount = isset($data['listcount']) ? $data['listcount'] : "";
+        $this->product_code = !empty($data['product_code']) ? $data['product_code'] : "";
+        $this->serial_code = !empty($data['serial_code']) ? $data['serial_code'] : "";
+        $this->rep_code = !empty($data['rep_code']) ? $data['rep_code'] : "";
+        $this->customer = !empty($data['customer']) ? $data['customer'] : "";
+        $this->product_name = !empty($data['product_name']) ? $data['product_name'] : "";
+        $this->end_user = !empty($data['end_user']) ? $data['end_user'] : "";
+        $this->quantity = !empty($data['quantity']) ? $data['quantity'] : "";
+        //$this->status = isset($data['status']) ? $data['status'] : "";
+        $this->after_due_date = !empty($data['after_due_date']) ? $data['after_due_date'] : "";
+        //$this->comment = $data['comment'] == 'null' ? "" : $data['comment'];
+        $this->comment = !empty($data['comment']) ? $data['comment'] : "";
+
+        $mode = isset($data['mode']) ? $data['mode'] : "";
+        $upkind = isset($data['upkind']) ? $data['upkind'] : "";
+        $details = isset($data['details']) ? $data['details'] : [];
+        foreach($details AS $key => $val) {
+            $name = $val;
+
+        }
+
+
+        try {
+            $re_data = [];
+            $systemdate = Carbon::now();
+            if($upkind == 3) {
+            //$this->company_id = DB::table($this->table)->max('company_id') + 1;
+            //$this->product_id = DB::table($this->table)->max('product_id') + 1;
+            //$this->order_info = 'a';
+            //$this->created_user = 'system';
+            }
+            if($upkind == 2) {
+                //$this->product_id = DB::table($this->table)->max('product_id') + 1;
+                //$this->order_info = 'a';
+                //$this->created_user = 'system';
+            }
+            //$this->now_inventory = isset($this->now_inventory) ? $this->now_inventory : "";
+            //$this->nbox = isset($this->nbox) ? $this->nbox : "";
+
+            /*
+            //例：user_idが1001かつemailがtest@test.comを検索し、見つかった場合は、nameをnishiyamaへ、ageを33にupdateします。
+                        DB::table($this->table_process_date)
+                        ->updateOrInsert(
+                            ['user_id' => 1001, 'email' => 'test@test.com'],
+                            ['name' => 'nishiyama', 'age' => 33]
+                        );
+            */
+
+            DB::table($this->table_process_date)
+            ->updateOrInsert(
+                ['user_id' => 1001, 'email' => 'test@test.com'],
+                [
+                    'name' => 'Takeru', 
+                    'age' => 33
+                ]
+            );
+
+
+
+
+    
+            $id = DB::table($this->table_process_date)->insertGetId(
+                [
+                    'product_code' => $this->product_code,
+                    'serial_code' => $this->serial_code,
+                    'rep_code' => $this->rep_code,
+                    'after_due_date' => $this->after_due_date,
+                    'customer' => $this->customer,
+                    'product_name' => $this->product_name,
+                    'end_user' => $this->end_user,
+                    'quantity' => $this->quantity,
+                    'status' => '0',
+                    'comment' => $this->comment,
+                    'created_user' => 'system',
+                    'created_at' => $systemdate,
+                    'updated_at' => NULL
+    
+                ]
+            );
+
+            /*
+            if($upkind == 1){
+                
+                DB::table($this->table)
+                ->where('id', $this->id)
+                ->update([
+                    'status' => '',
+                ]);
+
+            }
+            */
+            $re_data['id'] = $id;
+            DB::commit();
+            //return $re_data;
+
+        }catch(\PDOException $pe){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$pe');
+            Log::error($pe->getMessage());
+            throw $pe;
+        }catch(\Exception $e){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$e');
+            Log::error($e->getMessage());
+            throw $e;
+        }
+        
+        $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
+        $result_msg = "OK";
+
+
+        $redata = array();
+        $redata[] = [
+            'id' => $id, 
+            'listcount' => $listcount, 
+            'product_code' => $this->product_code, 
+            'after_due_date' => $this->after_due_date, 
+            'customer' => $this->customer, 
+            'product_name' => $this->product_name, 
+            'end_user' => $this->end_user, 
+            'quantity' => $this->quantity, 
+            'comment' => $this->comment, 
+            'status' => $this->status, 
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+            'name' => $details['name'],
+        ];
+        if(!empty($redata)) {
+            echo json_encode($redata, JSON_UNESCAPED_UNICODE);
+        }
+        //'chk_status' => $chk_status, 'acmsg' => $action_msg            
+
+    }
+
+
+
+
+
 
 
 
