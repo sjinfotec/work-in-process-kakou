@@ -76,6 +76,7 @@ class ProcessController extends Controller
             'comment' => $comment,
             'mode' => $mode,
             'action_msg' => $action_msg,
+            'e_message' => $e_message,
             'result' => $result,
         ]);
 
@@ -175,6 +176,7 @@ class ProcessController extends Controller
                 'comment' => $comment,
             	'mode' => $mode,
                 'action_msg' => $action_msg,
+                'e_message' => $e_message,
                 'result' => $result,
 	        ]);
 
@@ -305,32 +307,73 @@ class ProcessController extends Controller
 
 
 
-    public function newData(Request $request)
+    public function insertData(Request $request)
     {
 
+
+
+
+        //$reqarr = $request->all();
+        //Log::debug("debug --");
+        /*
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
-        
+ 
         $listcount = isset($data['listcount']) ? $data['listcount'] : "";
+        $this->work_date = !empty($data['work_date']) ? $data['work_date'] : "";
         $this->product_code = !empty($data['product_code']) ? $data['product_code'] : "";
-        $this->serial_code = !empty($data['serial_code']) ? $data['serial_code'] : "";
-        $this->rep_code = !empty($data['rep_code']) ? $data['rep_code'] : "";
-        $this->customer = !empty($data['customer']) ? $data['customer'] : "";
-        $this->product_name = !empty($data['product_name']) ? $data['product_name'] : "";
-        $this->end_user = !empty($data['end_user']) ? $data['end_user'] : "";
-        $this->quantity = !empty($data['quantity']) ? $data['quantity'] : "";
+        $this->departments_name = !empty($data['departments_name']) ? $data['departments_name'] : "";
+        $this->departments_code = !empty($data['departments_code']) ? $data['departments_code'] : "";
+        $this->work_name = !empty($data['work_name']) ? $data['work_name'] : "";
+        $this->work_code = !empty($data['work_code']) ? $data['work_code'] : "";
+        $this->process_name = !empty($data['process_name']) ? $data['process_name'] : "";
         //$this->status = isset($data['status']) ? $data['status'] : "";
-        $this->after_due_date = !empty($data['after_due_date']) ? $data['after_due_date'] : "";
-        //$this->comment = $data['comment'] == 'null' ? "" : $data['comment'];
-        $this->comment = !empty($data['comment']) ? $data['comment'] : "";
 
         $mode = isset($data['mode']) ? $data['mode'] : "";
         $upkind = isset($data['upkind']) ? $data['upkind'] : "";
-        $details = isset($data['details']) ? $data['details'] : [];
+        */
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+        /*
         foreach($details AS $key => $val) {
             $name = $val;
 
         }
+        */
+
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $e_message = "検索 ： ".$s_product_code."";
+
+
+        $listcount = isset($_POST['listcount']) ? $_POST['listcount'] : "";
+        $this->work_date = !empty($_POST['work_date']) ? $_POST['work_date'] : "";
+        $this->product_code = !empty($_POST['product_code']) ? $_POST['product_code'] : "";
+        $this->departments_name = !empty($_POST['departments_name']) ? $_POST['departments_name'] : "";
+        $this->departments_code = !empty($_POST['departments_code']) ? $_POST['departments_code'] : "";
+        $this->work_name = !empty($_POST['work_name']) ? $_POST['work_name'] : "";
+        $this->work_code = !empty($_POST['work_code']) ? $_POST['work_code'] : "";
+        $this->process_name = !empty($_POST['process_name']) ? $_POST['process_name'] : "";
+        $this->status = isset($_POST['status']) ? $_POST['status'] : "";
+
+        $mode = isset($_POST['mode']) ? $_POST['mode'] : "";
+        $upkind = isset($_POST['upkind']) ? $_POST['upkind'] : "";
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+
+        $reqarr = $request->only([
+            'work_name', 
+            'departments_name'
+        ]);
 
 
         try {
@@ -357,39 +400,80 @@ class ProcessController extends Controller
                             ['user_id' => 1001, 'email' => 'test@test.com'],
                             ['name' => 'nishiyama', 'age' => 33]
                         );
+
+
+'created_at' => $systemdate,
+
             */
 
-            DB::table($this->table_process_date)
-            ->updateOrInsert(
-                ['user_id' => 1001, 'email' => 'test@test.com'],
-                [
-                    'name' => 'Takeru', 
-                    'age' => 33
-                ]
-            );
 
 
 
-
+            $work_date_arr = $request->only(['work_date']);
+            $str = "";
+            if(is_array($work_date_arr)) {
+                foreach($work_date_arr AS $key => $wdarr) {
+                    foreach($wdarr AS $wdkey => $val) {
+                        $str .= "wdkey=".$wdkey.":val=".$val;
     
+                        if($this->work_code == 'DEL') {
+                            DB::table($this->table_process_date)
+                            ->where('work_date', $val)
+                            ->where('product_code', $s_product_code)
+                            ->where('departments_code', $this->departments_code)
+                            ->delete();
+
+                
+                        }
+                        else {
+            
+
+
+                            DB::table($this->table_process_date)
+                            ->updateOrInsert(
+                                [
+                                    'work_date' => $val,
+                                    'product_code' => $s_product_code, 
+                                    'departments_code' => $this->departments_code,
+                                ],
+                                [
+                                    'departments_name' => $this->departments_name, 
+                                    'work_name' => $this->work_name, 
+                                    'work_code' => $this->work_code,
+                                    'process_name' => $this->process_name, 
+                                    'status' => $this->status,
+                                    'created_user' => 'system',
+                                    'updated_at' => $systemdate
+                
+
+                                ]
+                            );
+                        }
+
+                    }
+                }
+            }
+
+       
+
+            /*    
             $id = DB::table($this->table_process_date)->insertGetId(
                 [
+                    'work_date' => $this->work_date,
                     'product_code' => $this->product_code,
-                    'serial_code' => $this->serial_code,
-                    'rep_code' => $this->rep_code,
-                    'after_due_date' => $this->after_due_date,
-                    'customer' => $this->customer,
-                    'product_name' => $this->product_name,
-                    'end_user' => $this->end_user,
-                    'quantity' => $this->quantity,
-                    'status' => '0',
-                    'comment' => $this->comment,
+                    'departments_name' => $this->departments_name,
+                    'departments_code' => $this->departments_code,
+                    'work_name' => $this->work_name,
+                    'work_code' => $this->work_code,
+                    'process_name' => $this->process_name,
+                    'status' => '1',
                     'created_user' => 'system',
                     'created_at' => $systemdate,
                     'updated_at' => NULL
     
                 ]
             );
+            */
 
             /*
             if($upkind == 1){
@@ -402,7 +486,7 @@ class ProcessController extends Controller
 
             }
             */
-            $re_data['id'] = $id;
+            //$re_data['id'] = $id;
             DB::commit();
             //return $re_data;
 
@@ -415,22 +499,24 @@ class ProcessController extends Controller
             Log::error($e->getMessage());
             throw $e;
         }
+
+
         
         $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
         $result_msg = "OK";
 
-
+        /*
         $redata = array();
         $redata[] = [
             'id' => $id, 
             'listcount' => $listcount, 
+            'work_date' => $this->work_date, 
             'product_code' => $this->product_code, 
-            'after_due_date' => $this->after_due_date, 
-            'customer' => $this->customer, 
-            'product_name' => $this->product_name, 
-            'end_user' => $this->end_user, 
-            'quantity' => $this->quantity, 
-            'comment' => $this->comment, 
+            'departments_name' => $this->departments_name, 
+            'departments_code' => $this->departments_code, 
+            'work_name' => $this->work_name, 
+            'work_code' => $this->work_code, 
+            'process_name' => $this->process_name, 
             'status' => $this->status, 
             'mode' => $mode, 
             'e_message' => $e_message, 
@@ -441,6 +527,40 @@ class ProcessController extends Controller
             echo json_encode($redata, JSON_UNESCAPED_UNICODE);
         }
         //'chk_status' => $chk_status, 'acmsg' => $action_msg            
+        */
+
+        Log::info("insertData in POST --".implode($reqarr)." + ".$str);
+
+        return view('process', [
+            's_product_code' => $s_product_code,
+            'product_code' => $product_code,
+            'after_due_date' => $after_due_date,
+            'customer' => $customer,
+            'product_name' => $product_name,
+            'end_user' => $end_user,
+            'quantity' => $quantity,
+            'comment' => $comment,
+            'action_msg' => $action_msg,
+            'result' => $result,
+            'listcount' => $listcount, 
+            'work_date' => $this->work_date, 
+            'product_code' => $this->product_code, 
+            'departments_name' => $this->departments_name, 
+            'departments_code' => $this->departments_code, 
+            'work_name' => $this->work_name, 
+            'work_code' => $this->work_code, 
+            'process_name' => $this->process_name, 
+            'status' => $this->status, 
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+
+        ]);
+
+
+//            'name' => $details['name'],
+
+
 
     }
 

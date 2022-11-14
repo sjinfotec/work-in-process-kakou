@@ -664,6 +664,16 @@ input[type="radio"]:checked + label {
   border-radius: 5px; /* 角丸を指定する */
 }
 
+#workname input[type="radio"]:checked + label.del {
+  background: #e74848;
+  color: #ffffff;
+}
+#workname .del {
+  border: 2px solid #bb2222;
+}
+#workname .del:hover {
+  background-color: #e7b2b2;
+}
 
 
 
