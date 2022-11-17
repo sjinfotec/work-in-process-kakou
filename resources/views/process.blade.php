@@ -91,7 +91,7 @@ function scheduleDays($check_date,$company_schedule_arr) {
 
 
 
-function calendar2($result,$after_due_date) {
+function calendar2($result,$after_due_date,$wd_result) {
 	//DateTimeインスタンスを作成
 	$today = new DateTime();
 	$due_date = new DateTime($after_due_date);
@@ -186,6 +186,8 @@ function calendar2($result,$after_due_date) {
 		echo '<br>process date 1 : '. $start_process_date_1 .'～'. $end_process_date_1 .'<br>';
 		echo 'process date 2 : '. $start_process_date_2 .'～'. $end_process_date_2 .'<br>';
 		echo 'process date 3 : '. $start_process_date_3 .'～'. $end_process_date_3 .'<br>';
+		var_dump($wd_result);
+		echo 'var_dump end : <br>';
 
 		$body = '<div id="calendar">';
 	
@@ -238,7 +240,7 @@ function calendar2($result,$after_due_date) {
 					<div class="line"><div class="%s">%s</div></div>
 					<div class="line"><div class="%s">%s</div></div>
 					<div class="line">
-						<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" '.$checked.'>
+						<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>
 						<label for="work'.$ymd_day.'" class="wclabel transition2"></label>
 					</div>
 					<div>
@@ -338,7 +340,7 @@ EOF;
 
 	return $cal_html;
 }
-$html_cal2 = calendar2($result,$after_due_date);	//開始年月～何か月分
+$html_cal2 = calendar2($result,$after_due_date,$wd_result);	//開始年月～何か月分
 
 
 // カレンダー表示
@@ -537,6 +539,7 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 						<div>
 							<div>modeの値：{{ $mode }}</div>
 						</div>
+						<div id="resultstr"></div>
 
 						<form id="addprocessform" name="addprocessform" method="POST">
 							<input type="hidden" name="mode" id="mode" value="wp_search">
@@ -702,6 +705,31 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 		}
 		else if(cf == 'select_workname') {
 			document.getElementById('work_name').value = val1;
+			var result = window.confirm('result : ' + val2 + '');
+			let text = [];
+			let obj = JSON.parse(val2);
+			obj.forEach(function(element, index3, array){
+				//$('#resultwp').prepend('<button class="style5" type="button" >' + element.name + '</button>\n');
+				//text.push('<button class="style5" type="button" >' + element.name + '</button>\n');
+
+				/** 日付を文字列にフォーマットする */
+				var d = new Date(element.work_date);
+				var formatted = 
+					`${d.getFullYear()}-` +
+					`${(d.getMonth()+1).toString().padStart(2, '0')}-` +
+					`${d.getDate().toString().padStart(2, '0')}`
+					.replace(/\n|\r/g, '');
+
+				text.push(
+				index3 + ':' + element.work_date + ' :' + formatted + '\n'
+				);
+				document.getElementById('work' + formatted).checked = true;
+
+
+			});
+			document.getElementById('resultstr').innerHTML = text.join('');
+
+			//document.getElementById('work2022-11-09').checked = true;
 
 		}
 		else {
@@ -710,6 +738,16 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 	}
 
 
+
+function chkOnOff(c) {
+	//let check_onoff = document.querySelectorAll(".chkonff");
+	let check_onoff = document.querySelectorAll(c);
+	for (let i in check_onoff) {
+		if (check_onoff.hasOwnProperty(i)) {
+			check_onoff[i].checked = false;
+		}
+	}
+}
 
 
 
@@ -732,6 +770,7 @@ function appendListWORK(dataarr) {
 			
 			//document.getElementById('resultwp').innerHTML = '<span class="color_green">' + '<button class="style5" type="button" disabled>' + res.name + '</button>' + '</span>';
 			//$('#result_new_view').prepend('<tr><td>' + data.listcount + '</td><td class="txtcolor1">&#10004;</td><td>No.&ensp;<span class="dtnum">' + data.product_code + '</span></td><td>' + statusv + '</td></tr>\n');
+			console.log('appendListWORK in depa ' + data.department);
 			let text = [];
 			data.result.forEach(function(element, index2, array){
 				//$('#resultwp').prepend('<button class="style5" type="button" >' + element.name + '</button>\n');
@@ -740,7 +779,7 @@ function appendListWORK(dataarr) {
 				text.push(
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="' + element.id + '" id="work_code' + index2 + '">\n' + 
-				'	<label for="work_code' + index2 + '" class="label transition2" onclick="clickEvent(\'\',\'' + element.name + '\',\'\',\'select_workname\',\'\',\'\',\'\')">' + element.name + '</label>\n' +
+				'	<label for="work_code' + index2 + '" class="label transition2" onclick="WORKDATEchecked(\'\',\'' + element.name + '\',\'{{ $wd_result }}\',\'select_workname\',\'\',\'' + element.id + '\',\'' + data.department + '\')">' + element.name + '</label>\n' +
 				'</div>\n'
 				);
 
@@ -772,6 +811,8 @@ function WORKcollect(n,dn) {
 	var Mode = document.getElementById('mode').value;
 	//var Jdepartments_name = document.getElementById('departments_name' + n).value;
 	document.getElementById('departments_name').value = dn;
+	//console.log('WORKcollect in depa ' + n);
+
 	var details = {name: "pro", team: ""};
 	//var Wpdate = document.getElementById('today').value;
 	console.log("mode :" + Mode);
@@ -783,12 +824,126 @@ function WORKcollect(n,dn) {
 	})
 	.then(response => {
 		appendListWORK(response.data);
+		this.chkOnOff('.chkonff');
 		
 	})
 	.catch(error => {
-		window.error(error.response.data);
+		window.error(error.response);
 	});
 }
+
+
+
+// 部署における作業日の取得
+function appendWORKDATE(dataarr) {
+	//console.log('appendWORKDATE in ' + dataarr[0].result_msg);
+	$.each(dataarr, function(index3, data) {
+		//const res = data.wd_result[index3];
+		//console.log('appendWORKDATE in result_msg ok' + data.result_msg);
+
+		document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data.e_message + '</div>\n';
+		if(data.result_msg === 'OK') {
+			let text = [];
+			
+			data.wd_result.forEach(function(element, index4, array){
+
+				/*
+				text.push(
+				'<div id="workname">\n' +
+				'	<input type="radio" name="work_code" value="' + element.id + '" id="work_code' + index2 + '">\n' + 
+				'	<label for="work_code' + index2 + '" class="label transition2" onclick="clickEvent(\'\',\'' + element.name + '\',\'{{ $wd_result }}\',\'select_workname\',\'\',\'\',\'\')">' + element.name + '</label>\n' +
+				'</div>\n'
+				);
+				*/
+
+				var d = new Date(element.work_date);
+				var formatted = 
+					`${d.getFullYear()}-` +
+					`${(d.getMonth()+1).toString().padStart(2, '0')}-` +
+					`${d.getDate().toString().padStart(2, '0')}`
+					.replace(/\n|\r/g, '');
+
+				text.push(
+				index4 + ':' + element.work_date + ' :' + formatted + '\n'
+				);
+				document.getElementById('work' + formatted).checked = true;
+
+
+
+
+			});
+
+			document.getElementById('resultstr').innerHTML = text.join('');
+
+
+		}
+		else {
+			//statusv = '<span style="color:red;">NG</span>';
+			//$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor3">&#10006;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
+			document.getElementById('resultstr').innerHTML = "作業日を取得できませんでした";
+
+		}
+	});
+}
+
+function WORKDATEchecked(fname,val1,val2,cf,com1,wc,dc) {
+	document.getElementById('work_name').value = val1;
+
+	var Js_product_code = document.getElementById('s_product_code').value;
+	//var Jdepartments_code = document.getElementById('departments_code').value;
+	//var Jwork_code = document.getElementById('work_code').value;
+	var Mode = document.getElementById('mode').value;
+	//var Jdepartments_name = document.getElementById('departments_name' + n).value;
+	//document.getElementById('departments_name').value = dn;
+	//var details = {name: "pro", team: ""};
+	//var Wpdate = document.getElementById('today').value;
+	//console.log("mode :" + Mode);
+	/*
+	let check_onoff = document.querySelectorAll(".chkonff");
+	for (let i in check_onoff) {
+		if (check_onoff.hasOwnProperty(i)) {
+			check_onoff[i].checked = false;
+		}
+	}
+	*/
+	this.chkOnOff('.chkonff');	// 最初に作業日のチェックを全て外す（外すチェックのclassを指定する）
+	const res = axios.post("/process/wdget", {
+		s_product_code: Js_product_code,
+		departments_code: dc,
+		work_code: wc,
+		mode: Mode
+	})
+	.then(response => {
+		console.log('WORKDATEchecked then ' + response.data[0].result_msg);
+		appendWORKDATE(response.data);
+		
+	})
+	.catch(error => {
+		console.log('WORKDATEchecked catch ' + error.response);
+		//window.error(error.response);
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -876,7 +1031,7 @@ function SEARCHcollect() {
 		
 	})
 	.catch(error => {
-		window.error(error.response.data);
+		window.error(error.response);
 	});
 }
 
@@ -966,7 +1121,7 @@ function NEWcollect(n) {
 		
 	})
 	.catch(error => {
-		window.error(error.response.data);
+		window.error(error.response);
 	});
 }
 

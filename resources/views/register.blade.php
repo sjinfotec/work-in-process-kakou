@@ -326,7 +326,7 @@ function SEARCHcollect() {
 		
 	})
 	.catch(error => {
-		window.error(error.response.data);
+		window.error(error.response);
 	});
 }
 
@@ -415,7 +415,7 @@ function NEWcollect(n) {
 		
 	})
 	.catch(error => {
-		window.error(error.response.data);
+		window.error(error.response);
 	});
 }
 
