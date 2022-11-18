@@ -4,15 +4,15 @@ use Illuminate\Support\Facades\Storage;
 $html_result = "";
 $cal_start_ym = "";
 $ymd_after_due_date = "";
+$editzone = false;
 if(isset($result)) {
-		var_dump($result);
+	$resultdata = $result['result'];
+		var_dump($resultdata);
 	
-	if(isset($result[0])) {
-		foreach($result as $key => $val) {
+	if(isset($resultdata)) {
+		foreach($resultdata as $key => $val) {
 
-			//echo "key".$key."<br>\n";
-			//$res = $result[$key];
-			$number = 1 + $key;
+			//$number = 1 + $key;
 			$product_code = $val->product_code;
 			$after_due_date = $val->after_due_date;
 			$customer = $val->customer;
@@ -22,9 +22,14 @@ if(isset($result)) {
 			$comment = $val->comment;
 			$html_after_due_date = !empty($after_due_date) ? date('n月j日', strtotime($after_due_date)) : "";
 			$ymd_after_due_date = !empty($after_due_date) ? date('Y-m-d', strtotime($after_due_date)) : "";
+
+			$editzone = true;
+
+
+
 			$html_result .= <<<EOF
 				<tr>
-					<td>{$number} <span id="btn_cnt_new"><button class="" type="button" onClick="NEWcollect()">axios登録</button></span></td>
+					<td>{$key} <span id="btn_cnt_new"><button class="" type="button" onClick="NEWcollect()">axios登録</button></span></td>
 					<td><input type="hidden" name="product_code" id="product_code" value="{$product_code}">{$product_code}</td>
 					<td><input type="hidden" name="after_due_date" id="after_due_date" value="{$after_due_date}">{$html_after_due_date}</td>
 					<td><input type="hidden" name="customer" id="customer" value="{$customer}">{$customer}</td>
@@ -174,9 +179,10 @@ function calendar2($result,$after_due_date,$wd_result) {
 	$tag_on = 0;
 	//$ym_html .= '<span>'.$prev_month.'</span>';
 	//$ym_html .= '<span>'.$year_month.'</span>';
-
-	if(isset($result[0])) {
-		$res = $result[0];
+	$resultdata = $result['result'];
+	if(isset($resultdata)) {
+		$res = $resultdata;
+		/*
 		$start_process_date_1 = !empty($res->start_process_date_1) ? date("Y-m-d", strtotime($res->start_process_date_1)) : '';
 		$end_process_date_1 = !empty($res->end_process_date_1) ? date("Y-m-d", strtotime($res->end_process_date_1)) : '';
 		$start_process_date_2 = !empty($res->start_process_date_2) ? date("Y-m-d", strtotime($res->start_process_date_2)) : '';
@@ -186,6 +192,7 @@ function calendar2($result,$after_due_date,$wd_result) {
 		echo '<br>process date 1 : '. $start_process_date_1 .'～'. $end_process_date_1 .'<br>';
 		echo 'process date 2 : '. $start_process_date_2 .'～'. $end_process_date_2 .'<br>';
 		echo 'process date 3 : '. $start_process_date_3 .'～'. $end_process_date_3 .'<br>';
+		*/
 		var_dump($wd_result);
 		echo 'var_dump end : <br>';
 
@@ -213,11 +220,14 @@ function calendar2($result,$after_due_date,$wd_result) {
 			//会社の休日
 			$company_class = scheduleDays($day->format('Y-m-d'),$company_schedule_arr) ? "datebox" : "";
 
-
+/*
 			$pd1_class =  ($start_process_date_1 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_1 ?  'd1c1' : '';
 			$pd2_class =  ($start_process_date_2 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_2 ?  'd2c1' : '';
 			$pd3_class =  ($start_process_date_3 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_3 ?  'd3c1' : '';
-
+*/
+$pd1_class =  '';
+$pd2_class =  '';
+$pd3_class =  '';
 
 			$fdw = $day->format('w');
 			
@@ -346,12 +356,12 @@ $html_cal2 = calendar2($result,$after_due_date,$wd_result);	//開始年月～何
 // カレンダー表示
 function create_calendar( $num = 1, $set = false, $after_due_date) {
 	
-	$cal_parts = "";
+	$cal_parts = '<div id="cal_cnt">';
 	//今日
 	$date = new DateTime();
 	$today = $date->format( 'Y-n-j' );
 	//該当日（納品日）
-	$today =  !empty($after_due_date) ? date('Y-n-j', strtotime($after_due_date)) : $today;
+	$thisday =  !empty($after_due_date) ? date('Y-n-j', strtotime($after_due_date)) : $today;
  
 	//最初の月
 	if( $set ) {
@@ -399,9 +409,13 @@ function create_calendar( $num = 1, $set = false, $after_due_date) {
 				$stylecss = "";
 			}
 			//日
-			if ( $month.'-'.$day == $today ) {
+			if ( $month.'-'.$day == $thisday ) {
 				$cal_parts .= '<td class="'.$stylecss.'"><strong>'.$day.'</strong></td>';	
-			} else {
+			} 
+			elseif ( $month.'-'.$day == $today ) {
+				$cal_parts .= '<td class="'.$stylecss.' today">'.$day.'</td>';	
+			} 
+			else {
 				$cal_parts .= '<td class="'.$stylecss.'">'.$day.'</td>';
 			}
 			//最終日かつ土曜日ではない
@@ -437,6 +451,7 @@ function create_calendar( $num = 1, $set = false, $after_due_date) {
 		$cal_parts .= '</table>';
  
 	}
+	$cal_parts .= '</div><!--end cal_cnt-->';
 	return $cal_parts;
 	 
 }
@@ -444,7 +459,7 @@ function create_calendar( $num = 1, $set = false, $after_due_date) {
 //$html_cal = create_calendar( 12 );	//何か月分
 //$html_cal = create_calendar( 2, '2020-1' );	//開始年月～何か月分
 
-$html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月～何か月分
+$html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月～何か月分
 
 
 ?>
@@ -497,31 +512,31 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 							<div id="form2" class="mgt20">
 								<div class="form_style">
 									<label for="product_code" class="">伝票番号</label>
-									<input type="text" class="input_style" name="product_code" id="product_code" value="{{ $product_code }}">
+									<input type="text" class="input_style" name="product_code" id="product_code" value="{{ $product_code }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="after_due_date" class="">納期</label>
-									<input type="date" class="input_style" name="after_due_date" id="after_due_date" value="{{ $ymd_after_due_date }}">
+									<input type="date" class="input_style" name="after_due_date" id="after_due_date" value="{{ $ymd_after_due_date }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="customer" class="">得意先</label>
-									<input type="text" class="input_style" name="customer" id="customer" value="{{ $customer }}">
+									<input type="text" class="input_style" name="customer" id="customer" value="{{ $customer }}" readonly> 
 								</div>
-								<div class="form_style">
+								<div class="form_style ">
 									<label for="product_name" class="">品名</label>
-									<input type="text" class="input_style" name="product_name" id="product_name" value="{{ $product_name }}">
+									<input type="text" class="input_style" name="product_name" id="product_name" value="{{ $product_name }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="end_user" class="">エンドユーザー</label>
-									<input type="text" class="input_style" name="end_user" id="end_user" value="{{ $end_user }}">
+									<input type="text" class="input_style" name="end_user" id="end_user" value="{{ $end_user }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="quantity" class="">数量</label>
-									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}">
+									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="comment" class="">コメント</label>
-									<input type="text" class="input_style" name="comment" id="comment" value="{{ $comment }}">
+									<input type="text" class="input_style" name="comment" id="comment" value="{{ $comment }}" readonly>
 								</div>
 
 							</div>
@@ -592,37 +607,47 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 							</div>
 							-->
 
-							<div id="form_cnt">
-								<div>
-									<input type="radio" name="departments_code" value="2" id="departments_code2">
-									<label for="departments_code2" class="label transition2" onclick="WORKcollect(2,'情報処理課［制作］')">情報処理課［制作］</label>
-								</div>
-								<div>
-									<input type="radio" name="departments_code" value="3" id="departments_code3">
-									<label for="departments_code3" class="label transition2" onclick="WORKcollect(3,'情報処理課［データ］')">情報処理課［データ］</label>
-								</div>
-								<div>
-									<input type="radio" name="departments_code" value="4" id="departments_code4">
-									<label for="departments_code4" class="label transition2" onclick="WORKcollect(4,'印刷課１')">印刷課１</label>
-								</div>
-								<div>
-									<input type="radio" name="departments_code" value="5" id="departments_code5">
-									<label for="departments_code5" class="label transition2" onclick="WORKcollect(5,'印刷課２')">印刷課２</label>
-								</div>
-								<div>
-									<input type="radio" name="departments_code" value="6" id="departments_code6">
-									<label for="departments_code6" class="label transition2" onclick="WORKcollect(6,'加工課１')">加工課１</label>
-								</div>
-								<div>
-									<input type="radio" name="departments_code" value="7" id="departments_code7">
-									<label for="departments_code7" class="label transition2" onclick="WORKcollect(7,'加工課２')">加工課２</label>
-								</div>
-							</div>
-							<div id="resultwp"></div>
-							<div id="resultbtn"></div>
 
-							<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm_update','『 登録 』','product_search','chkwrite')">登録</button>
+							@php
 
+							if($editzone == true) {
+							$departments_btn = <<<EOF
+								<div id="form_cnt">
+									<div>
+										<input type="radio" name="departments_code" value="2" id="departments_code2">
+										<label for="departments_code2" class="label transition2" onclick="WORKcollect(2,'情報処理課［制作］')">情報処理課［制作］</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="3" id="departments_code3">
+										<label for="departments_code3" class="label transition2" onclick="WORKcollect(3,'情報処理課［データ］')">情報処理課［データ］</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="4" id="departments_code4">
+										<label for="departments_code4" class="label transition2" onclick="WORKcollect(4,'印刷課１')">印刷課１</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="5" id="departments_code5">
+										<label for="departments_code5" class="label transition2" onclick="WORKcollect(5,'印刷課２')">印刷課２</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="6" id="departments_code6">
+										<label for="departments_code6" class="label transition2" onclick="WORKcollect(6,'加工課１')">加工課１</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="7" id="departments_code7">
+										<label for="departments_code7" class="label transition2" onclick="WORKcollect(7,'加工課２')">加工課２</label>
+									</div>
+								</div>
+								<div id="resultwp"></div>
+								<div id="resultbtn"></div>
+
+								<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm_update','『 登録 』','product_search','chkwrite')">登録</button>
+
+							EOF;
+							echo $departments_btn;
+							}
+
+							@endphp
 
 						</form>
 
@@ -682,27 +707,6 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 				console.log('キャンセルがクリックされました');
 			}
 		}
-		else if(cf == 'confirm_updatexx') {
-			var Jshop = fm.shop.value;
-			var Jshop_code = fm.sp.value;
-			var Jpay_month = fm.pay_month.value;
-			var Jstatus = fm.status.value;
-			var result = window.confirm( com1 +'\\nショップ : '+ Jshop +'\\nコード : '+ Jshop_code +'\\n : '+ Jpay_month +'');
-			if( result ) {
-				//document.defineedit.edit_id.value = val;
-				//document.defineedit.submit();
-				//tname[0].value = val;
-				//fm.pay_month.value = val;
-				fm.motion.value = val;
-				fm.mode.value = md;
-				fm.submode.value = smd;
-				fm.submit();
-			}
-			else {
-				console.log('キャンセルがクリックされました');
-			}
-
-		}
 		else if(cf == 'select_workname') {
 			document.getElementById('work_name').value = val1;
 			var result = window.confirm('result : ' + val2 + '');
@@ -730,6 +734,34 @@ $html_cal = create_calendar( 2, $cal_start_ym, $after_due_date);	//開始年月�
 			document.getElementById('resultstr').innerHTML = text.join('');
 
 			//document.getElementById('work2022-11-09').checked = true;
+
+		}
+		else if(cf == 'select_del') {
+
+
+			//var Jwork_name = fm.work_name.value;
+			//var Jdepartments_name = fm.departments_name.value;
+			//var Js_product_code = fm.s_product_code.value;
+			//value="DEL" id="work_code_del"
+			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
+			var result = window.confirm('部署名 : ' + val1 + '\n' + com1 + 'します');
+			if( result ) {
+				fm.work_code.value = 'DEL';
+				fm.mode.value = md;
+				fm.action = '/process/insert';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
+
+
+
+
+
+
+
+
 
 		}
 		else {
@@ -779,7 +811,7 @@ function appendListWORK(dataarr) {
 				text.push(
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="' + element.id + '" id="work_code' + index2 + '">\n' + 
-				'	<label for="work_code' + index2 + '" class="label transition2" onclick="WORKDATEchecked(\'\',\'' + element.name + '\',\'{{ $wd_result }}\',\'select_workname\',\'\',\'' + element.id + '\',\'' + data.department + '\')">' + element.name + '</label>\n' +
+				'	<label for="work_code' + index2 + '" class="label transition2" onclick="WORKDATEchecked(\'\',\'' + element.name + '\',\'\',\'select_workname\',\'\',\'' + element.id + '\',\'' + data.department + '\')">' + element.name + '</label>\n' +
 				'</div>\n'
 				);
 
@@ -789,7 +821,7 @@ function appendListWORK(dataarr) {
 			text.push(
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="DEL" id="work_code_del">\n' + 
-				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'\',\'削除\',\'\',\'select_workname\',\'\',\'\',\'\')">削除</label>\n' +
+				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'' + data.department + '\',\'\',\'select_del\',\'削除\',\'\',\'\')">削除</label>\n' +
 				'</div>\n'
 			);
 
@@ -851,7 +883,7 @@ function appendWORKDATE(dataarr) {
 				text.push(
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="' + element.id + '" id="work_code' + index2 + '">\n' + 
-				'	<label for="work_code' + index2 + '" class="label transition2" onclick="clickEvent(\'\',\'' + element.name + '\',\'{{ $wd_result }}\',\'select_workname\',\'\',\'\',\'\')">' + element.name + '</label>\n' +
+				'	<label for="work_code' + index2 + '" class="label transition2" onclick="clickEvent(\'\',\'' + element.name + '\',\'\',\'select_workname\',\'\',\'\',\'\')">' + element.name + '</label>\n' +
 				'</div>\n'
 				);
 				*/
@@ -1141,6 +1173,8 @@ function NEWcollect(n) {
 			boxes[i].checked = true;
 		}
 	}
+
+
 
 
 </script>

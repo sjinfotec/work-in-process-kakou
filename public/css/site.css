@@ -469,13 +469,14 @@ header button {width:auto;}
   display: flex;
   flex-direction: column;
   /*width:calc(100% - 8px);*/
-  /*width:50%;*/
+  width:30%;
   box-sizing: border-box;
 }
 #form2 .input_style {
   font-size:2rem;
   height:3rem;
   padding:0 4px;
+  border:2px solid #EC3;
 }
 #form2 label {
   background:#eecc33;
@@ -548,6 +549,38 @@ header button {width:auto;}
   position: absolute;
   width:  22px;
   height:  194px;
+  background-color: #f4c836;
+  /*border-radius:  50%;*/
+  line-height: 3px;
+  text-align: center;
+  left:0px;
+  top: 2rem;
+  z-index: 1;
+/*
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+*/
+}
+
+#cal_cnt  {
+  display: flex;
+  gap:30px 20px;
+}
+#cal_cnt td {
+  text-align: center;
+}
+#cal_cnt .today {
+  position: relative;
+  /*font-weight: bold;*/
+}
+#cal_cnt .today::after {
+  content: "";
+  display:block;
+  /*position:  relative;*/
+  position: absolute;
+  width:  22px;
+  height:  2px;
   background-color: #f4c836;
   /*border-radius:  50%;*/
   line-height: 3px;

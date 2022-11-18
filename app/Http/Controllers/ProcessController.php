@@ -328,7 +328,49 @@ class ProcessController extends Controller
 
     public function postSearch(Request $request)
     {
-        
+
+
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $action_msg = "";
+        $result = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $e_message = "検索 ： ".$s_product_code."";
+
+
+        $result = $this->SearchProcessDetails($request);
+
+
+
+	        return view('process', [
+                's_product_code' => $s_product_code,
+                'product_code' => $product_code,
+                'after_due_date' => $after_due_date,
+                'customer' => $customer,
+                'product_name' => $product_name,
+                'end_user' => $end_user,
+                'quantity' => $quantity,
+                'comment' => $comment,
+            	'mode' => $mode,
+                'action_msg' => $action_msg,
+                'e_message' => $e_message,
+                'result' => $result,
+                'wd_result' => '',
+	        ]);
+
+    }
+
+
+    public function SearchProcessDetails($request) {
         $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
         $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
         $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
@@ -363,9 +405,6 @@ class ProcessController extends Controller
                     'end_user',
                     'quantity',
                     'status',
-                    'process_1','departments_name_1','departments_code_1','work_name_1','work_code_1','start_process_date_1','end_process_date_1',
-                    'process_2','departments_name_2','departments_code_2','work_name_2','work_code_2','start_process_date_2','end_process_date_2',
-                    'process_3','departments_name_3','departments_code_3','work_name_3','work_code_3','start_process_date_3','end_process_date_3',
                     'comment'
                 );
                 $data->where('product_code', $s_product_code);
@@ -406,22 +445,26 @@ class ProcessController extends Controller
         }
         
 
+        $redata = array();
+        $redata = [
+            'datacount' => $datacount, 
+            'html_after_due_date' => $html_after_due_date,
+			'product_code' => $s_product_code,
+			'after_due_date' => $after_due_date,
+			'customer' => $customer,
+			'product_name' => $product_name,
+			'end_user' => $end_user,
+			'quantity' => $quantity,
+			'comment' => $comment,
+            'result' => $result,
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+        ];
 
-	        return view('process', [
-                's_product_code' => $s_product_code,
-                'product_code' => $product_code,
-                'after_due_date' => $after_due_date,
-                'customer' => $customer,
-                'product_name' => $product_name,
-                'end_user' => $end_user,
-                'quantity' => $quantity,
-                'comment' => $comment,
-            	'mode' => $mode,
-                'action_msg' => $action_msg,
-                'e_message' => $e_message,
-                'result' => $result,
-                'wd_result' => '',
-	        ]);
+        return $redata;
+
+
 
     }
 
@@ -658,17 +701,20 @@ class ProcessController extends Controller
 
             $work_date_arr = $request->only(['work_date']);
             $str = "";
+            $count = "";
+            $updateresult = "";
             if(is_array($work_date_arr)) {
                 foreach($work_date_arr AS $key => $wdarr) {
                     foreach($wdarr AS $wdkey => $val) {
                         $str .= "wdkey=".$wdkey.":val=".$val;
     
                         if($this->work_code == 'DEL') {
-                            DB::table($this->table_process_date)
+                            $count = DB::table($this->table_process_date)
                             ->where('work_date', $val)
                             ->where('product_code', $s_product_code)
                             ->where('departments_code', $this->departments_code)
                             ->delete();
+                            
 
                 
                         }
@@ -676,7 +722,7 @@ class ProcessController extends Controller
             
 
 
-                            DB::table($this->table_process_date)
+                            $updateresult = DB::table($this->table_process_date)
                             ->updateOrInsert(
                                 [
                                     'work_date' => $val,
@@ -695,6 +741,7 @@ class ProcessController extends Controller
 
                                 ]
                             );
+                            
                         }
 
                     }
@@ -702,39 +749,11 @@ class ProcessController extends Controller
             }
 
        
+            
 
-            /*    
-            $id = DB::table($this->table_process_date)->insertGetId(
-                [
-                    'work_date' => $this->work_date,
-                    'product_code' => $this->product_code,
-                    'departments_name' => $this->departments_name,
-                    'departments_code' => $this->departments_code,
-                    'work_name' => $this->work_name,
-                    'work_code' => $this->work_code,
-                    'process_name' => $this->process_name,
-                    'status' => '1',
-                    'created_user' => 'system',
-                    'created_at' => $systemdate,
-                    'updated_at' => NULL
-    
-                ]
-            );
-            */
-
-            /*
-            if($upkind == 1){
-                
-                DB::table($this->table)
-                ->where('id', $this->id)
-                ->update([
-                    'status' => '',
-                ]);
-
-            }
-            */
             //$re_data['id'] = $id;
-            DB::commit();
+            //DB::commit();
+            
             //return $re_data;
             $wd_result = $this->workdateSearch($request);
 
@@ -748,10 +767,37 @@ class ProcessController extends Controller
             throw $e;
         }
 
-
+        
         
         $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
         $result_msg = "OK";
+        /*
+        $result = array();
+        $result = [
+            'count' => $count, 
+            'updateresult' => $updateresult, 
+			'product_code' => $s_product_code,
+			'after_due_date' => $after_due_date,
+			'customer' => $customer,
+			'product_name' => $product_name,
+			'end_user' => $end_user,
+			'quantity' => $quantity,
+			'comment' => $comment,
+            'work_date' => $this->work_date, 
+            'product_code' => $this->product_code, 
+            'departments_name' => $this->departments_name, 
+            'departments_code' => $this->departments_code, 
+            'work_name' => $this->work_name, 
+            'work_code' => $this->work_code, 
+            'process_name' => $this->process_name, 
+            'status' => $this->status, 
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+        ];
+        */
+
+
 
         /*
         $redata = array();
@@ -777,7 +823,9 @@ class ProcessController extends Controller
         //'chk_status' => $chk_status, 'acmsg' => $action_msg            
         */
 
-        Log::info("insertData in POST --".implode($reqarr)." + ".$str);
+        //Log::info("insertData in POST --".implode($reqarr)." + ".$str);
+
+        //$result = $this->postSearch();
 
         return view('process', [
             's_product_code' => $s_product_code,
