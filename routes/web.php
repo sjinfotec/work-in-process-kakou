@@ -50,6 +50,11 @@ Route::post('/process/insert', [ProcessController::class,'insertData']);
 Route::post('/process/search', [ProcessController::class,'postSearch']);
 Route::post('/process/wdget', [ProcessController::class,'workDate']);   // 部署の作業日取得
 
+// 工程編集
+Route::get('/view', [ViewController::class,'index']);
+Route::post('/view', [ViewController::class,'index']);
+Route::post('/view/get', [ViewController::class,'getData']);
+Route::post('/view/search', [ViewController::class,'postSearch']);
 
 
 

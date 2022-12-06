@@ -210,10 +210,26 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 
 		foreach($resdate AS $key => $val) {
 			//echo $work_date = date("Y-m-d", strtotime($val->work_date))."<br>\n";
+			//echo "resdate key = ".$key." : val = <br>\n";
+			$work_date_arr[] = date("Y-m-d", strtotime($resdate[$key]->work_date));
+			$work_date = date("Y-m-d", strtotime($resdate[$key]->work_date));
+			$departments_code = $resdate[$key]->departments_code;
+			//$departments_name_wdkey[$departments_code][$work_date] = $resdate[$key]->departments_name;
+			$departments_name_wdkey[$departments_code][$work_date] = $resdate[$key]->work_name;
+			$work_name = $resdate[$key]->work_name;
+			$work_code = $resdate[$key]->work_code;
+			$work_code_wdkey[$work_date][$work_name] = $resdate[$key]->work_code;
+			//$work_name_wdkey[$work_code][$work_date] = $resdate[$key]->work_name;
+			$work_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
 		}
+		print_r($departments_name_wdkey);
+		echo "<br><br>\n";
+		print_r($work_name_wdkey);
+		echo "<br><br>\n";
+		
 
 
-
+		$i = 1;
 		$body = '<div id="calendar">';
 
 		foreach ($period as $dkey => $day) {
@@ -222,6 +238,49 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 			$grey_class = $day->format('Y-m') === $year_month ? '' : 'grey';
 
 			//echo "ymd_day = ".$ymd_day." : dkey = ".$dkey."<br>\n";
+
+			
+			if(in_array($ymd_day, $work_date_arr)) {
+				//echo $ymd_day."は配列内に存在します , ".$departments_name_wdkey[$ymd_day]." , ".$work_name_wdkey[$ymd_day]."<br>\n";
+				if($i > 6) $i = 1;
+				$line[1][$dkey] = "";
+				$line[2][$dkey] = "";
+				$line[3][$dkey] = "";
+				$line[4][$dkey] = "";
+				$line[5][$dkey] = "";
+				$line[6][$dkey] = "";
+				$line[7][$dkey] = "";
+				$line[8][$dkey] = "";
+				$line[9][$dkey] = "";
+				foreach($work_name_wdkey[$ymd_day] AS $key => $val) {
+					$wc = $work_code_wdkey[$ymd_day][$key];
+					$w = $wc % 9 + 1;
+					echo "wc = ".$wc." : w = ".$w."<br>\n";
+					//$line[$i][$dkey] = "<span class=\"\" title=\"".$key."\">■</span>";
+				echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
+				//echo $line[$i][$dkey] . " : i = " . $i . "<br>\n";
+				$line[$w][$dkey] = "<span class=\"\" title=\"".$key."\">■</span>";
+
+				//if($wc !== $nextwc) $i++;
+				//$nextwc = $wc;
+					
+
+				}
+				//$line1[$dkey] = "■";
+			}
+			else {
+				$line[1][$dkey] = "";
+				$line[2][$dkey] = "";
+				$line[3][$dkey] = "";
+				$line[4][$dkey] = "";
+				$line[5][$dkey] = "";
+				$line[6][$dkey] = "";
+				$line[7][$dkey] = "";
+				$line[8][$dkey] = "";
+				$line[9][$dkey] = "";
+			}
+
+
 
 
 
@@ -249,9 +308,13 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 			$pd2_class =  ($start_process_date_2 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_2 ?  'd2c1' : '';
 			$pd3_class =  ($start_process_date_3 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_3 ?  'd3c1' : '';
 */
-			$pd1_class =  '';
-			$pd2_class =  '';
-			$pd3_class =  '';
+			$pd1_class =  'd1c1';
+			$pd2_class =  'd2c1';
+			$pd3_class =  'd3c1';
+
+			$line1 = $line[1][$dkey].$line[4][$dkey].$line[7][$dkey];
+			$line2 = $line[2][$dkey].$line[5][$dkey].$line[8][$dkey];
+			$line3 = $line[3][$dkey].$line[6][$dkey].$line[9][$dkey];
 
 			$fdw = $day->format('w');
 			
@@ -283,11 +346,11 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 				</div>
 				',
 				$pd1_class,
-				'&ensp;',
+				$line1,
 				$pd2_class,
-				'&ensp;',
+				$line2,
 				$pd3_class,
-				'&ensp;',
+				$line3,
 				$day->format('j')
 			);
 
@@ -491,7 +554,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 @section('content')
 				<div id="contents_area">
 					<div id="title_cnt">
-						<h1 class="tstyle">作業工程作成</h1>
+						<h1 class="tstyle">作業工程閲覧</h1>
 					</div>
 					<!-- main contentns row -->
 					<div id="maincontents">
@@ -511,28 +574,6 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							</form>
 						</div>
 						<form id="updateform" name="updateform" method="POST">
-							<!--
-							<div id="tbl_1">
-								<table>
-									<thead>
-									<tr>
-										<th>&emsp;</th>
-										<th>伝票番号</th>
-										<th>納期</th>
-										<th>得意先</th>
-										<th>品名</th>
-										<th>エンドユーザー</th>
-										<th>数量</th>
-
-									</tr>
-									</thead>
-									<tbody id="result_search_view">
-									@php echo $html_result;
-									@endphp
-									</tbody>
-								</table>
-							</div>
-							-->
 							<div id="form2" class="mgt20">
 								<div class="form_style">
 									<label for="product_code" class="">伝票番号</label>
@@ -557,14 +598,6 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								<div class="form_style">
 									<label for="quantity" class="">数量</label>
 									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="receive_date" class="">入稿日</label>
-									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_after_due_date }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="platemake_date" class="">下版日</label>
-									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_after_due_date }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="comment" class="">コメント</label>
@@ -603,47 +636,9 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							echo $html_cal2;
 						@endphp
 						
-							<!--
-							<div id="form_cnt">
-								<div>工程表１</div>
-								<div class="datezone">
-									<label for="start_process_date_1" class="transition2">開始日</label>
-									<input type="date" class="form_style1" name="start_process_date_1" value="" id="start_process_date_1">
-								</div>
-								<div class="datezone">
-									<label for="end_process_date_1" class="transition2">終了日</label>
-									<input type="date" class="form_style1" name="end_process_date_1" value="" id="end_process_date_1">
-								</div>
-							</div>
-							<div id="form_cnt">
-								<div>工程表２</div>
-								<div class="datezone">
-									<label for="start_process_date_1" class="transition2">開始日</label>
-									<input type="date" class="form_style1" name="start_process_date_2" value="" id="start_process_date_2">
-								</div>
-								<div class="datezone">
-									<label for="end_process_date_1" class="transition2">終了日</label>
-									<input type="date" class="form_style1" name="end_process_date_2" value="" id="end_process_date_2">
-								</div>
-							</div>
-							<div id="form_cnt">
-								<div>工程表３</div>
-								<div class="datezone">
-									<label for="start_process_date_1" class="transition2">開始日</label>
-									<input type="date" class="form_style1" name="start_process_date_3" value="" id="start_process_date_3">
-								</div>
-								<div class="datezone">
-									<label for="end_process_date_1" class="transition2">終了日</label>
-									<input type="date" class="form_style1" name="end_process_date_3" value="" id="end_process_date_3">
-								</div>
-							</div>
-							-->
 
 
-							@php
-
-							if($editzone == true) {
-							$departments_btn = <<<EOF
+						@if ($editzone === true)
 								<div id="form_cnt">
 									<div>
 										<input type="radio" name="departments_code" value="2" id="departments_code2">
@@ -675,11 +670,8 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 								<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm_update','『 登録 』','product_search','chkwrite')">登録</button>
 
-							EOF;
-							echo $departments_btn;
-							}
 
-							@endphp
+						@endif
 
 						</form>
 
@@ -717,7 +709,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 				//document.defineedit.edit_id.value = val;
 				//document.defineedit.submit();
 				fm.mode.value = md;
-				fm.action = '/process/search';
+				fm.action = '/view/search';
 				fm.submit();
 			}
 			else {

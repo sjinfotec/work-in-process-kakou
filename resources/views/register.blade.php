@@ -148,7 +148,7 @@ if(isset($result)) {
 
 
 
-
+<!--
 <form id="addprocessform" name="addprocessform" method="POST">
 	<div id="form_cnt">
 		<div>
@@ -165,7 +165,7 @@ if(isset($result)) {
 		</div>
 	</div>
 </form>
-
+-->
 
 
 @endsection
