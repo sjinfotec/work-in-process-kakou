@@ -50,11 +50,25 @@ Route::post('/process/insert', [ProcessController::class,'insertData']);
 Route::post('/process/search', [ProcessController::class,'postSearch']);
 Route::post('/process/wdget', [ProcessController::class,'workDate']);   // 部署の作業日取得
 
-// 工程編集
+// 閲覧
 Route::get('/view', [ViewController::class,'index']);
 Route::post('/view', [ViewController::class,'index']);
 Route::post('/view/get', [ViewController::class,'getData']);
 Route::post('/view/search', [ViewController::class,'postSearch']);
+
+// 詳細編集
+Route::get('/spec', [SpecController::class,'index']);
+Route::post('/spec', [SpecController::class,'index']);
+Route::post('/spec/get', [SpecController::class,'getData']);
+Route::post('/spec/workget', [SpecController::class,'getWORK']);
+Route::post('/spec/getone', [SpecController::class,'getDataOne']);
+Route::post('/spec/update', [SpecController::class,'fix']);
+Route::post('/spec/insert', [SpecController::class,'insertData']);
+Route::post('/spec/search', [SpecController::class,'postSearch']);
+Route::post('/spec/wdget', [SpecController::class,'workDate']);   // 部署の作業日取得
+
+
+
 
 
 

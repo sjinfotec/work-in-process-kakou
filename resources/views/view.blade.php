@@ -214,23 +214,36 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 			$work_date_arr[] = date("Y-m-d", strtotime($resdate[$key]->work_date));
 			$work_date = date("Y-m-d", strtotime($resdate[$key]->work_date));
 			$departments_code = $resdate[$key]->departments_code;
-			//$departments_name_wdkey[$departments_code][$work_date] = $resdate[$key]->departments_name;
-			$departments_name_wdkey[$departments_code][$work_date] = $resdate[$key]->work_name;
+			$departments_name = $resdate[$key]->departments_name;
 			$work_name = $resdate[$key]->work_name;
 			$work_code = $resdate[$key]->work_code;
 			$work_code_wdkey[$work_date][$work_name] = $resdate[$key]->work_code;
-			//$work_name_wdkey[$work_code][$work_date] = $resdate[$key]->work_name;
 			$work_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
+			$departments_code_wdkey[$work_date][$work_name] = $resdate[$key]->departments_code;
+			$departments_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
+			$wname_dcode_wdkey[$work_name] = $resdate[$key]->departments_code;
 		}
-		print_r($departments_name_wdkey);
+		print_r($wname_dcode_wdkey);
 		echo "<br><br>\n";
 		print_r($work_name_wdkey);
 		echo "<br><br>\n";
 		
 
-
-		$i = 1;
+		$class_array1 = Array(
+			'1' => 'd1c1',
+			'2' => 'd2c1',
+			'3' => 'd3c1',
+			'4' => 'd4c1',
+			'5' => 'd5c1',
+			'6' => 'd6c1',
+			'7' => 'd7c1',
+			'8' => 'd8c1',
+			'9' => 'd9c1',
+			'10' => 'd10c1'
+		);
 		$body = '<div id="calendar">';
+				$redcode = "";
+				$rewcode = "";
 
 		foreach ($period as $dkey => $day) {
 			$ymd_day =  $day->format('Y-m-d');
@@ -241,8 +254,8 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 
 			
 			if(in_array($ymd_day, $work_date_arr)) {
+				//[コレート1号] => 7 [スジ入れ機] => 6 [バスター３号機] => 6 [圧着機] => 6 [フォームカッター] => 6 [検品（カウントロン）] => 6 [梱包] => 6 [オンデマンド] => 2 [PC] => 3 [東レ] => 3 
 				//echo $ymd_day."は配列内に存在します , ".$departments_name_wdkey[$ymd_day]." , ".$work_name_wdkey[$ymd_day]."<br>\n";
-				if($i > 6) $i = 1;
 				$line[1][$dkey] = "";
 				$line[2][$dkey] = "";
 				$line[3][$dkey] = "";
@@ -252,21 +265,25 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 				$line[7][$dkey] = "";
 				$line[8][$dkey] = "";
 				$line[9][$dkey] = "";
+				$line[10][$dkey] = "";
+				
 				foreach($work_name_wdkey[$ymd_day] AS $key => $val) {
-					$wc = $work_code_wdkey[$ymd_day][$key];
-					$w = $wc % 9 + 1;
-					echo "wc = ".$wc." : w = ".$w."<br>\n";
-					//$line[$i][$dkey] = "<span class=\"\" title=\"".$key."\">■</span>";
-				echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
-				//echo $line[$i][$dkey] . " : i = " . $i . "<br>\n";
-				$line[$w][$dkey] = "<span class=\"\" title=\"".$key."\">■</span>";
+					$dcode = $wname_dcode_wdkey[$key];
 
-				//if($wc !== $nextwc) $i++;
-				//$nextwc = $wc;
-					
+					$departments_name = $departments_name_wdkey[$ymd_day][$key];
+					$wcode = $work_code_wdkey[$ymd_day][$key];
+					$dc = $departments_code_wdkey[$ymd_day][$key];
+					$d = $dc % 10;
+					if($d == 0) $d = 10;
+					$departments_name = $rewcode !== $wcode ? "<span class=\"worktext\">".$departments_name."</span>" : "";
+					//echo "wc = ".$wc." : w = ".$w." : d = ".$d."<br>\n";
+					//echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
+					$class_w = $class_array1[$d];
+					$line[$d][$dkey] .= "<a href=\"\"><div class=\"workitem {$class_w}\" title=\"".$key." , ".$val."\">&nbsp;".$departments_name."</div></a>";
+					$redcode = $dcode;
+					$rewcode = $wcode;
 
 				}
-				//$line1[$dkey] = "■";
 			}
 			else {
 				$line[1][$dkey] = "";
@@ -278,6 +295,7 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 				$line[7][$dkey] = "";
 				$line[8][$dkey] = "";
 				$line[9][$dkey] = "";
+				$line[10][$dkey] = "";
 			}
 
 
@@ -308,13 +326,15 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 			$pd2_class =  ($start_process_date_2 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_2 ?  'd2c1' : '';
 			$pd3_class =  ($start_process_date_3 <= $day->format('Y-m-d')) && ($day->format('Y-m-d')) <= $end_process_date_3 ?  'd3c1' : '';
 */
-			$pd1_class =  'd1c1';
-			$pd2_class =  'd2c1';
-			$pd3_class =  'd3c1';
+			$pd1_class =  '';
+			$pd2_class =  '';
+			$pd3_class =  '';
+			$pd4_class =  '';
 
-			$line1 = $line[1][$dkey].$line[4][$dkey].$line[7][$dkey];
-			$line2 = $line[2][$dkey].$line[5][$dkey].$line[8][$dkey];
-			$line3 = $line[3][$dkey].$line[6][$dkey].$line[9][$dkey];
+			$line1 = $line[1][$dkey].$line[2][$dkey].$line[8][$dkey].$line[9][$dkey].$line[10][$dkey];
+			$line2 = $line[4][$dkey].$line[5][$dkey];
+			$line3 = $line[3][$dkey];
+			$line4 = $line[6][$dkey].$line[7][$dkey];
 
 			$fdw = $day->format('w');
 			
@@ -336,6 +356,7 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 					<div class="line"><div class="%s">%s</div></div>
 					<div class="line"><div class="%s">%s</div></div>
 					<div class="line"><div class="%s">%s</div></div>
+					<div class="line"><div class="%s">%s</div></div>
 					<div class="line">
 						<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>
 						<label for="work'.$ymd_day.'" class="wclabel transition2"></label>
@@ -351,6 +372,8 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 				$line2,
 				$pd3_class,
 				$line3,
+				$pd4_class,
+				$line4,
 				$day->format('j')
 			);
 
