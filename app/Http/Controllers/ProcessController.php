@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use App\Models\Calendar;
 
 class ProcessController extends Controller
 {
@@ -82,6 +83,8 @@ class ProcessController extends Controller
             'result' => $result,
             'result_date' => $result_date,
             'wd_result' => $wd_result,
+            'html_cal_main' => '',
+
         ]);
 
 
@@ -346,19 +349,23 @@ class ProcessController extends Controller
         $wd_result = "";
         $result_msg = "";
         $html_after_due_date = "";
-        $e_message = "検索 ： ".$s_product_code."";
+        $e_message = "検索 ： ".$s_product_code."  ".$after_due_date."";
 
 
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
         //$result = array_merge($result_details, $result_dete);
+        $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+        $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+        $calendar_data = new Calendar();	// インスタンス作成
+        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
 
 
 
 	        return view('process', [
                 's_product_code' => $s_product_code,
                 'product_code' => $product_code,
-                'after_due_date' => $after_due_date,
+                'after_due_date' => $test,
                 'customer' => $customer,
                 'product_name' => $product_name,
                 'end_user' => $end_user,
@@ -370,6 +377,7 @@ class ProcessController extends Controller
                 'result' => $result_details,
                 'result_date' => $result_date,
                 'wd_result' => '',
+                'html_cal_main' => $html_cal,
 	        ]);
 
     }
@@ -455,7 +463,7 @@ class ProcessController extends Controller
             'datacount' => $datacount, 
             'html_after_due_date' => $html_after_due_date,
 			'product_code' => $s_product_code,
-			'after_due_date' => $after_due_date,
+			'after_due_date' => $r_after_due_date,
 			'customer' => $customer,
 			'product_name' => $product_name,
 			'end_user' => $end_user,
@@ -738,6 +746,7 @@ class ProcessController extends Controller
         $result_date = "";
         $result_msg = "";
         $html_after_due_date = "";
+        $html_cal = "";
         $e_message = "検索 ： ".$s_product_code."";
 
 
@@ -803,7 +812,8 @@ class ProcessController extends Controller
                     foreach($wdarr AS $wdkey => $val) {
                         $str .= "wdkey=".$wdkey.":val=".$val;
     
-                        if($this->work_code == 'DEL') {
+                        //if($this->work_code == 'DEL') {
+                        if($mode == 'delete') {
                             $count = DB::table($this->table_process_date)
                             ->where('work_date', $val)
                             ->where('product_code', $s_product_code)
@@ -936,7 +946,8 @@ class ProcessController extends Controller
             'e_message' => $e_message,
             'result' => $result,
             'result_date' => $result_date,
-            'wd_result' => $wd_result
+            'wd_result' => $wd_result,
+            'html_cal_main' => $html_cal,
         ]);
 
         /*

@@ -249,6 +249,11 @@ header button {width:auto;}
 }
 #page_top:hover{opacity: 0.9;}
 
+#error  {
+  border:1px solid #555;
+  padding:4px 10px;
+}
+
 .form_style1 {
   font-size:2rem;
   height:3rem;
@@ -499,11 +504,13 @@ header button {width:auto;}
 
 #calendar {
   display: flex;
+  margin-top: 20px;
 }
 #calendar .ymstyle  {
   padding:0 5px;
   margin:0 5px 2px 5px;
   white-space: nowrap;
+  color: #FFF;
 }
 
 #calendar_dayzone  {
@@ -548,13 +555,13 @@ header button {width:auto;}
   /*position:  relative;*/
   position: absolute;
   width:  22px;
-  height:  194px;
+  height:  530px;
   background-color: #f4c836;
   /*border-radius:  50%;*/
   line-height: 3px;
   text-align: center;
   left:0px;
-  top: 2rem;
+  top: 30px;
   z-index: 1;
 /*
   top: 50%;
@@ -562,6 +569,13 @@ header button {width:auto;}
   transform: translateY(-50%);
 */
 }
+#calendar_dayzone a{
+  text-decoration: none;
+  background: #eee;
+  display: block;
+  width:100%;
+}
+
 
 #cal_cnt  {
   display: flex;
@@ -599,13 +613,13 @@ header button {width:auto;}
 #workin {box-sizing: border-box; margin-top:10px;}
 #workin .line {
   position: relative;
-  height:10rem;
+  height:88px;
   z-index: 2;
   /*overflow:hidden;*/
   border-top:1px solid transparent;
 }
 #workin .workitem {
-  margin-top: 20px;
+  margin-bottom: 20px;
   position: relative;
 }
 #workin a {
@@ -616,7 +630,7 @@ header button {width:auto;}
 #workin .worktext {
   position:  absolute;
   left:-7px;
-  top: 24px;
+  top: 23px;
   z-index: 3;
   /*display:inline-block;*/
   /*overflow: auto;*/
@@ -650,7 +664,7 @@ header button {width:auto;}
   background:#960;
 }
 #workin .d2c1 {
-  background:#390;
+  background:#C90;
 }
 #workin .d3c1 {
   background:#09C;

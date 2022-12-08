@@ -4,11 +4,16 @@ use Illuminate\Support\Facades\Storage;
 $html_result = "";
 $cal_start_ym = "";
 $ymd_after_due_date = "";
+$ymd_receive_date = "";
+$ymd_platemake_date = "";
 $editzone = false;
+$action_msg .= "modeの値：".$mode."\n";
+
 //var_dump($result);
 //echo "<br><br>1:\n";
 //echo $result;
 //echo "<br><br>2:\n";
+
 
 if(isset($result['result'])) {
 	$resultdata = $result['result'];
@@ -27,6 +32,8 @@ if(isset($result['result'])) {
 			$comment = $val->comment;
 			$html_after_due_date = !empty($after_due_date) ? date('n月j日', strtotime($after_due_date)) : "";
 			$ymd_after_due_date = !empty($after_due_date) ? date('Y-m-d', strtotime($after_due_date)) : "";
+			$ymd_receive_date = !empty($receive_date) ? date('Y-m-d', strtotime($receive_date)) : "";
+			$ymd_platemake_date = !empty($platemake_date) ? date('Y-m-d', strtotime($platemake_date)) : "";
 
 			$editzone = true;
 
@@ -109,6 +116,7 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 	$f_due_date = $due_date->format('Y-m-d');
 	$ym_html = '';
 	$body = '';
+	//$action_msg .= $f_due_date."<br>\n";
 
 
 	
@@ -329,11 +337,16 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 			$pd2_class =  '';
 			$pd3_class =  '';
 			$pd4_class =  '';
+			$pd5_class =  '';
+			$pd6_class =  '';
 
-			$line1 = $line[1][$dkey].$line[2][$dkey].$line[8][$dkey].$line[9][$dkey].$line[10][$dkey];
-			$line2 = $line[4][$dkey].$line[5][$dkey];
-			$line3 = $line[3][$dkey];
-			$line4 = $line[6][$dkey].$line[7][$dkey];
+			$line1 = $line[2][$dkey];
+			$line2 = $line[3][$dkey];
+			$line3 = $line[4][$dkey];
+			$line4 = $line[5][$dkey];
+			$line5 = $line[6][$dkey];
+			$line6 = $line[7][$dkey];
+			$line7 = $line[1][$dkey].$line[8][$dkey].$line[9][$dkey].$line[10][$dkey];
 
 			$fdw = $day->format('w');
 			
@@ -356,6 +369,8 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 					<div class="line"><div class="%s">%s</div></div>
 					<div class="line"><div class="%s">%s</div></div>
 					<div class="line"><div class="%s">%s</div></div>
+					<div class="line"><div class="%s">%s</div></div>
+					<div class="line"><div class="%s">%s</div></div>
 					<div class="line">
 						<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>
 						<label for="work'.$ymd_day.'" class="wclabel transition2"></label>
@@ -373,24 +388,16 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 				$line3,
 				$pd4_class,
 				$line4,
+				$pd5_class,
+				$line5,
+				$pd6_class,
+				$line6,
 				$day->format('j')
 			);
 
 
-
-			//sprintfを使って整形しながらhtml部分を作成する
-			//'<td style="%s %s %s"><div>%s</div><div>%s</div></td>',
-			/*
 			$body .= sprintf(
-				'<td class="youbi_%d %s %s">%d</td>',
-				$day->format('w'),
-				$today_class,
-				$grey_class,
-				$day->format('d')
-			);
-			*/
-			$body .= sprintf(
-				'<div class="day_cnt" style="%s"><div style="%s">%s</div><div class="datestyle %s %s"><span>%s</span></div>'.$workspace.'</div>',
+				'<div class="day_cnt" style="%s"><a href=""><div style="%s">%s</div><div class="datestyle %s %s">%s</div></a>'.$workspace.'</div>',
 				$due_class,
 				$style_bg,
 				$weekarr[$fdw],
@@ -419,37 +426,6 @@ function calendar2($result,$after_due_date,$wd_result,$result_date) {
 
 	}
 
-$cal_htmlxxx = <<<EOF
-	<table class="calendar">
-		<thead class="calendar-head">
-		<tr class="calendar-row">
-			<!-- リンクにクエリ情報を設定する -->
-			<th><a href="?t={$prev_month}">&laquo;</a></th>
-			<th colspan="5"><a href="">{$year_month}</a></th>
-			<th><a href="?t={$next_month}">&raquo;</a></th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr class="calendar-row">
-			<td>日</td>
-			<td>月</td>
-			<td>火</td>
-			<td>水</td>
-			<td>木</td>
-			<td>金</td>
-			<td>土</td>
-		</tr>
-			{$body}
-		</tbody>
-		<tfoot>
-		<tr class="calendar-row">
-			<th colspan="7"><a href="">today</a></th>
-		</tr>
-		</tfoot>
-	</table>
-	{$f_due_date}
-	
-EOF;
 $cal_html = <<<EOF
 	{$ym_html}
 	{$body}
@@ -459,7 +435,7 @@ EOF;
 
 	return $cal_html;
 }
-$html_cal2 = calendar2($result,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+//$html_cal2 = calendar2($result,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
 
 
 // カレンダー表示
@@ -591,33 +567,12 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								<div id="form1">
 									<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
 									<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
+									<div id="error">{{ $e_message }}</div>
 								</div>
 								@csrf 
 							</form>
 						</div>
 						<form id="updateform" name="updateform" method="POST">
-							<!--
-							<div id="tbl_1">
-								<table>
-									<thead>
-									<tr>
-										<th>&emsp;</th>
-										<th>伝票番号</th>
-										<th>納期</th>
-										<th>得意先</th>
-										<th>品名</th>
-										<th>エンドユーザー</th>
-										<th>数量</th>
-
-									</tr>
-									</thead>
-									<tbody id="result_search_view">
-									@php echo $html_result;
-									@endphp
-									</tbody>
-								</table>
-							</div>
-							-->
 							<div id="form2" class="mgt20">
 								<div class="form_style">
 									<label for="product_code" class="">伝票番号</label>
@@ -645,11 +600,11 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								</div>
 								<div class="form_style">
 									<label for="receive_date" class="">入稿日</label>
-									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_after_due_date }}" readonly>
+									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_receive_date }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="platemake_date" class="">下版日</label>
-									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_after_due_date }}" readonly>
+									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_platemake_date }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="comment" class="">コメント</label>
@@ -660,24 +615,14 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 						</form>
 
 
-
-
-
 						<div id="resultupdate"></div>
-						<div id="resultlist"><ul class="list-group"></ul></div>
-						<div id="error">{{ $e_message }}</div>
-
-						<div>{{ $action_msg }}</div>
-						<div>
-							<div>modeの値：{{ $mode }}</div>
-						</div>
 						<div id="resultstr"></div>
 
 						<form id="addprocessform" name="addprocessform" method="POST">
 							<input type="hidden" name="mode" id="mode" value="wp_search">
 							<input type="hidden" name="submode" id="submode" value="">
 							<input type="hidden" name="motion" id="motion" value="">
-							<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
+							<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
 							<input type="hidden" name="work_name" id="work_name" value=""> 
 							<input type="hidden" name="departments_name" id="departments_name" value=""> 
 							@csrf
@@ -685,46 +630,9 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 
 						@php
-							echo $html_cal2;
+							echo $html_cal_main;
 						@endphp
 						
-							<!--
-							<div id="form_cnt">
-								<div>工程表１</div>
-								<div class="datezone">
-									<label for="start_process_date_1" class="transition2">開始日</label>
-									<input type="date" class="form_style1" name="start_process_date_1" value="" id="start_process_date_1">
-								</div>
-								<div class="datezone">
-									<label for="end_process_date_1" class="transition2">終了日</label>
-									<input type="date" class="form_style1" name="end_process_date_1" value="" id="end_process_date_1">
-								</div>
-							</div>
-							<div id="form_cnt">
-								<div>工程表２</div>
-								<div class="datezone">
-									<label for="start_process_date_1" class="transition2">開始日</label>
-									<input type="date" class="form_style1" name="start_process_date_2" value="" id="start_process_date_2">
-								</div>
-								<div class="datezone">
-									<label for="end_process_date_1" class="transition2">終了日</label>
-									<input type="date" class="form_style1" name="end_process_date_2" value="" id="end_process_date_2">
-								</div>
-							</div>
-							<div id="form_cnt">
-								<div>工程表３</div>
-								<div class="datezone">
-									<label for="start_process_date_1" class="transition2">開始日</label>
-									<input type="date" class="form_style1" name="start_process_date_3" value="" id="start_process_date_3">
-								</div>
-								<div class="datezone">
-									<label for="end_process_date_1" class="transition2">終了日</label>
-									<input type="date" class="form_style1" name="end_process_date_3" value="" id="end_process_date_3">
-								</div>
-							</div>
-							-->
-
-
 
 							@if ($editzone === true)
 								<div id="form_cnt">
@@ -755,8 +663,8 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								</div>
 								<div id="resultwp"></div>
 								<div id="resultbtn"></div>
-
-								<button class="" type="button" onClick="clickEvent('addprocessform','1','1','confirm_update','『 登録 』','product_search','chkwrite')">登録</button>
+								<div id="motionbtn"></div>
+								
 							@endif
 
 						</form>
@@ -764,7 +672,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 						@php
 							//echo $html_cal;
 						@endphp
-
+						<div>{{ $action_msg }}</div>
 					</div>
 					<!-- /main contentns row -->
 
@@ -857,7 +765,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
 			var result = window.confirm('部署名 : ' + val1 + '\n' + com1 + 'します');
 			if( result ) {
-				fm.work_code.value = 'DEL';
+				//fm.work_code.value = 'DEL';
 				fm.mode.value = md;
 				fm.action = '/process/insert';
 				fm.submit();
@@ -931,12 +839,14 @@ function appendListWORK(dataarr) {
 			});
 			text.push(
 				'<div id="workname">\n' +
-				'	<input type="radio" name="work_code" value="DEL" id="work_code_del">\n' + 
-				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'' + data.department + '\',\'\',\'select_del\',\'削除\',\'\',\'\')">削除</label>\n' +
+				'	<input type="radio" name="work_code" value="900" id="work_code900">\n' + 
+				'	<label for="work_code900" class="label transition2" onclick="WORKDATEchecked(\'\',\'その他\',\'\',\'select_workname\',\'\',\'900\',\'' + data.department + '\')">その他</label>\n' +
 				'</div>\n'
-			);
+				);
 
 			document.getElementById('resultbtn').innerHTML = text.join('');
+			document.getElementById('motionbtn').innerHTML = "";
+
 
 
 		}
@@ -980,6 +890,8 @@ function WORKcollect(n,dn) {
 // 部署における作業日の取得
 function appendWORKDATE(dataarr) {
 	//console.log('appendWORKDATE in ' + dataarr[0].result_msg);
+	let text2 = [];
+
 	$.each(dataarr, function(index3, data) {
 		//const res = data.wd_result[index3];
 		//console.log('appendWORKDATE in result_msg ok' + data.result_msg);
@@ -1026,6 +938,16 @@ function appendWORKDATE(dataarr) {
 			document.getElementById('resultstr').innerHTML = "作業日を取得できませんでした";
 
 		}
+
+		text2.push(
+				'<div id="workname">\n' +
+				'	<input type="radio" name="work_code" value="DEL" id="work_code_del">\n' + 
+				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'' + data.department + '\',\'\',\'select_del\',\'削除\',\'delete\',\'\')">削除</label>\n' +
+				'<button class="" type="button" onClick="clickEvent(\'addprocessform\',\'1\',\'1\',\'confirm_update\',\'『 登録 』\',\'product_search\',\'chkwrite\')">登録</button>\n' +
+				'</div>\n'
+			);
+		document.getElementById('motionbtn').innerHTML = text2.join('');
+
 	});
 }
 
@@ -1089,184 +1011,6 @@ function WORKDATEchecked(fname,val1,val2,cf,com1,wc,dc) {
 
 
 
-
-
-
-	var appendcount = Number('1');
-// 画面を更新する処理
-function appendList(arrdata) {
-	$.each(arrdata, function(index, data) {
-		console.log('appendList in 配列キー ' + index);
-		//console.log('appendList appendcount ' + appendcount);
-		//$('#list ul').append("No. : " + data.t_number + "<br>名前 : " + data.name + "<br>name_code : " + data.name_code + '');
-		//$('#resultupdate').html = ( "message--" + data.e_message );
-		const res = data.result[index];
-		document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data.e_message + '</div>\n';
-		var statusv = '<span style="color:green;">OK</span>';
-		var html_after_due_date = '';
-		if(data.result_msg) {
-			var BUTTON_collect = '';
-			if(data.result_msg == 'OK') {
-				BUTTON_collect = '<button class="style3" type="button" onClick="NEWcollect('+ appendcount +')">axios登録</button>';
-			}
-			if(data.result_msg == 'already') {
-				BUTTON_collect = '<button class="style4" type="button" disabled>登録済</button>';
-			}
-			if(data.result_msg == 'NOnippou') {
-				BUTTON_collect = '<button class="style4" type="button" disabled>日報登録なし</button>';
-			}
-			var r_quantity = res.quantity ? res.quantity : '';
-			if(data.chk_status === 'esse') {
-				statusv = '<span style="color:orange;">上書き</span>';
-			}
-			$('#resultlist ul').prepend('<li><span>' + appendcount + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data.s_product_id + '</span> ' + statusv + '</li>\n');
-
-			$('#result_search_view').prepend(
-				'<tr>'+
-				'<td><input type="hidden" name="listcount" id="listcount'+ appendcount +'" value="' + appendcount + '">'+ appendcount +' <span id="btn_cnt_new'+ appendcount +'">'+ BUTTON_collect +'</span></td>'+
-				'<td><input type="hidden" name="product_code" id="product_code'+ appendcount +'" value="' + res.product_id + '">' + res.product_id + '</td>'+
-				'<td><input type="hidden" name="after_due_date" id="after_due_date'+ appendcount +'" value="' + res.after_due_date + '">' + data.html_after_due_date + '</td>'+
-				'<td><input type="hidden" name="customer" id="customer'+ appendcount +'" value="' + res.customer + '">' + data.result[index].customer + '</td>'+
-				'<td><input type="hidden" name="product_name" id="product_name'+ appendcount +'" value="' + res.product_name + '">' + res.product_name + '</td>'+
-				'<td><input type="hidden" name="end_user" id="end_user'+ appendcount +'" value="' + res.end_user + '">' + res.end_user + '</td>'+
-				'<td><input type="hidden" name="quantity" id="quantity'+ appendcount +'" value="' + r_quantity + '">' + r_quantity + ''+
-					'<input type="hidden" name="serial_code" id="serial_code'+ appendcount +'" value="' + res.serial_id + '">'+
-					'<input type="hidden" name="rep_code" id="rep_code'+ appendcount +'" value="' + res.rep_id + '">'+
-					'<input type="hidden" name="comment" id="comment'+ appendcount +'" value="' + res.comment + '">'+
-				'</td>'+
-				'</tr>'
-			);
-
-
-		}
-		else {
-			statusv = '<span style="color:red;">NG</span>';
-			$('#resultlist ul').prepend('<li><span>' + appendcount + '</span>&emsp;<span class="txtcolor3">&#10006;</span>&emsp;No.&ensp;<span class="dtnum">' + data.s_product_id + '</span> ' + statusv + '</li>\n');
-		}
-		appendcount = appendcount + 1;
-		//index += 1;
-	});
-}
-// エラー処理
-function error(error) {
-    $('#list').empty();
-    $('#error').append(error);
-}
-
-
-
-// 基本的にはresponse.dataにデータが返る
-function SEARCHcollect() {
-	var Ps_product_id = document.getElementById('s_product_id').value;
-	var Pmotion = document.getElementById('motion').value;
-	var Psubmode = document.getElementById('submode').value;
-	var Mode = document.getElementById('mode').value;
-	//var Wpdate = document.getElementById('today').value;
-	console.log("Mode :" + Mode);
-	const res = axios.post("/regi/search", {
-		s_product_id: Ps_product_id,
-		motion: Pmotion,
-		submode: Psubmode,
-		mode: Mode,
-	})
-	.then(response => {
-		appendList(response.data);
-		
-	})
-	.catch(error => {
-		window.error(error.response);
-	});
-}
-
-
-
-
-
-
-
-
-var addcount = Number('1');
-// 画面を更新する処理
-function appendListADD(dataarr) {
-	$.each(dataarr, function(index, data) {
-		//console.log('appendList in 配列index = ' + index);
-		//console.log('appendList addcount ' + addcount);
-		//$('#list ul').append("No. : " + data.t_number + "<br>名前 : " + data.name + "<br>name_code : " + data.name_code + '');
-		//$('#resultupdate').html = ( "message--" + data.e_message );
-
-		/*
-		'product_id' => $product_id, 
-		'after_due_date' => $after_due_date, 
-		'customer' => $customer, 
-		'product_name' => $product_name, 
-		'end_user' => $end_user, 
-		'quantity' => $quantity, 
-		'mode' => $mode, 
-		'e_message' => $e_message, 
-		'result_msg' => $result_msg
-		*/
-
-		document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data.e_message + '</div>\n';
-		var statusv = '<span style="color:green;">OK</span>';
-		if(data.result_msg === 'OK') {
-			if(data.chk_status === 'esse') {
-				statusv = '<span style="color:orange;">上書き</span>';
-			}
-			$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
-			
-			document.getElementById('btn_cnt_new' + data.listcount).innerHTML = '<span class="color_green">' + '<button class="style5" type="button" disabled>登録完了</button>' + '</span>';
-			$('#result_new_view').prepend('<tr><td>' + data.listcount + '</td><td class="txtcolor1">&#10004;</td><td>No.&ensp;<span class="dtnum">' + data.product_code + '</span></td><td>' + statusv + '</td></tr>\n');
-
-
-
-		}
-		else {
-			statusv = '<span style="color:red;">NG</span>';
-			$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor3">&#10006;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
-		}
-		addcount = addcount + 1;
-	});
-}
-
-function NEWcollect(n) {
-	var Jlistcount = document.getElementById('listcount' + n).value;
-	var Jproduct_code = document.getElementById('product_code' + n).value;
-	var Jserial_code = document.getElementById('serial_code' + n).value;
-	var Jrep_code = document.getElementById('rep_code' + n).value;
-	var Jafter_due_date = document.getElementById('after_due_date' + n).value;
-	var Jcustomer = document.getElementById('customer' + n).value;
-	var Jproduct_name = document.getElementById('product_name' + n).value;
-	var Jend_user = document.getElementById('end_user' + n).value;
-	var Jquantity = document.getElementById('quantity' + n).value;
-	var Jcomment = document.getElementById('comment' + n).value;
-	//var collectdate = document.getElementById('collect_date').value;
-	var Mode = document.getElementById('mode').value;
-	var details = {name: "Ronaldo", team: "Juventus"};
-	//var Wpdate = document.getElementById('today').value;
-	console.log("mode :" + Mode);
-	console.log("Jproduct_code :" + Jproduct_code);
-	const res = axios.post("/regi/new", {
-		listcount: Jlistcount,
-		product_code: Jproduct_code,
-		serial_code: Jserial_code,
-		rep_code: Jrep_code,
-		customer: Jcustomer,
-		product_name: Jproduct_name,
-		end_user: Jend_user,
-		quantity: Jquantity,
-		after_due_date: Jafter_due_date,
-		comment: Jcomment,
-		mode: Mode,
-		details: details,
-	})
-	.then(response => {
-		appendListADD(response.data);
-		
-	})
-	.catch(error => {
-		window.error(error.response);
-	});
-}
 
 
 
