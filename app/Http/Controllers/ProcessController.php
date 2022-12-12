@@ -391,6 +391,8 @@ class ProcessController extends Controller
         $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
         $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $receive_date = !empty($_POST["receive_date"]) ? $_POST['receive_date'] : "";
+        $platemake_date = !empty($_POST["platemake_date"]) ? $_POST['platemake_date'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $action_msg = "";
@@ -417,6 +419,8 @@ class ProcessController extends Controller
                     'product_name',
                     'end_user',
                     'quantity',
+                    'receive_date',
+                    'platemake_date',
                     'status',
                     'comment'
                 );

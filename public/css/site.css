@@ -46,15 +46,23 @@ a:hover {
 button  {
   white-space:nowrap;
   border-radius: 5px;
-  padding:2px 6px;
+  padding:4px 6px;
   color:#FFF;
   background:#578a3d;
   width:10em;
   border:none;
   cursor: pointer;
+  
+  box-shadow: 3px 3px 5px 0 rgba(255, 255, 255, 0.7) inset ,-3px -3px 5px 0 rgba(0, 0, 0, 0.5) inset;
 }
 button:hover  {
-  background:#88bb66;
+  /*background:#88bb66;*/
+  opacity: 0.5;
+  color: #000;
+}
+button:active  {
+  /*background:#88bb66;*/
+  box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5) inset ,-3px -3px 5px 0 rgba(255, 255, 255, 0.7) inset;
 }
 
 .gc1  {  background:#9cbb1c;}
@@ -69,6 +77,10 @@ button:hover  {
 .gc4b  {  background:linear-gradient(to bottom, #FFF 0%, #FFF 80%, #eecc55 80%,  #eecc55 100%);}
 .bc4  {  border:2px solid #eecc55;}
 .bcc4 {  border-color:#eecc55;}
+
+.gc5  {  background:#EC3;}
+
+
 .stock_active {  background:linear-gradient(to bottom, #ffeecc 0%, #ffeecc 80%, #eecc55 80%,  #eecc55 100%);}
 .bold { font-weight: bold;}
 
@@ -177,11 +189,11 @@ header button {width:auto;}
   height:  50px;
   background-color: #eecc33;
   /*border-radius:  50%;*/
-  line-height: 28px;
+  /*line-height: 28px;*/
   text-align: center;
   position:  relative;
   left:0px;
-  top: 3px;
+  top: 0px;
   margin-right:10px;
 /*
   top: 50%;
@@ -272,6 +284,8 @@ header button {width:auto;}
 .mgt10  {margin-top:10px;}
 .mgt20  {margin-top:20px;}
 .mgt40  {margin-top:40px;}
+
+.mgla {margin-left: auto;}
 
 .w4e  {width: 4em;}
 .w10e {width: 10em;}
@@ -465,7 +479,7 @@ header button {width:auto;}
 #form2  {
   display: flex;
   align-items: center;
-  /*justify-content: space-between;*/
+  justify-content: space-between;
   flex-wrap: wrap;
   gap:10px 20px;
 

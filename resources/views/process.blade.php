@@ -8,6 +8,7 @@ $ymd_receive_date = "";
 $ymd_platemake_date = "";
 $editzone = false;
 $action_msg .= "modeの値：".$mode."\n";
+$select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
 
 //var_dump($result);
 //echo "<br><br>1:\n";
@@ -29,6 +30,8 @@ if(isset($result['result'])) {
 			$product_name = $val->product_name;
 			$end_user = $val->end_user;
 			$quantity = $val->quantity;
+			$receive_date = $val->receive_date;
+			$platemake_date = $val->platemake_date;
 			$comment = $val->comment;
 			$html_after_due_date = !empty($after_due_date) ? date('n月j日', strtotime($after_due_date)) : "";
 			$ymd_after_due_date = !empty($after_due_date) ? date('Y-m-d', strtotime($after_due_date)) : "";
@@ -98,10 +101,12 @@ foreach($csvfile_data as $key => $value){
 //var_dump($company_schedule_arr);
 
 function scheduleDays($check_date,$company_schedule_arr) {
+	/*
 	$schedulearr = Array(
 		'2022-01-01','2022-01-02','2022-01-03','2022-01-04','2022-01-09','2022-01-10','2022-01-16','2022-01-22','2022-01-23','2022-01-30',
 		'2020-01-05','2020-01-11','2020-01-12','2020-01-19','2020-01-25','2020-01-26'
 	);
+	*/
 	return $result_chk = in_array($check_date, $company_schedule_arr);
 }
 
@@ -556,6 +561,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 					</div>
 					<!-- main contentns row -->
 					<div id="maincontents">
+					@if($select_html === 'Default')
 						<div id="search_fcnt">
 							<h4>伝票番号検索</h4>
 
@@ -566,7 +572,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 								<div id="form1">
 									<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
-									<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
+									<button class="transition2" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
 									<div id="error">{{ $e_message }}</div>
 								</div>
 								@csrf 
@@ -612,6 +618,11 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								</div>
 
 							</div>
+							<div id="form1" class="mgt20">
+								<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $product_code }}">
+								<button class="gc5 transition2 mgla" type="button" onClick="clickEvent('updateform','1','1','confirm','『 編集 』','product_search','chkwrite')">編集</button>
+							</div>
+
 						</form>
 
 
@@ -673,6 +684,64 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							//echo $html_cal;
 						@endphp
 						<div>{{ $action_msg }}</div>
+
+
+
+					@elseif($select_html === 'Edit')
+						<form id="updateform" name="updateform" method="POST">
+							<div id="form2" class="mgt20">
+								<div class="form_style">
+									<label for="product_code" class="">伝票番号</label>
+									<input type="text" class="input_style" name="product_code" id="product_code" value="{{ $product_code }}">
+								</div>
+								<div class="form_style">
+									<label for="after_due_date" class="">納期</label>
+									<input type="date" class="input_style" name="after_due_date" id="after_due_date" value="{{ $ymd_after_due_date }}">
+								</div>
+								<div class="form_style">
+									<label for="customer" class="">得意先</label>
+									<input type="text" class="input_style" name="customer" id="customer" value="{{ $customer }}"> 
+								</div>
+								<div class="form_style ">
+									<label for="product_name" class="">品名</label>
+									<input type="text" class="input_style" name="product_name" id="product_name" value="{{ $product_name }}">
+								</div>
+								<div class="form_style">
+									<label for="end_user" class="">エンドユーザー</label>
+									<input type="text" class="input_style" name="end_user" id="end_user" value="{{ $end_user }}">
+								</div>
+								<div class="form_style">
+									<label for="quantity" class="">数量</label>
+									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}">
+								</div>
+								<div class="form_style">
+									<label for="receive_date" class="">入稿日</label>
+									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_receive_date }}">
+								</div>
+								<div class="form_style">
+									<label for="platemake_date" class="">下版日</label>
+									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_platemake_date }}">
+								</div>
+								<div class="form_style">
+									<label for="comment" class="">コメント</label>
+									<input type="text" class="input_style" name="comment" id="comment" value="{{ $comment }}">
+								</div>
+
+							</div>
+							<div id="form1" class="mgt20">
+								<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $product_code }}">
+								<button class="gc5 transition2" type="button" onClick="clickEvent('updateform','1','1','process_details_update','『 登録 』','product_search','chkwrite')">登録</button>
+								<button class="gc5 transition2 mgla" type="button" onClick="clickEvent('updateform','1','1','process_details_del','『 削除 』','product_search','chkwrite')">削除</button>
+							</div>
+
+						</form>
+
+
+						<div id="resultupdate"></div>
+						<div id="resultstr"></div>
+
+					@endif
+
 					</div>
 					<!-- /main contentns row -->
 
@@ -709,6 +778,28 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			else {
 				console.log('キャンセルがクリックされました');
 			}
+		}
+		else if(cf == 'select_del') {
+
+
+			//var Jwork_name = fm.work_name.value;
+			//var Jdepartments_name = fm.departments_name.value;
+			//var Js_product_code = fm.s_product_code.value;
+			//value="DEL" id="work_code_del"
+			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
+			var result = window.confirm('部署名 : ' + val1 + '\n' + com1 + 'します');
+			if( result ) {
+				//fm.work_code.value = 'DEL';
+				fm.mode.value = md;
+				fm.action = '/process/insert';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
+
+
+
 		}
 		else if(cf == 'confirm_update') {
 			var Jwork_name = fm.work_name.value;

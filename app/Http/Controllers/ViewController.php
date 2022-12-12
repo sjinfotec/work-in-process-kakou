@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use App\Models\Calendar;
 
 class ViewController extends Controller
 {
@@ -82,6 +83,7 @@ class ViewController extends Controller
             'result' => $result,
             'result_date' => $result_date,
             'wd_result' => $wd_result,
+            'html_cal_main' => '',
         ]);
 
 
@@ -352,6 +354,10 @@ class ViewController extends Controller
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
         //$result = array_merge($result_details, $result_dete);
+        $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+        $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+        $calendar_data = new Calendar();	// インスタンス作成
+        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
 
 
 
@@ -370,6 +376,7 @@ class ViewController extends Controller
                 'result' => $result_details,
                 'result_date' => $result_date,
                 'wd_result' => '',
+                'html_cal_main' => $html_cal,
 	        ]);
 
     }
