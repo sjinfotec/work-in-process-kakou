@@ -27,15 +27,36 @@ class Calendar extends Model
 
     public function calendar($result,$after_due_date,$wd_result,$result_date) {
         //DateTimeインスタンスを作成
+        //var_dump($result['result']);
         $today = new DateTime();
         $due_date = new DateTime($after_due_date);
         $f_today = $today->format('Y-m-d');
         $f_due_date = $due_date->format('Y-m-d');
+
+        $receive_date = $result['result'][0]->receive_date;
+        if(!empty($receive_date)) {
+            $dt_receive_date = new DateTime($receive_date);
+            $f_receive_date = $dt_receive_date->format('Y-m-d');
+        }
+        else {
+            $f_receive_date = "";
+        }
+
+        $platemake_date = $result['result'][0]->platemake_date;
+        if(!empty($platemake_date)) {
+            $dt_platemake_date = new DateTime($platemake_date);
+            $f_platemake_date = $dt_platemake_date->format('Y-m-d');
+            }
+        else {
+            $f_platemake_date = "";
+        }
+
         $ym_html = '';
         $body = '';
         $work_date_arr = Array();
-        //$action_msg .= $f_due_date."<br>\n";
-    
+
+        //echo $f_receive_date;
+
         /*
         if(isset($_GET['t']) && preg_match('/\A\d{4}-\d{2}\z/', $_GET['t'])) {
         //クエリ情報を基にしてDateTimeインスタンスを作成
@@ -217,6 +238,21 @@ class Calendar extends Model
                 //本日にはtodayクラスを付与してCSSで数字の見た目を変える due_date $html_due_date $today->format('Y-m-d')
                 $today_class = $day->format('Y-m-d') === $f_today ? 'today' : '';
                 $due_class = $day->format('Y-m-d') === $f_due_date ? 'background:red; color:#FFF; font-weight:bold;' : '';
+                $receive_class = $day->format('Y-m-d') === $f_receive_date ? 'background:#088; color:#FFF; font-weight:bold;' : '';
+                $platemake_class = $day->format('Y-m-d') === $f_platemake_date ? 'background:#808; color:#FFF; font-weight:bold;' : '';
+                if($day->format('Y-m-d') === $f_platemake_date && $day->format('Y-m-d') === $f_receive_date)   {
+                    $re_pl_html = '<div class="platemake" title="入稿・下版日">&emsp;<span class="str1">入稿・下版日</span></div>';
+                }
+                elseif($day->format('Y-m-d') === $f_platemake_date)   {
+                    $re_pl_html = '<div class="platemake" title="下版日">&emsp;<span class="str1">下版日</span></div>';
+                }
+                elseif($day->format('Y-m-d') === $f_receive_date)   {
+                    $re_pl_html = '<div class="receive" title="入稿日">&emsp;<span class="str1">入稿日</span></div>';
+                }
+                else    {
+                    $re_pl_html = '<div class="">&emsp;</div>';
+                }
+                
                 //会社の休日
                 $company_class = $this->scheduleDays($day->format('Y-m-d'),$company_schedule_arr) ? "datebox" : "";
     
@@ -262,9 +298,6 @@ class Calendar extends Model
                             <input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>
                             <label for="work'.$ymd_day.'" class="wclabel transition2"></label>
                         </div>
-                        <div>
-                            <input type="hidden" name="work_datexxx['.$ymd_day.']" value="'.$ymd_day.'">
-                        </div>
                     </div>
                     ',
                     $pd1_class,
@@ -284,13 +317,14 @@ class Calendar extends Model
     
     
                 $body .= sprintf(
-                    '<div class="day_cnt" style="%s"><a href=""><div style="%s">%s</div><div class="datestyle %s %s">%s</div></a>'.$workspace.'</div>',
+                    '<div class="day_cnt" style="%s"><a href=""><div style="%s">%s</div><div class="datestyle %s %s">%s</div></a>%s'.$workspace.'</div>',
                     $due_class,
                     $style_bg,
                     $weekarr[$fdw],
                     $company_class,
                     $today_class,
-                    $day->format('j')
+                    $day->format('j'),
+                    $re_pl_html,
                 );
     
                 
@@ -316,6 +350,7 @@ class Calendar extends Model
     $cal_html = <<<EOF
         {$ym_html}
         {$body}
+        <div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>
         {$f_due_date}
     
     EOF;

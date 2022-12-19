@@ -48,7 +48,7 @@ class ViewController extends Controller
 
 
 
-    public function index()
+    public function index(Request $request)
     {
         
         $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
@@ -60,13 +60,19 @@ class ViewController extends Controller
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
         $action_msg = "";
         $result = "";
         $result_date = "";
         $wd_result = "";
         $result_msg = "";
         $html_after_due_date = "";
-        $e_message = "検索 ： ".$s_product_code."";
+        $e_message = "";
+
+
+        $result_details = $this->SearchProcessDetails($request);
+
+
 
         return view('view', [
             's_product_code' => $s_product_code,
@@ -80,14 +86,352 @@ class ViewController extends Controller
             'mode' => $mode,
             'action_msg' => $action_msg,
             'e_message' => $e_message,
-            'result' => $result,
+            'result' => $result_details,
             'result_date' => $result_date,
             'wd_result' => $wd_result,
             'html_cal_main' => '',
+            'select_html' => $select_html,
+
         ]);
 
 
     }
+
+
+    public function oneSearch(Request $request)
+    {
+        
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $action_msg = "";
+        $result = "";
+        $result_date = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $e_message = "";
+
+
+        $result_details = $this->SearchProcessDetails($request);
+
+
+
+        return view('view', [
+            's_product_code' => $s_product_code,
+            'product_code' => $product_code,
+            'after_due_date' => $after_due_date,
+            'customer' => $customer,
+            'product_name' => $product_name,
+            'end_user' => $end_user,
+            'quantity' => $quantity,
+            'comment' => $comment,
+            'mode' => $mode,
+            'action_msg' => $action_msg,
+            'e_message' => $e_message,
+            'result' => $result_details,
+            'result_date' => $result_date,
+            'wd_result' => $wd_result,
+            'html_cal_main' => '',
+            'select_html' => $select_html,
+
+        ]);
+
+
+    }
+
+
+
+
+
+
+
+
+    public function postSearch(Request $request)
+    {
+
+
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $action_msg = "";
+        $result = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $e_message = "検索 ： ".$s_product_code."  ".$after_due_date."";
+
+
+        $result_details = $this->SearchProcessDetails($request);
+        $result_date = $this->SearchProcessDate($request);
+        //$result = array_merge($result_details, $result_dete);
+        $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+        $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+        $calendar_data = new Calendar();	// インスタンス作成
+        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+
+
+
+	        return view('view', [
+                's_product_code' => $s_product_code,
+                'product_code' => $product_code,
+                'after_due_date' => $test,
+                'customer' => $customer,
+                'product_name' => $product_name,
+                'end_user' => $end_user,
+                'quantity' => $quantity,
+                'comment' => $comment,
+            	'mode' => $mode,
+                'action_msg' => $action_msg,
+                'e_message' => $e_message,
+                'result' => $result_details,
+                'result_date' => $result_date,
+                'wd_result' => '',
+                'html_cal_main' => $html_cal,
+                'select_html' => $select_html,
+	        ]);
+
+    }
+
+
+    public function SearchProcessDetails($request) {
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $receive_date = !empty($_POST["receive_date"]) ? $_POST['receive_date'] : "";
+        $platemake_date = !empty($_POST["platemake_date"]) ? $_POST['platemake_date'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $action_msg = "";
+        $result = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $e_message = "";
+        $systemdate = Carbon::now();
+        $lnum = 2;  // limitの件数
+
+
+
+
+
+        try {
+
+                $data = DB::table($this->table)
+                ->select(
+                    'product_code',
+                    'serial_code',
+                    'rep_code',
+                    'after_due_date',
+                    'customer',
+                    'product_name',
+                    'end_user',
+                    'quantity',
+                    'receive_date',
+                    'platemake_date',
+                    'status',
+                    'comment',
+                    'created_user',
+                    'updated_user',
+                    'created_at',
+                    'updated_at'
+                );
+                if(!empty($s_product_code)) {
+                    $data->where('product_code', $s_product_code);
+                    $sqlmode = "pcode";
+                }
+                else {
+                    //$data->where('product_code', $s_product_code);
+                    $data->whereDate('after_due_date', '>=', $systemdate)
+                    ->limit($lnum);
+                    $sqlmode = "default";
+                }
+                $result = $data
+                ->get();
+                $datacount = $data->count();
+
+
+
+                if($datacount > 0) {
+                    $r_after_due_date = $result[0]->after_due_date;
+                    $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
+                    $result_msg = "OK";
+                    if($sqlmode === "pcode") {
+                        $e_message .= "検索結果 ： ".$datacount." 件<br>\n伝票番号 ".$result[0]->product_code." 検索しました";
+                    }
+                    elseif($sqlmode === "default") {
+                        $e_message .= "検索結果　： 本日以降<br>\n";
+                        $e_message .= "".$datacount." 件中 ".$lnum." 件<br>\n";
+                    }
+                    
+
+                }
+                else {
+                    $r_after_due_date = "";
+
+                    $e_message .= " 結果 ： ".$datacount." 件 データがありません";
+                    $result_msg = "none";
+
+    
+
+                }
+
+
+
+                
+
+            //return $result;
+            //$wd_result = $this->workdateSearch($request);
+
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+
+        $redata = array();
+        $redata = [
+            'datacount' => $datacount, 
+            'html_after_due_date' => $html_after_due_date,
+			'product_code' => $s_product_code,
+			'after_due_date' => $r_after_due_date,
+			'customer' => $customer,
+			'product_name' => $product_name,
+			'end_user' => $end_user,
+			'quantity' => $quantity,
+			'comment' => $comment,
+            'result' => $result,
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+        ];
+
+        return $redata;
+
+
+
+    }
+
+
+    public function SearchProcessDate($request) {
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $f_work_date = "";
+        $html_f_work_date = "";
+        $e_message = "検索 ： ".$s_product_code."";
+
+        try {
+
+            if(isset($s_product_code)) {
+                $data = DB::table($this->table_process_date)
+                ->select(
+                    'work_date',
+                    'product_code',
+                    'departments_name',
+                    'departments_code',
+                    'work_name',
+                    'work_code',
+                    'process_name',
+                    'status'
+                );
+                $data->where('product_code', $s_product_code);
+                $result = $data
+                ->get();
+                $datacount = $data->count();
+
+
+
+                if($datacount > 0) {
+                    $f_work_date = $result[0]->work_date;
+                    $html_f_work_date = !empty($f_work_date) ? date('n月j日', strtotime($f_work_date)) : "";
+                    $result_msg = "OK date";
+                    $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> date = ".$html_f_work_date;
+
+                }
+                else {
+
+                    $e_message .= " データがありません <> count = ".$datacount."";
+                    $result_msg = "none";
+    
+
+                }
+
+
+
+                
+            }
+
+            //return $result;
+            //$wd_result = $this->workdateSearch($request);
+
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+
+        $redata = array();
+        $redata = [
+            'datacount' => $datacount, 
+            'html_f_work_date' => $html_f_work_date,
+			'product_code' => $s_product_code,
+			'f_work_date' => $f_work_date,
+            'result' => $result,
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+        ];
+
+        return $redata;
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -329,237 +673,6 @@ class ViewController extends Controller
 
     }
 
-
-    public function postSearch(Request $request)
-    {
-
-
-        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
-        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
-        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
-        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
-        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
-        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
-        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
-        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
-        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
-        $action_msg = "";
-        $result = "";
-        $wd_result = "";
-        $result_msg = "";
-        $html_after_due_date = "";
-        $e_message = "検索 ： ".$s_product_code."";
-
-
-        $result_details = $this->SearchProcessDetails($request);
-        $result_date = $this->SearchProcessDate($request);
-        //$result = array_merge($result_details, $result_dete);
-        $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
-        $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
-        $calendar_data = new Calendar();	// インスタンス作成
-        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
-
-
-
-	        return view('view', [
-                's_product_code' => $s_product_code,
-                'product_code' => $product_code,
-                'after_due_date' => $after_due_date,
-                'customer' => $customer,
-                'product_name' => $product_name,
-                'end_user' => $end_user,
-                'quantity' => $quantity,
-                'comment' => $comment,
-            	'mode' => $mode,
-                'action_msg' => $action_msg,
-                'e_message' => $e_message,
-                'result' => $result_details,
-                'result_date' => $result_date,
-                'wd_result' => '',
-                'html_cal_main' => $html_cal,
-	        ]);
-
-    }
-
-
-    public function SearchProcessDetails($request) {
-        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
-        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
-        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
-        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
-        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
-        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
-        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
-        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
-        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
-        $action_msg = "";
-        $result = "";
-        $wd_result = "";
-        $result_msg = "";
-        $html_after_due_date = "";
-        $e_message = "検索 ： ".$s_product_code."";
-
-
-
-
-
-        try {
-
-            if(isset($s_product_code)) {
-                $data = DB::table($this->table)
-                ->select(
-                    'product_code',
-                    'serial_code',
-                    'rep_code',
-                    'after_due_date',
-                    'customer',
-                    'product_name',
-                    'end_user',
-                    'quantity',
-                    'status',
-                    'comment'
-                );
-                $data->where('product_code', $s_product_code);
-                $result = $data
-                ->get();
-                $datacount = $data->count();
-
-
-
-                if($datacount > 0) {
-                    $r_after_due_date = $result[0]->after_due_date;
-                    $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
-                    $result_msg = "OK";
-                    $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> date = ".$html_after_due_date;
-
-                }
-                else {
-
-                    $e_message .= " データがありません <> count = ".$datacount." <> date = ".$html_after_due_date;
-                    $result_msg = "none";
-    
-
-                }
-
-
-
-                
-            }
-
-            //return $result;
-            //$wd_result = $this->workdateSearch($request);
-
-
-        } catch (PDOException $e){
-            //print('Error:'.$e->getMessage());
-            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
-            //die();
-        }
-        
-
-        $redata = array();
-        $redata = [
-            'datacount' => $datacount, 
-            'html_after_due_date' => $html_after_due_date,
-			'product_code' => $s_product_code,
-			'after_due_date' => $after_due_date,
-			'customer' => $customer,
-			'product_name' => $product_name,
-			'end_user' => $end_user,
-			'quantity' => $quantity,
-			'comment' => $comment,
-            'result' => $result,
-            'mode' => $mode, 
-            'e_message' => $e_message, 
-            'result_msg' => $result_msg,
-        ];
-
-        return $redata;
-
-
-
-    }
-
-
-    public function SearchProcessDate($request) {
-        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
-        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
-        $action_msg = "";
-        $result = "";
-        $result_msg = "";
-        $f_work_date = "";
-        $html_f_work_date = "";
-        $e_message = "検索 ： ".$s_product_code."";
-
-        try {
-
-            if(isset($s_product_code)) {
-                $data = DB::table($this->table_process_date)
-                ->select(
-                    'work_date',
-                    'product_code',
-                    'departments_name',
-                    'departments_code',
-                    'work_name',
-                    'work_code',
-                    'process_name',
-                    'status'
-                );
-                $data->where('product_code', $s_product_code);
-                $result = $data
-                ->get();
-                $datacount = $data->count();
-
-
-
-                if($datacount > 0) {
-                    $f_work_date = $result[0]->work_date;
-                    $html_f_work_date = !empty($f_work_date) ? date('n月j日', strtotime($f_work_date)) : "";
-                    $result_msg = "OK date";
-                    $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> date = ".$html_f_work_date;
-
-                }
-                else {
-
-                    $e_message .= " データがありません <> count = ".$datacount."";
-                    $result_msg = "none";
-    
-
-                }
-
-
-
-                
-            }
-
-            //return $result;
-            //$wd_result = $this->workdateSearch($request);
-
-
-        } catch (PDOException $e){
-            //print('Error:'.$e->getMessage());
-            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
-            //die();
-        }
-        
-
-        $redata = array();
-        $redata = [
-            'datacount' => $datacount, 
-            'html_f_work_date' => $html_f_work_date,
-			'product_code' => $s_product_code,
-			'f_work_date' => $f_work_date,
-            'result' => $result,
-            'mode' => $mode, 
-            'e_message' => $e_message, 
-            'result_msg' => $result_msg,
-        ];
-
-        return $redata;
-
-
-
-    }
 
 
 

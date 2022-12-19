@@ -84,6 +84,7 @@ class ProcessController extends Controller
             'result_date' => $result_date,
             'wd_result' => $wd_result,
             'html_cal_main' => '',
+            'select_html' => '',
 
         ]);
 
@@ -344,6 +345,7 @@ class ProcessController extends Controller
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
         $action_msg = "";
         $result = "";
         $wd_result = "";
@@ -378,6 +380,7 @@ class ProcessController extends Controller
                 'result_date' => $result_date,
                 'wd_result' => '',
                 'html_cal_main' => $html_cal,
+                'select_html' => $select_html,
 	        ]);
 
     }
@@ -422,7 +425,11 @@ class ProcessController extends Controller
                     'receive_date',
                     'platemake_date',
                     'status',
-                    'comment'
+                    'comment',
+                    'created_user',
+                    'updated_user',
+                    'created_at',
+                    'updated_at'
                 );
                 $data->where('product_code', $s_product_code);
                 $result = $data
@@ -702,6 +709,241 @@ class ProcessController extends Controller
 
 
 
+
+
+
+
+
+
+
+
+
+    public function updateProcessDetails(Request $request)
+    {
+
+
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+        /*
+        foreach($details AS $key => $val) {
+            $name = $val;
+
+        }
+        */
+
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $motion = !empty($_POST["motion"]) ? $_POST['motion'] : "";
+
+        $this->serial_code = $request->serial_code;
+        $params = $request->only([
+            'product_code',
+            'serial_code',
+            'rep_code',
+            'after_due_date',
+            'customer',
+            'product_name',
+            'end_user',
+            'quantity',
+            'receive_date',
+            'platemake_date',
+            'status',
+            'comment',
+            'created_user',
+            'created_at',
+            'updated_user',
+            'updated_at',
+        ]);
+
+
+
+
+        $action_msg = "";
+        $result = "";
+        $result_date = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $html_cal = "";
+        $e_message = "検索 ： ".$s_product_code."";
+
+
+        $listcount = isset($_POST['listcount']) ? $_POST['listcount'] : "";
+        $this->status = isset($_POST['status']) ? $_POST['status'] : "";
+
+        $mode = isset($_POST['mode']) ? $_POST['mode'] : "";
+        $upkind = isset($_POST['upkind']) ? $_POST['upkind'] : "";
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+
+        $reqarr = $request->only([
+            'work_name', 
+            'departments_name'
+        ]);
+
+
+        try {
+            $re_data = [];
+            $systemdate = Carbon::now();
+            if($upkind == 3) {
+            //$this->company_id = DB::table($this->table)->max('company_id') + 1;
+            //$this->product_id = DB::table($this->table)->max('product_id') + 1;
+            //$this->order_info = 'a';
+            //$this->created_user = 'system';
+            }
+            if($upkind == 2) {
+                //$this->product_id = DB::table($this->table)->max('product_id') + 1;
+                //$this->order_info = 'a';
+                //$this->created_user = 'system';
+            }
+            //$this->now_inventory = isset($this->now_inventory) ? $this->now_inventory : "";
+            //$this->nbox = isset($this->nbox) ? $this->nbox : "";
+
+            /*
+            //例：user_idが1001かつemailがtest@test.comを検索し、見つかった場合は、nameをnishiyamaへ、ageを33にupdateします。
+                        DB::table($this->table_process_date)
+                        ->updateOrInsert(
+                            ['user_id' => 1001, 'email' => 'test@test.com'],
+                            ['name' => 'nishiyama', 'age' => 33]
+                        );
+
+            */
+
+
+
+
+            if($mode == 'delete') {
+                $count1 = DB::table($this->table_process_date)
+                ->where('product_code', $s_product_code)
+                ->delete();
+                $count2 = DB::table($this->table)
+                ->where('product_code', $s_product_code)
+                ->delete();
+    
+            }
+            else {
+
+
+
+                $updateresult = DB::table($this->table)
+                ->updateOrInsert(
+                    [
+                        'product_code' => $s_product_code, 
+                        'created_user' => 'system',
+                    ],
+                    [
+
+                        'serial_code' => $params['serial_code'], 
+                        'rep_code' => $params['rep_code'], 
+                        'after_due_date' => $params['after_due_date'], 
+                        'customer' => $params['customer'], 
+                        'product_name' => $params['product_name'], 
+                        'end_user' => $params['end_user'], 
+                        'quantity' => $params['quantity'], 
+                        'receive_date' => $params['receive_date'], 
+                        'platemake_date' => $params['platemake_date'], 
+                        'status' => $params['status'], 
+                        'comment' => $params['comment'], 
+                        'updated_user' => $params['updated_user'], 
+                        'updated_at' => $systemdate,
+
+                    ]
+                );
+                
+            }
+
+
+
+                /*
+                $updateresult = DB::table($this->table)
+                ->updateOrInsert(
+                    [
+                        'product_code' => $s_product_code, 
+                        'created_user' => 'system',
+                    ],
+                    [
+
+                        'serial_code' => $params['serial_code']$serial_code, 
+                        'rep_code' => $rep_code, 
+                        'after_due_date' => $after_due_date, 
+                        'customer' => $customer, 
+                        'product_name' => $product_name, 
+                        'end_user' => $end_user, 
+                        'quantity' => $quantity, 
+                        'receive_date' => $receive_date, 
+                        'platemake_date' => $platemake_date, 
+                        'status' => $status, 
+                        'comment' => $comment, 
+                        'updated_user' => $updated_user, 
+                        'updated_at' => $systemdate,
+
+                    ]
+                );
+                */
+
+
+
+
+            //$re_data['id'] = $id;
+            //DB::commit();
+            
+            //return $re_data;
+            
+            $result_details = $this->SearchProcessDetails($request);
+            $result_date = $this->SearchProcessDate($request);
+            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+            $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+            $calendar_data = new Calendar();	// インスタンス作成
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+    
+            //$wd_result = $this->workdateSearch($request);
+
+        }catch(\PDOException $pe){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$pe');
+            Log::error($pe->getMessage());
+            throw $pe;
+        }catch(\Exception $e){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$e');
+            Log::error($e->getMessage());
+            throw $e;
+        }
+
+        
+        
+        $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
+        $result_msg = "OK";
+
+
+        return view('process', [
+            's_product_code' => $s_product_code,
+            'product_code' => $product_code,
+            'after_due_date' => $after_due_date,
+            'customer' => $customer,
+            'product_name' => $product_name,
+            'end_user' => $end_user,
+            'quantity' => $quantity,
+            'comment' => $comment,
+            'mode' => $mode,
+            'action_msg' => $action_msg,
+            'e_message' => $e_message,
+            'result' => $result_details,
+            'result_date' => $result_date,
+            'html_cal_main' => $html_cal,
+            'select_html' => 'Default',
+        ]);
+
+    }
+
+
+
+
+
+
     public function insertData(Request $request)
     {
 
@@ -952,6 +1194,7 @@ class ProcessController extends Controller
             'result_date' => $result_date,
             'wd_result' => $wd_result,
             'html_cal_main' => $html_cal,
+            'select_html' => '',
         ]);
 
         /*

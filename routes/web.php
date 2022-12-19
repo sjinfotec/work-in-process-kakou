@@ -45,7 +45,8 @@ Route::post('/process', [ProcessController::class,'index']);
 Route::post('/process/get', [ProcessController::class,'getData']);
 Route::post('/process/workget', [ProcessController::class,'getWORK']);
 Route::post('/process/getone', [ProcessController::class,'getDataOne']);
-Route::post('/process/update', [ProcessController::class,'fix']);
+Route::post('/process/update', [ProcessController::class,'updateProcessDetails']);
+Route::post('/process/updates', [ProcessController::class,'fix']);
 Route::post('/process/insert', [ProcessController::class,'insertData']);
 Route::post('/process/search', [ProcessController::class,'postSearch']);
 Route::post('/process/wdget', [ProcessController::class,'workDate']);   // 部署の作業日取得

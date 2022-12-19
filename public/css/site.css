@@ -478,7 +478,8 @@ header button {width:auto;}
 
 #form2  {
   display: flex;
-  align-items: center;
+  /*align-items: center;*/
+  align-items: stretch;
   justify-content: space-between;
   flex-wrap: wrap;
   gap:10px 20px;
@@ -499,6 +500,12 @@ header button {width:auto;}
 }
 #form2 label {
   background:#eecc33;
+}
+#form2 .input_style2 {
+  font-size:2rem;
+  /*height:3rem;*/
+  padding:0 4px;
+  border:2px solid #EC3;
 }
 
 
@@ -575,13 +582,39 @@ header button {width:auto;}
   line-height: 3px;
   text-align: center;
   left:0px;
-  top: 30px;
+  top: 60px;
   z-index: 1;
 /*
   top: 50%;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 */
+}
+#calendar_dayzone .receive {
+  position: relative;
+  background:#0BE;
+}
+#calendar_dayzone .platemake  {
+  position: relative;
+  background:#E0B;
+}
+#calendar_dayzone .str1  {
+  position: absolute;
+  top: 12px;
+  left: -3px;
+  width: auto;
+  height: 16px;
+  line-height: 18px;
+  color: #FFF;
+  font-weight:bold;
+  background:rgb(18, 158, 88);
+  border-left:3px solid #FFF;
+  border-radius:  3px;
+  text-align: left;
+  padding-left: 2px;
+
+
+  white-space: nowrap;
 }
 #calendar_dayzone a{
   text-decoration: none;
@@ -1053,7 +1086,7 @@ button.style5  {
 }
 
 .transition1  {
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.1s ease-in-out;
 }
 .transition2  {
   transition: all 0.5s 0s ease-in-out;
