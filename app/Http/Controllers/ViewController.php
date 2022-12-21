@@ -51,7 +51,26 @@ class ViewController extends Controller
     public function index(Request $request)
     {
         
+
+        $this->serial_code = $request->serial_code;
+        $params = $request->only([
+            'duedate_start',
+            'duedate_end',
+        ]);
+
+
+
+
+
         $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $duedate_start = !empty($_POST["duedate_start"]) ? $_POST['duedate_start'] : "";
+        $duedate_end = !empty($_POST["duedate_end"]) ? $_POST['duedate_end'] : "";
+        $s_customer = !empty($_POST["s_customer"]) ? $_POST['s_customer'] : "";
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+        $s_end_user = !empty($_POST["s_end_user"]) ? $_POST['s_end_user'] : "";
+
+
+        /*
         $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
         $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
         $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
@@ -59,6 +78,7 @@ class ViewController extends Controller
         $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        */
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
         $action_msg = "";
@@ -76,13 +96,6 @@ class ViewController extends Controller
 
         return view('view', [
             's_product_code' => $s_product_code,
-            'product_code' => $product_code,
-            'after_due_date' => $after_due_date,
-            'customer' => $customer,
-            'product_name' => $product_name,
-            'end_user' => $end_user,
-            'quantity' => $quantity,
-            'comment' => $comment,
             'mode' => $mode,
             'action_msg' => $action_msg,
             'e_message' => $e_message,
@@ -91,6 +104,11 @@ class ViewController extends Controller
             'wd_result' => $wd_result,
             'html_cal_main' => '',
             'select_html' => $select_html,
+            'duedate_start' => $duedate_start,
+            'duedate_end' => $duedate_end,
+            's_customer' => $s_customer,
+            's_product_name' => $s_product_name,
+            's_end_user' => $s_end_user,
 
         ]);
 
@@ -122,6 +140,13 @@ class ViewController extends Controller
 
         $result_details = $this->SearchProcessDetails($request);
 
+        if($result_details['datacount'] === 1) {
+            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+            //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+            $calendar_data = new Calendar();	// インスタンス作成
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+    
+        }
 
 
         return view('view', [
@@ -173,23 +198,32 @@ class ViewController extends Controller
         $wd_result = "";
         $result_msg = "";
         $html_after_due_date = "";
+        $html_cal = "";
         $e_message = "検索 ： ".$s_product_code."  ".$after_due_date."";
+
+        $duedate_start = !empty($_POST["duedate_start"]) ? $_POST['duedate_start'] : "";
+        $duedate_end = !empty($_POST["duedate_end"]) ? $_POST['duedate_end'] : "";
+        $s_customer = !empty($_POST["s_customer"]) ? $_POST['s_customer'] : "";
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+        $s_end_user = !empty($_POST["s_end_user"]) ? $_POST['s_end_user'] : "";
 
 
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
+        //echo "result_details['datacount'] = ".$result_details['datacount']."<br>\n";
+        if($result_details['datacount'] === 1) {
+            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+            //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+            $calendar_data = new Calendar();	// インスタンス作成
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+    
+        }
         //$result = array_merge($result_details, $result_dete);
-        $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
-        $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
-        $calendar_data = new Calendar();	// インスタンス作成
-        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
-
-
 
 	        return view('view', [
                 's_product_code' => $s_product_code,
                 'product_code' => $product_code,
-                'after_due_date' => $test,
+                'after_due_date' => $after_due_date,
                 'customer' => $customer,
                 'product_name' => $product_name,
                 'end_user' => $end_user,
@@ -203,22 +237,30 @@ class ViewController extends Controller
                 'wd_result' => '',
                 'html_cal_main' => $html_cal,
                 'select_html' => $select_html,
-	        ]);
+                'duedate_start' => $duedate_start,
+                'duedate_end' => $duedate_end,
+                's_customer' => $s_customer,
+                's_product_name' => $s_product_name,
+                's_end_user' => $s_end_user,
+
+
+
+                ]);
 
     }
 
 
     public function SearchProcessDetails($request) {
         $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
-        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
-        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
-        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
-        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
-        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
-        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
-        $receive_date = !empty($_POST["receive_date"]) ? $_POST['receive_date'] : "";
-        $platemake_date = !empty($_POST["platemake_date"]) ? $_POST['platemake_date'] : "";
-        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        //$product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        //$after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $s_customer = !empty($_POST["s_customer"]) ? $_POST['s_customer'] : "";
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+        $s_end_user = !empty($_POST["s_end_user"]) ? $_POST['s_end_user'] : "";
+        //$quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        //$receive_date = !empty($_POST["receive_date"]) ? $_POST['receive_date'] : "";
+        //$platemake_date = !empty($_POST["platemake_date"]) ? $_POST['platemake_date'] : "";
+        //$comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $action_msg = "";
         $result = "";
@@ -227,9 +269,22 @@ class ViewController extends Controller
         $html_after_due_date = "";
         $e_message = "";
         $systemdate = Carbon::now();
-        $lnum = 2;  // limitの件数
+        $lnum = 20;  // limitの件数
+        $default = true;
+        $viewmode = Array();
 
 
+        $this->motion = $request->motion;
+        $params = $request->only([
+            's_product_code',
+            'duedate_start',
+            'duedate_end',
+            's_customer',
+            's_product_name',
+            's_end_user',
+            'mode',
+            'submode',
+        ]);
 
 
 
@@ -254,16 +309,46 @@ class ViewController extends Controller
                     'created_at',
                     'updated_at'
                 );
-                if(!empty($s_product_code)) {
-                    $data->where('product_code', $s_product_code);
-                    $sqlmode = "pcode";
+                if(!empty($params['s_product_code'])) {
+                    $data->where('product_code', $params['s_product_code']);
+                    $viewmode['pcode'] = 1;
+                    $default = false;
                 }
-                else {
-                    //$data->where('product_code', $s_product_code);
-                    $data->whereDate('after_due_date', '>=', $systemdate)
+                if(!empty($params['duedate_start'])) {
+                    $data->where('after_due_date', '>=', $params['duedate_start']);
+                    $viewmode['duedatestart'] = 1;
+                    $default = false;
+                }
+                if(!empty($params['duedate_end'])) {
+                    $data->where('after_due_date', '<=', $params['duedate_end']);
+                    $viewmode['duedatestart'] = 1;
+                    $default = false;
+                }
+                if(!empty($params['s_customer'])) {
+                    $data->where('customer', 'LIKE', '%'.$params['s_customer'].'%');
+                    $viewmode['customer'] = 1;
+                    $default = false;
+                }
+                if(!empty($params['s_product_name'])) {
+                    $data->where('product_name', 'LIKE', '%'.$params['s_product_name'].'%');
+                    $viewmode['pname'] = 1;
+                    $default = false;
+                }
+                if(!empty($params['s_end_user'])) {
+                    $data->where('end_user', 'LIKE', '%'.$params['s_end_user'].'%');
+                    $viewmode['enduser'] = 1;
+                    $default = false;
+                }
+
+                if($default) {                    
+                    $data->whereDate('after_due_date', '>=', $systemdate);
+                    $data
+                    //->orderBy('after_due_date', 'desc')
+                    ->orderBy('after_due_date', 'asc')
                     ->limit($lnum);
-                    $sqlmode = "default";
+                    $viewmode['default'] = 1;
                 }
+
                 $result = $data
                 ->get();
                 $datacount = $data->count();
@@ -274,12 +359,25 @@ class ViewController extends Controller
                     $r_after_due_date = $result[0]->after_due_date;
                     $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
                     $result_msg = "OK";
-                    if($sqlmode === "pcode") {
-                        $e_message .= "検索結果 ： ".$datacount." 件<br>\n伝票番号 ".$result[0]->product_code." 検索しました";
+                    $e_message .= "検索結果 ： ".$datacount." 件<br>\n";
+                    if(isset($viewmode['pcode'])) {
+                        $e_message .= "伝票番号 『 ".$result[0]->product_code." 』 検索しました<br>\n";
                     }
-                    elseif($sqlmode === "default") {
-                        $e_message .= "検索結果　： 本日以降<br>\n";
-                        $e_message .= "".$datacount." 件中 ".$lnum." 件<br>\n";
+                    if(isset($viewmode['duedatestart'])) {
+                        $e_message .= "期間 『 ".$params['duedate_start']." ～ ".$params['duedate_end']." 』 検索しました<br>\n";
+                    }
+                    if(isset($viewmode['customer'])) {
+                        $e_message .= "得意先 『 ".$params['s_customer']." 』 検索しました<br>\n";
+                    }
+                    if(isset($viewmode['pname'])) {
+                        $e_message .= "品名 『 ".$params['s_product_name']." 』 検索しました<br>\n";
+                    }
+                    if(isset($viewmode['enduser'])) {
+                        $e_message .= "エンドユーザー 『 ".$params['s_end_user']." 』 検索しました<br>\n";
+                    }
+                    if(isset($viewmode['default'])) {
+                        $limitcount = $datacount < $lnum ? $datacount : $lnum ;
+                        $e_message .= "納期　本日以降  ".$limitcount." 件の表示<br>\n";
                     }
                     
 
@@ -307,7 +405,14 @@ class ViewController extends Controller
             $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
             //die();
         }
-        
+
+        /*
+        	's_customer' => $params['s_customer'],
+			's_product_name' => $params['s_product_name'],
+			's_end_user' => $params['s_end_user'],
+			'quantity' => $quantity,
+			'comment' => $comment,
+        */
 
         $redata = array();
         $redata = [
@@ -315,11 +420,9 @@ class ViewController extends Controller
             'html_after_due_date' => $html_after_due_date,
 			'product_code' => $s_product_code,
 			'after_due_date' => $r_after_due_date,
-			'customer' => $customer,
-			'product_name' => $product_name,
-			'end_user' => $end_user,
-			'quantity' => $quantity,
-			'comment' => $comment,
+			's_customer' => $s_customer,
+			's_product_name' => $s_product_name,
+			's_end_user' => $s_end_user,
             'result' => $result,
             'mode' => $mode, 
             'e_message' => $e_message, 
@@ -341,7 +444,7 @@ class ViewController extends Controller
         $result_msg = "";
         $f_work_date = "";
         $html_f_work_date = "";
-        $e_message = "検索 ： ".$s_product_code."";
+        $e_message = "工程 ： ".$s_product_code."";
 
         try {
 

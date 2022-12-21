@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Storage;
+use App\Models\CalendarSquare;
+
 
 $html_result = "";
 $cal_start_ym = "";
@@ -10,7 +12,7 @@ $editzone = false;
 $action_msg .= "mode：".$mode."<br>\n";
 $select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
 
-var_dump($result);
+//var_dump($result);
 //echo "<br><br>1:\n";
 //echo $result;
 //echo "<br><br>2:\n";
@@ -200,51 +202,73 @@ function create_calendar( $num = 1, $set = false, $after_due_date) {
 $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月～何か月分
 
 
+
+	//$after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+	//$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+
+	$calendar_squ_data = new CalendarSquare();	// インスタンス作成
+	$html_calsqu = $calendar_squ_data->create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月～何か月分
+
+
+
+
+
 ?>
 @extends('layouts.main')
 @section('content')
 				<div id="contents_area">
 					<div id="title_cnt">
-						<h1 class="tstyle">作業工程閲覧</h1>
+						<h1 class="tstyle">作業工程／検索・閲覧</h1>
 					</div>
 					<!-- main contentns row -->
 					<div id="maincontents">
 					@if($select_html === 'Default')
 						<div id="search_fcnt">
-							<h4>伝票番号検索</h4>
+							<!--<h4>検索</h4>-->
 
 							<form id="searchform" name="searchform" method="POST">
-								<input type="hidden" name="mode" id="mode" value="product_search">
-								<input type="hidden" name="submode" id="submode" value="chkwrite">
+								<input type="hidden" name="mode" id="mode" value="">
+								<input type="hidden" name="submode" id="submode" value="">
 								<input type="hidden" name="motion" id="motion" value="">
 
 								<div id="form1">
-									<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
-									<button class="transition1" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
-									<!--<div id="error">{{ $e_message }}</div>-->
+									<div>
+										<label for="s_product_code" class="w4e">伝票番号</label>
+										<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
+									</div>
+									<div class="mgl40">
+										<label for="duedate" class="w4e">納期</label>
+										<input type="date" class="form_style1 w10e" name="duedate_start" id="duedate" value="{{ $duedate_start }}">
+										～
+										<input type="date" class="form_style1 w10e" name="duedate_end" id="duedate" value="{{ $duedate_end }}">
+									</div>
 								</div>
+								<div id="form1" class="mgt10">
+									<div class="form_zone">
+										<label for="s_customer" class="">得意先</label>
+										<input type="text" class="form_style1" name="s_customer" id="s_customer" value="{{ $s_customer }}"> 
+									</div>
+									<div class="form_zone">
+										<label for="s_product_name" class="">品名</label>
+										<input type="text" class="form_style1" name="s_product_name" id="s_product_name" value="{{ $s_product_name }}">
+									</div>
+									<div class="form_zone">
+										<label for="s_end_user" class="">エンドユーザー</label>
+										<input type="text" class="form_style1" name="s_end_user" id="s_end_user" value="{{ $s_end_user }}">
+									</div>
+								</div>
+								<div id="form1" class="mgt10">
+									<button class="transition1" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','some_search','chkwrite')">検索</button>
+									<div id="error">{!! $result['e_message'] !!}</div>
+								</div>
+									<!--<div id="error">{{ $e_message }}</div>-->
+
 								@csrf 
 							</form>
 						</div>
-						<div id="search_fcnt">
-							<h4>検索</h4>
-
-							<form id="searchform" name="searchform" method="POST">
-								<input type="hidden" name="mode" id="mode" value="product_search">
-								<input type="hidden" name="submode" id="submode" value="chkwrite">
-								<input type="hidden" name="motion" id="motion" value="">
-
-								<div id="form1">
-									<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
-									<button class="transition1" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
-									<!--<div id="error">{{ $e_message }}</div>-->
-								</div>
-								@csrf 
-							</form>
-						</div>
-						<div id="error">{!! $result['e_message'] !!}</div>
+						
 						<form id="updateform" name="updateform" method="POST">
-							<div id="">
+							<div id="tbl_1" class="mgt10">
 								<table>
 									<thead>
 										<tr>
@@ -270,8 +294,8 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 											<td class="">{{ $val->product_name }}</td>
 											<td class="">{{ $val->end_user }}</td>
 											<td class="">{{ $val->quantity }}</td>
-											<td class="">{{ date('Y-m-d', strtotime($val->receive_date)) }}</td>
-											<td class="">{{ date('Y-m-d', strtotime($val->platemake_date)) }}</td>
+											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
+											<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>
 											<td class="">{{ $val->comment }}</td>
 										</tr>
 
@@ -285,55 +309,6 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 
 
-
-
-
-
-
-
-
-
-
-
-							<div id="form2" class="mgt20">
-								<div class="form_style">
-									<label for="product_code" class="">伝票番号</label>
-									<input type="text" class="input_style" name="product_code" id="product_code" value="{{ $product_code }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="after_due_date" class="">納期</label>
-									<input type="date" class="input_style" name="after_due_date" id="after_due_date" value="{{ $ymd_after_due_date }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="customer" class="">得意先</label>
-									<input type="text" class="input_style" name="customer" id="customer" value="{{ $customer }}" readonly> 
-								</div>
-								<div class="form_style ">
-									<label for="product_name" class="">品名</label>
-									<input type="text" class="input_style" name="product_name" id="product_name" value="{{ $product_name }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="end_user" class="">エンドユーザー</label>
-									<input type="text" class="input_style" name="end_user" id="end_user" value="{{ $end_user }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="quantity" class="">数量</label>
-									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="receive_date" class="">入稿日</label>
-									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_receive_date }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="platemake_date" class="">下版日</label>
-									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_platemake_date }}" readonly>
-								</div>
-								<div class="form_style">
-									<label for="comment" class="">コメント</label>
-									<textarea class="input_style2" id="comment" name="comment" rows="3" readonly>{{ $comment }}</textarea>
-								</div>
-
-							</div>
 							@if ($editzone === true)
 							<div id="form1" class="mgt20">
 								<input type="hidden" name="mode" id="mode" value="">
@@ -403,9 +378,9 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 						</form>
 
-						@php
-							//echo $html_cal;
-						@endphp
+						@if($result['datacount'] === 1)
+							{!! $html_calsqu !!}
+						@endif
 						<div>{!! $action_msg !!}</div>
 
 

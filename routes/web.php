@@ -56,6 +56,7 @@ Route::get('/view', [ViewController::class,'index']);
 Route::post('/view', [ViewController::class,'index']);
 Route::post('/view/get', [ViewController::class,'getData']);
 Route::post('/view/search', [ViewController::class,'postSearch']);
+Route::get('/view/search', [ViewController::class,'index']);
 
 // 詳細編集
 Route::get('/spec', [SpecController::class,'index']);

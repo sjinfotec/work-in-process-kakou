@@ -225,7 +225,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								@csrf 
 							</form>
 						</div>
-						<div id="error">{!! $result['e_message'] !!}</div>
+						<div id="error">@isset($result['e_message']) {!! $result['e_message'] !!} @endisset</div>
 						<form id="updateform" name="updateform" method="POST">
 							<div id="form2" class="mgt20">
 								<div class="form_style">

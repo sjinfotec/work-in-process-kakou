@@ -285,7 +285,9 @@ header button {width:auto;}
 .mgt20  {margin-top:20px;}
 .mgt40  {margin-top:40px;}
 
-.mgla {margin-left: auto;}
+.mgl20  {margin-left:20px;}
+.mgl40  {margin-left:40px;}
+.mgla   {margin-left: auto;}
 
 .w4e  {width: 4em;}
 .w10e {width: 10em;}
@@ -342,6 +344,13 @@ header button {width:auto;}
   /*justify-content: space-between;*/
   gap:0 20px;
 
+}
+#form1 .form_zone {
+  display: flex;
+  flex-direction: column;
+  /*width:calc(100% - 8px);*/
+  width:30%;
+  box-sizing: border-box;
 }
 #form1 .form_style {
   font-size:2rem;
