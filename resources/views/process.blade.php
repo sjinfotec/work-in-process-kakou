@@ -326,6 +326,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										<input type="radio" name="departments_code" value="7" id="departments_code7">
 										<label for="departments_code7" class="label transition2" onclick="WORKcollect(7,'加工課２')">加工課２</label>
 									</div>
+									<div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>
 								</div>
 								<div id="resultwp"></div>
 								<div id="resultbtn"></div>
@@ -387,10 +388,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								<input type="hidden" name="mode" id="mode" value="">
 								<input type="hidden" name="select_html" id="select_html" value="">
 								<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $product_code }}">
-								<input type="text" name="serial_code" id="serial_code" value="{{ $serial_code }}">
-								<input type="text" name="rep_code" id="rep_code" value="{{ $rep_code }}">
-								<input type="text" name="status" id="status" value="{{ $status }}">
-								<input type="text" name="updated_user" id="updated_user" value="{{ $updated_user }}">
+								<input type="hidden" name="serial_code" id="serial_code" value="{{ $serial_code }}">
+								<input type="hidden" name="rep_code" id="rep_code" value="{{ $rep_code }}">
+								<input type="hidden" name="status" id="status" value="{{ $status }}">
+								<input type="hidden" name="updated_user" id="updated_user" value="{{ $updated_user }}">
 								<div>
 									<button class="transition1" type="button" onClick="clickEvent('updateform','1','1','process_details_update','登録','product_update','chkwrite')">登録</button>
 									<button class="transition1" type="button" onClick="javascript:history.back();">戻る</button>

@@ -129,6 +129,7 @@ class ViewController extends Controller
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $viewmode = "watch";
         $action_msg = "";
         $result = "";
         $result_date = "";
@@ -144,7 +145,7 @@ class ViewController extends Controller
             $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
             //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
             $calendar_data = new Calendar();	// インスタンス作成
-            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
     
         }
 
@@ -199,6 +200,7 @@ class ViewController extends Controller
         $result_msg = "";
         $html_after_due_date = "";
         $html_cal = "";
+        $viewmode = "watch";
         $e_message = "検索 ： ".$s_product_code."  ".$after_due_date."";
 
         $duedate_start = !empty($_POST["duedate_start"]) ? $_POST['duedate_start'] : "";
@@ -215,7 +217,7 @@ class ViewController extends Controller
             $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
             //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
             $calendar_data = new Calendar();	// インスタンス作成
-            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
     
         }
         //$result = array_merge($result_details, $result_dete);
@@ -315,14 +317,18 @@ class ViewController extends Controller
                     $default = false;
                 }
                 if(!empty($params['duedate_start'])) {
-                    $data->where('after_due_date', '>=', $params['duedate_start']);
+                    $data->where('after_due_date', '>=', $params['duedate_start'])->limit(30);
                     $viewmode['duedatestart'] = 1;
                     $default = false;
+                    $limiton = true;
                 }
                 if(!empty($params['duedate_end'])) {
-                    $data->where('after_due_date', '<=', $params['duedate_end']);
+                    $data->where('after_due_date', '<=', $params['duedate_end'])
+                    ->limit(30);
+                    $duecount = $data->count();
                     $viewmode['duedatestart'] = 1;
                     $default = false;
+                    $limiton = true;
                 }
                 if(!empty($params['s_customer'])) {
                     $data->where('customer', 'LIKE', '%'.$params['s_customer'].'%');
@@ -379,7 +385,10 @@ class ViewController extends Controller
                         $limitcount = $datacount < $lnum ? $datacount : $lnum ;
                         $e_message .= "納期　本日以降  ".$limitcount." 件の表示<br>\n";
                     }
-                    
+                    if(isset($limiton)) {
+                        $e_message .= "結果表示は 30件までです。<br>\n";
+                    }
+
 
                 }
                 else {

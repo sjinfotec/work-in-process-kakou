@@ -351,6 +351,7 @@ class ProcessController extends Controller
         $wd_result = "";
         $result_msg = "";
         $html_after_due_date = "";
+        $viewmode = "editing";
         $e_message = "検索 ： ".$s_product_code."  ".$after_due_date."";
 
 
@@ -360,7 +361,7 @@ class ProcessController extends Controller
         $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
         $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
         $calendar_data = new Calendar();	// インスタンス作成
-        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
 
 
 
@@ -771,6 +772,7 @@ class ProcessController extends Controller
         $result_msg = "";
         $html_after_due_date = "";
         $html_cal = "";
+        $viewmode = "editing";
         $e_message = "検索 ： ".$s_product_code."";
 
 
@@ -899,7 +901,7 @@ class ProcessController extends Controller
             $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
             $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
             $calendar_data = new Calendar();	// インスタンス作成
-            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date);	//開始年月～何か月分
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
     
             //$wd_result = $this->workdateSearch($request);
 

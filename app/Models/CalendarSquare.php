@@ -43,7 +43,7 @@ class CalendarSquare extends Model
             $cal_parts .= '<table>';
             $cal_parts .= '<thead><tr><th colspan="7" class="month">'.$y.'年'.$m.'月</tr></thead>';
             $cal_parts .= '<tbody>';
-            $cal_parts .= '<tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>';
+            $cal_parts .= '<tr class="color_gray"><th class="color3">日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th class="color4">土</th></tr>';
             //週の数
             $week_line = 0;
     
@@ -71,7 +71,7 @@ class CalendarSquare extends Model
                 }
                 //日
                 if ( $month.'-'.$day == $thisday ) {
-                    $cal_parts .= '<td class="'.$stylecss.'"><strong>'.$day.'</strong></td>';	
+                    $cal_parts .= '<td class="'.$stylecss.' color_red"><strong>'.$day.'</strong></td>';	
                 } 
                 elseif ( $month.'-'.$day == $today ) {
                     $cal_parts .= '<td class="'.$stylecss.' today">'.$day.'</td>';	

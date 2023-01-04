@@ -25,7 +25,7 @@ class Calendar extends Model
     }
     
 
-    public function calendar($result,$after_due_date,$wd_result,$result_date) {
+    public function calendar($result,$after_due_date,$wd_result,$result_date,$viewmode) {
         //DateTimeインスタンスを作成
         //var_dump($result['result']);
         $today = new DateTime();
@@ -285,6 +285,16 @@ class Calendar extends Model
                     $style_bg = '';
                 }
                 $checked = '';
+
+
+                $workdate_html = "";
+                if($viewmode === 'editing')    {
+                    $workdate_html .= '<div class="line">'."\n";
+                    $workdate_html .= '							<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>'."\n";
+                    $workdate_html .= '							<label for="work'.$ymd_day.'" class="wclabel transition2"></label>'."\n";
+                    $workdate_html .= '						</div>'."\n";
+                }
+
     
                 $workspace = sprintf('
                     <div id="workin">
@@ -294,10 +304,7 @@ class Calendar extends Model
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
-                        <div class="line">
-                            <input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>
-                            <label for="work'.$ymd_day.'" class="wclabel transition2"></label>
-                        </div>
+                        '.$workdate_html.'
                     </div>
                     ',
                     $pd1_class,
@@ -350,8 +357,8 @@ class Calendar extends Model
     $cal_html = <<<EOF
         {$ym_html}
         {$body}
-        <div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>
-        {$f_due_date}
+        <!--<div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>-->
+        納期 ： {$f_due_date}
     
     EOF;
     

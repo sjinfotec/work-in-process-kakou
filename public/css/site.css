@@ -65,24 +65,6 @@ button:active  {
   box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5) inset ,-3px -3px 5px 0 rgba(255, 255, 255, 0.7) inset;
 }
 
-.gc1  {  background:#9cbb1c;}
-.bc1  {  border:2px solid #dddd88;}
-.bcc1 {  border-color:#dddd88;}
-.gc2  {  background:#eee9e6;}
-.bc2  {  border:2px solid #ccbb55;}
-.bcc2 {  border-color:#ccbb55;}
-.gc3  {  background:#e86;}
-.bc3  {  border:2px solid #ddaa88;}
-.gc4  {  background:#9be;}
-.gc4b  {  background:linear-gradient(to bottom, #FFF 0%, #FFF 80%, #eecc55 80%,  #eecc55 100%);}
-.bc4  {  border:2px solid #eecc55;}
-.bcc4 {  border-color:#eecc55;}
-
-.gc5  {  background:#EC3;}
-
-
-.stock_active {  background:linear-gradient(to bottom, #ffeecc 0%, #ffeecc 80%, #eecc55 80%,  #eecc55 100%);}
-.bold { font-weight: bold;}
 
 
 /*--------------------## ヘッダー ##--------------------*/
@@ -106,7 +88,7 @@ header  {
   top: 0px; /* 上端から0pxのところで固定 */
   width:100%;
   background-color:#578a3d;
-  z-index: 1;
+  z-index: 10;
 }
 header .navbar  {
   display:flex;
@@ -276,10 +258,27 @@ header button {width:auto;}
   /*margin-right:10px;*/
 }
 
+.gc1  {  background:#9cbb1c;}
+.bc1  {  border:2px solid #dddd88;}
+.bcc1 {  border-color:#dddd88;}
+.gc2  {  background:#eee9e6;}
+.bc2  {  border:2px solid #ccbb55;}
+.bcc2 {  border-color:#ccbb55;}
+.gc3  {  background:#e86;}
+.bc3  {  border:2px solid #ddaa88;}
+.gc4  {  background:#9be;}
+.gc4b  {  background:linear-gradient(to bottom, #FFF 0%, #FFF 80%, #eecc55 80%,  #eecc55 100%);}
+.bc4  {  border:2px solid #eecc55;}
+.bcc4 {  border-color:#eecc55;}
+.gc5  {  background:#EC3;}
+
 .color_green  {color: green;}
 .color_red  {color: red;}
+.color_gray  {color: gray;}
 .color1 {color:#33aa55;}
 .color2 {color:#cc3333;}
+.color3  {  color:#e86;}
+.color4  {  color:#9be;}
 
 .mgt10  {margin-top:10px;}
 .mgt20  {margin-top:20px;}
@@ -292,9 +291,42 @@ header button {width:auto;}
 .w4e  {width: 4em;}
 .w10e {width: 10em;}
 
+.ta_r {text-align: right;}
+
+.stock_active {  background:linear-gradient(to bottom, #ffeecc 0%, #ffeecc 80%, #eecc55 80%,  #eecc55 100%);}
+.bold { font-weight: bold;}
 
 
-
+/*--------------------## タイトル系 /  ##--------------------*/
+#subtitle {
+  display:block;
+}
+#subtitle h4 {
+  border-left-style:solid;
+  border-left-width:10px;
+  padding:0 0 2px 6px;
+}
+#subtitle .margin {
+  margin-top:50px;
+}
+#subtitle .bc1::before {
+  content: "";
+  display:inline-block;
+  width:  16px;
+  height:  16px;
+  background-color: #f4c836;
+  /*border-radius:  50%;*/
+  line-height: 18px;
+  text-align: center;
+  position:  relative;
+  left:0px;
+  top: 3px;
+/*
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+*/
+}
 
 /*--------------------## TOP page ##--------------------*/
 #tips_cnt .lst1  {
@@ -639,6 +671,7 @@ header button {width:auto;}
 }
 #cal_cnt td {
   text-align: center;
+  padding: 0 2px;
 }
 #cal_cnt .today {
   position: relative;
@@ -953,6 +986,19 @@ input[type="radio"]:checked + label {
 }
 
 
+
+
+
+/*--------------------##  /  ##--------------------*/
+
+
+
+
+
+
+.print_view {display:none;}
+
+
 /*--------------------##  button  ##--------------------*/
 
 button.style1  {
@@ -990,78 +1036,6 @@ button.style5  {
 }
 
 
-
-/*--------------------##  /  ##--------------------*/
-
-
-
-
-
-#cnt3 {
-  display:flex;
-  /*width:100%;*/
-  align-items: center;
-  flex-wrap:wrap;
-}
-#cnt3 .mg1 {
-  margin-left:20px;
-}
-
-#form3  {
-  display:flex;
-  align-items: center;
-  /*justify-content: space-between;*/
-
-}
-#form3 .form_style {
-  font-size:2rem;
-  height:3rem;
-  /*width:calc(100% - 8px);*/
-  padding:0 4px;
-  width:auto;
-  box-sizing: border-box;
-  margin-right:10px;
-}
-
-
-
-/*--------------------## ゴミ箱 /  ##--------------------*/
-#subtitle {
-  display:block;
-}
-#subtitle h4 {
-  border-left-style:solid;
-  border-left-width:10px;
-  padding:0 0 2px 6px;
-}
-#subtitle .margin {
-  margin-top:50px;
-}
-#subtitle .bc1::before {
-  content: "";
-  display:inline-block;
-  width:  16px;
-  height:  16px;
-  background-color: #f4c836;
-  /*border-radius:  50%;*/
-  line-height: 18px;
-  text-align: center;
-  position:  relative;
-  left:0px;
-  top: 3px;
-/*
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-*/
-}
-
-
-
-
-
-.print_view {display:none;}
-
 /*--印刷ボタン--*/
 #btn_cnt4 {
   display:-webkit-flex;
@@ -1094,6 +1068,7 @@ button.style5  {
 	background: rgba(108, 178, 235, 0.7);
 }
 
+/*--------------------##  その他/  ##--------------------*/
 .transition1  {
   transition: color 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.1s ease-in-out;
 }

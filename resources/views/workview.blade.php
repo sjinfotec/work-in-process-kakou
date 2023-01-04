@@ -88,7 +88,7 @@ if(isset($result['result'])) {
 @section('content')
 				<div id="contents_area">
 					<div id="title_cnt">
-						<h1 class="tstyle">作業工程／検索・閲覧</h1>
+						<h1 class="tstyle">作業工程／詳細</h1>
 					</div>
 					<!-- main contentns row -->
 					<div id="maincontents">
@@ -117,8 +117,6 @@ if(isset($result['result'])) {
 									</div>
 									<div>
 										<button class="gc5 transition1 mgla" type="button" onClick="this.form.reset()">リセット</button>
-										<button class="gc5 transition1 mgla" type="button" onClick="formReset_2()">クリア</button>
-										<button class="gc5 transition1 mgla" type="button" onClick="formReset_3( Array('s_customer','s_product_name','s_end_user') )">クリア3</button>
 									</div>
 								</div>
 								<div id="form1" class="mgt10">
@@ -259,9 +257,7 @@ if(isset($result['result'])) {
 						</form>
 
 						@if($result['datacount'] === 1)
-						<div class="mgt20">
 							{!! $html_calsqu !!}
-						</div>
 						@endif
 						<div>{!! $action_msg !!}</div>
 
@@ -307,7 +303,7 @@ if(isset($result['result'])) {
 								</table>
 							</div>
 
-					{!! $html_cal_main !!}
+						{!! $html_cal_main !!}
 
 
 					@elseif($select_html === 'dayView')
@@ -382,63 +378,6 @@ if(isset($result['result'])) {
 
 
 
-					@elseif($select_html === 'Edit')
-						<form id="updateform" name="updateform" method="POST">
-							<div id="form2" class="mgt20">
-								<div class="form_style">
-									<label for="product_code" class="">伝票番号</label>
-									<input type="text" class="input_style" name="product_code" id="product_code" value="{{ $product_code }}">
-								</div>
-								<div class="form_style">
-									<label for="after_due_date" class="">納期</label>
-									<input type="date" class="input_style" name="after_due_date" id="after_due_date" value="{{ $ymd_after_due_date }}">
-								</div>
-								<div class="form_style">
-									<label for="customer" class="">得意先</label>
-									<input type="text" class="input_style" name="customer" id="customer" value="{{ $customer }}"> 
-								</div>
-								<div class="form_style ">
-									<label for="product_name" class="">品名</label>
-									<input type="text" class="input_style" name="product_name" id="product_name" value="{{ $product_name }}">
-								</div>
-								<div class="form_style">
-									<label for="end_user" class="">エンドユーザー</label>
-									<input type="text" class="input_style" name="end_user" id="end_user" value="{{ $end_user }}">
-								</div>
-								<div class="form_style">
-									<label for="quantity" class="">数量</label>
-									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}">
-								</div>
-								<div class="form_style">
-									<label for="receive_date" class="">入稿日</label>
-									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_receive_date }}">
-								</div>
-								<div class="form_style">
-									<label for="platemake_date" class="">下版日</label>
-									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_platemake_date }}">
-								</div>
-								<div class="form_style">
-									<label for="comment" class="">コメント</label>
-									<textarea class="input_style2" id="comment" name="comment" rows="3" >{{ $comment }}</textarea>
-								</div>
-
-							</div>
-							<div id="form1" class="mgt20">
-								<input type="hidden" name="mode" id="mode" value="">
-								<input type="hidden" name="select_html" id="select_html" value="">
-								<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $product_code }}">
-								<input type="text" name="serial_code" id="serial_code" value="{{ $serial_code }}">
-								<input type="text" name="rep_code" id="rep_code" value="{{ $rep_code }}">
-								<input type="text" name="status" id="status" value="{{ $status }}">
-								<input type="text" name="updated_user" id="updated_user" value="{{ $updated_user }}">
-								<div>
-									<button class="transition1" type="button" onClick="clickEvent('updateform','1','1','process_details_update','登録','product_update','chkwrite')">登録</button>
-									<button class="transition1" type="button" onClick="javascript:history.back();">戻る</button>
-								</div>
-								<button class="gc5 transition1 mgla" type="button" onClick="clickEvent('updateform','1','1','process_details_del','削除','product_search','chkwrite')">削除</button>
-							</div>
-							@csrf
-						</form>
 
 
 						<div id="resultupdate"></div>
@@ -826,18 +765,6 @@ function WORKDATEchecked(fname,val1,val2,cf,com1,wc,dc) {
 		//fm.reset();
 		var textForm = document.getElementById(fname);
 		textForm.value = '';
-	}
-	function formReset_2() {
-		document.getElementById('s_customer').value = "";
-		document.getElementById('s_product_name').value = "";
-		document.getElementById('s_end_user').value = "";
-	}
-	function formReset_3($arr) {
-		for ( var $key in $arr ) {
-			document.getElementById($arr[$key]).value = "";
-			//console.log('formReset_3 ' + $arr[$key]);
-    	}
-
 	}
 
 	function unChecked(cl) {
