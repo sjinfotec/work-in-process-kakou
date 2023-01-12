@@ -116,9 +116,8 @@ if(isset($result['result'])) {
 										<input type="date" class="form_style1 w10e" name="duedate_end" id="duedate" value="{{ $duedate_end }}">
 									</div>
 									<div>
-										<button class="gc5 transition1 mgla" type="button" onClick="this.form.reset()">リセット</button>
-										<button class="gc5 transition1 mgla" type="button" onClick="formReset_2()">クリア</button>
-										<button class="gc5 transition1 mgla" type="button" onClick="formReset_3( Array('s_customer','s_product_name','s_end_user') )">クリア3</button>
+										<!--<button class="gc5 transition1 mgla" type="button" onClick="this.form.reset()">リセット</button>-->
+										<button class="gc5 transition1 mgla" type="button" onClick="formReset_3( Array('s_customer','s_product_name','s_end_user') )">クリア</button>
 									</div>
 								</div>
 								<div id="form1" class="mgt10">

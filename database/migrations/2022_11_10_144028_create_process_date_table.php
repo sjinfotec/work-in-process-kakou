@@ -23,7 +23,7 @@ class CreateProcessDateTable extends Migration
             $table->string('work_name', 20)->nullable()->comment('作業');
             $table->smallInteger('work_code')->nullable()->comment('作業コード');
             $table->string('process_name', 50)->nullable()->comment('工程名');
-            $table->string('status', 10)->nullable()->comment('ステータス')->default(0);
+            $table->string('status', 10)->nullable()->comment('ステータス');
 
             $table->string('created_user', 10)->nullable()->comment('作成ユーザー');
             $table->string('updated_user', 10)->nullable()->comment('修正ユーザー');

@@ -532,19 +532,30 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 				console.log('キャンセルがクリックされました');
 			}
 
-
-
-
-
-
-
-
+		}
+		else if(cf == 'status_up') {
+			var result = window.confirm('部署名 : ' + val1 + '\n' + com1 + 'します');
+			if( result ) {
+				//fm.work_code.value = 'DEL';
+				fm.mode.value = md;
+				fm.status.value = val2;
+				fm.action = '/process/insert';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
 
 		}
 		else {
 			fm.submit();
 		}
 	}
+
+
+
+
+
 
 
 
@@ -700,8 +711,12 @@ function appendWORKDATE(dataarr) {
 		text2.push(
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="DEL" id="work_code_del">\n' + 
-				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'' + data.department + '\',\'\',\'select_del\',\'削除\',\'delete\',\'\')">削除</label>\n' +
+				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'\',\'\',\'select_del\',\'削除\',\'delete\',\'\')">削除</label>\n' +
 				'<button class="" type="button" onClick="clickEvent(\'addprocessform\',\'1\',\'1\',\'confirm_update\',\'『 登録 』\',\'product_search\',\'chkwrite\')">登録</button>\n' +
+				'	\n' +
+				'	<input type="radio" name="status" value="" id="status">\n' + 
+				'	<label for="status" class="label transition2" onclick="clickEvent(\'addprocessform\',\'' + data.departments_code + '\',\'完了\',\'status_up\',\'作業完了\',\'status_update\',\'\')">作業完了</label>\n' +
+				'	\n' +
 				'</div>\n'
 			);
 		document.getElementById('motionbtn').innerHTML = text2.join('');

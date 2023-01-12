@@ -10,20 +10,35 @@ $ymd_receive_date = "";
 $ymd_platemake_date = "";
 $editzone = false;
 $action_msg .= "mode：".$mode."<br>\n";
-$select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
+//$select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
 
 //var_dump($result);
 //echo "<br><br>1:\n";
 echo "select_html = ".$select_html."<br>\n";
 //echo "<br><br>2:\n";
 
+if(isset($result['result_date'])) {
+	$resultdate = $result['result_date']['result'];
+	//var_dump($resultdate);
+	//echo "<br><br>\n";
+}
+else {
+	$action_msg .= "resultにデータがありません<br>\n";
+	$resultdate = Array();
+}
 
-if(isset($result['result'])) {
-	$resultdata = $result['result'];
-		//var_dump($resultdata);
-	
-	if(isset($resultdata)) {
-		foreach($resultdata as $key => $val) {
+if(isset($result['result_details'])) {
+	$resultdetails = $result['result_details']['result'];
+		//var_dump($resultdetails);
+		//echo "<br><br>\n";
+		//echo $result['result_details']['pcode'];
+		//echo "<br><br>\n";
+		//echo "wday = ".$result['result_date']['wday'];
+		//echo "<br><br>\n";
+
+		
+	if(isset($resultdetails)) {
+		foreach($resultdetails as $key => $val) {
 
 			//$number = 1 + $key;
 			$product_code = $val->product_code;
@@ -48,16 +63,19 @@ if(isset($result['result'])) {
 			$ymd_receive_date = !empty($receive_date) ? date('Y-m-d', strtotime($receive_date)) : "";
 			$ymd_platemake_date = !empty($platemake_date) ? date('Y-m-d', strtotime($platemake_date)) : "";
 
+			
+
 			//$editzone = true;
 
 			//指定日時を月はじめに変換する date("Y-m-d H:i:s")
 			//$after_due_date = "";
+			$markday1 = !empty($result['result_date']['wday']) ? date("Y-m-d", strtotime($result['result_date']['wday'])) : date("Y-m-d");
 			$target_day = !empty($after_due_date) ? date("Y-m-1", strtotime($after_due_date)) : date("Y-m-d");
-			//echo "targetday = ".$target_day."<br>\n";
+			//echo "markday1 = ".$markday1."<br>\n";
 			$cal_start_ym = !empty($target_day) ? date('Y-n', strtotime($target_day . ' -1 month')) : "";
 			
 			$calendar_squ_data = new CalendarSquare();	// インスタンス作成
-			$html_calsqu = $calendar_squ_data->create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月～何か月分
+			$html_calsqu = $calendar_squ_data->create_calendar( 3, $cal_start_ym, $after_due_date, $markday1);	//開始年月～何か月分
 					
 
 		}
@@ -67,9 +85,11 @@ if(isset($result['result'])) {
 	}
 
 
+
+
 } else {
 	$action_msg .= "resultにデータがありません<br>\n";
-	$resultdata = Array();
+	$resultdetails = Array();
 }
 
 
@@ -161,7 +181,7 @@ if(isset($result['result'])) {
 										</tr>
 									</thead>
 									<tbody>
-									@forelse ($resultdata as $val)
+									@forelse ($resultdetails as $val)
 										<tr>
 											<td class="">
 												<button type="button" onClick="clickEvent('searchform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
@@ -256,9 +276,7 @@ if(isset($result['result'])) {
 
 						</form>
 
-						@if($result['datacount'] === 1)
-							{!! $html_calsqu !!}
-						@endif
+
 						<div>{!! $action_msg !!}</div>
 
 
@@ -283,7 +301,7 @@ if(isset($result['result'])) {
 										</tr>
 									</thead>
 									<tbody>
-									@forelse ($resultdata as $val)
+									@forelse ($resultdetails as $val)
 										<tr>
 											<td class="">{{ $val->product_code }}</td>
 											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
@@ -312,34 +330,42 @@ if(isset($result['result'])) {
 									<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
 									<button class="mgla style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
 								</div>
+							</div>
 
-								<div></div>
-								<h2>月日の作業</h2>
+							<div id="tbl_1" class="">
+								@empty($result['result_date']['f_work_date'])
+								<h2 class="color_gray">{{ $result['result_date']['html_f_work_date'] }} 作業なし</h2>
+								@else
+								<h2 class="color5">{{ $result['result_date']['html_f_work_date'] }}</h2>
+								@endempty
+
 
 								<table>
 									<thead>
 										<tr>
-											<th>作業日</th>
-											<th>部署名</th>
-											<th>作業名</th>
+											<!--<th>作業日</th>-->
+											<th class="stylebg1 w20r">部署名</th>
+											<th class="stylebg1">作業名</th>
+											<th class="stylebg1 w20r">進捗</th>
 										</tr>
 									</thead>
 									<tbody>
-									@forelse ($resultdata as $val)
+									@forelse ($resultdate as $val)
 										<tr>
-											<td class="">{!! date('Y-m-d', strtotime($val->work_date)) !!}</td>
-											<td class="">{{ $val->departments_name }}</td>
-											<td class="">{{ $val->work_name }}</td>
+											<!--<td class="">{!! date('Y 年 m 月 d 日', strtotime($val->work_date)) !!}</td>-->
+											<td class="stylebg2">{{ $val->departments_name }}</td>
+											<td class="stylebg2">{{ $val->work_name }}</td>
+											<td class="stylebg2">{{ $val->status }}</td>
 										</tr>
 
 									@empty
-										<tr><td colspan="3">no data</td></tr>
+										<tr><td colspan="3">作業なし</td></tr>
 									@endforelse
 									</tbody>
 								</table>
+							</div>
 
-
-
+							<div id="tbl_1" class="">
 
 								<table>
 									<thead>
@@ -356,7 +382,7 @@ if(isset($result['result'])) {
 										</tr>
 									</thead>
 									<tbody>
-									@forelse ($resultdata as $val)
+									@forelse ($resultdetails as $val)
 										<tr>
 											<td class="">{{ $val->product_code }}</td>
 											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
@@ -374,8 +400,14 @@ if(isset($result['result'])) {
 									@endforelse
 									</tbody>
 								</table>
+
 							</div>
 
+							@if($result['result_details']['datacount'] === 1)
+								<div class="mgt20">
+								{!! $html_calsqu !!}
+								</div>
+							@endif
 
 
 

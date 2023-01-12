@@ -17,7 +17,7 @@ class WorkViewController extends Controller
 {
 
     
-    public function workSearch(Request $request)
+    public function daySearch(Request $request)
     {
 
 
@@ -30,7 +30,8 @@ class WorkViewController extends Controller
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
-        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        //$select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $select_html = "dayView";
         $action_msg = "";
         $result = "";
         $wd_result = "";
@@ -48,9 +49,10 @@ class WorkViewController extends Controller
 
 
         $workview_data = new WorkView();	// インスタンス作成
-        $result_details = $workview_data->SearchProcessDetails($request);
-        $result_date = $workview_data->SearchProcessDate($request);
+        $result_daysearch = $workview_data->SearchData($request);
+        //$result_date = $workview_data->SearchProcessDate($request);
         //echo "result_details['datacount'] = ".$result_details['datacount']."<br>\n";
+        /*
         if($result_details['datacount'] === 1) {
             $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
             //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
@@ -58,9 +60,10 @@ class WorkViewController extends Controller
             $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
     
         }
+        */
         //$result = array_merge($result_details, $result_dete);
 
-	        return view('view', [
+	        return view('workview', [
                 's_product_code' => $s_product_code,
                 'product_code' => $product_code,
                 'after_due_date' => $after_due_date,
@@ -72,8 +75,7 @@ class WorkViewController extends Controller
             	'mode' => $mode,
                 'action_msg' => $action_msg,
                 'e_message' => $e_message,
-                'result' => $result_details,
-                'result_date' => $result_date,
+                'result' => $result_daysearch,
                 'wd_result' => '',
                 'html_cal_main' => $html_cal,
                 'select_html' => $select_html,

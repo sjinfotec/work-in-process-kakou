@@ -1072,6 +1072,22 @@ class ProcessController extends Controller
 
                 
                         }
+                        elseif($mode == 'status_update') {
+                            $updateresult = DB::table($this->table_process_date)
+                            ->where('work_date', $val)
+                            ->where('product_code', $s_product_code)
+                            ->where('departments_code', $this->departments_code)
+                            ->where('work_code', $this->work_code)
+                            ->update(
+                                [
+                                    'status' => '完了',
+                                ]
+                            );
+
+                            
+
+                
+                        }
                         else {
             
 
@@ -1088,7 +1104,6 @@ class ProcessController extends Controller
                                     'departments_name' => $this->departments_name, 
                                     'work_name' => $this->work_name, 
                                     'process_name' => $this->process_name, 
-                                    'status' => $this->status,
                                     'created_user' => 'system',
                                     'updated_at' => $systemdate
                 

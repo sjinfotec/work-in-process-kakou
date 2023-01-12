@@ -131,6 +131,8 @@ class Calendar extends Model
         if(isset($result['result'])) {
             $res = $result['result'];
             $resdate = $result_date['result'];
+            //var_dump($res);
+            //echo $res[0]->product_code;
     
             foreach($resdate AS $key => $val) {
                 $work_date_arr[] = date("Y-m-d", strtotime($resdate[$key]->work_date));
@@ -144,6 +146,7 @@ class Calendar extends Model
                 $departments_code_wdkey[$work_date][$work_name] = $resdate[$key]->departments_code;
                 $departments_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
                 $wname_dcode_wdkey[$work_name] = $resdate[$key]->departments_code;
+                $status_wdkey[$work_date][$work_name] = $resdate[$key]->status;
             }
             //print_r($wname_dcode_wdkey);
             //echo "<br><br>\n";
@@ -191,7 +194,10 @@ class Calendar extends Model
                     
                     foreach($work_name_wdkey[$ymd_day] AS $key => $val) {
                         $dcode = $wname_dcode_wdkey[$key];
-    
+
+                        $status_str = mb_substr($status_wdkey[$ymd_day][$key], 0, 1) ?: "";
+                        $status = $status_str ? "<span class=\"color6\">".$status_str."</span>": '&nbsp;';
+
                         $departments_name = $departments_name_wdkey[$ymd_day][$key];
                         $wcode = $work_code_wdkey[$ymd_day][$key];
                         $dc = $departments_code_wdkey[$ymd_day][$key];
@@ -201,7 +207,7 @@ class Calendar extends Model
                         //echo "wc = ".$wc." : w = ".$w." : d = ".$d."<br>\n";
                         //echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
                         $class_w = $class_array1[$d];
-                        $line[$d][$dkey] .= "<a href=\"\"><div class=\"workitem {$class_w}\" title=\"".$key." , ".$val."\">&nbsp;".$departments_name."</div></a>";
+                        $line[$d][$dkey] .= "<a href=\"#\"><div class=\"workitem {$class_w}\" title=\"".$key." , ".$val."\">".$status."".$departments_name."</div></a>";
                         $redcode = $dcode;
                         $rewcode = $wcode;
     
@@ -324,8 +330,9 @@ class Calendar extends Model
     
     
                 $body .= sprintf(
-                    '<div class="day_cnt" style="%s"><a href=""><div style="%s">%s</div><div class="datestyle %s %s">%s</div></a>%s'.$workspace.'</div>',
+                    '<div class="day_cnt" style="%s"><a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s"><div style="%s">%s</div><div class="datestyle %s %s">%s</div></a>%s'.$workspace.'</div>',
                     $due_class,
+                    $day->format('Y-m-d'),
                     $style_bg,
                     $weekarr[$fdw],
                     $company_class,

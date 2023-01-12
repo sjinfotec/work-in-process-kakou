@@ -279,6 +279,8 @@ header button {width:auto;}
 .color2 {color:#cc3333;}
 .color3  {  color:#e86;}
 .color4  {  color:#9be;}
+.color5  {  color:#578a3d;}
+.color6  {  color:#FFFFFF;}
 
 .mgt10  {margin-top:10px;}
 .mgt20  {margin-top:20px;}
@@ -480,6 +482,12 @@ header button {width:auto;}
 #tbl_1 .w1 {
   width:5em;
 }
+#tbl_1 .w8e {
+  width: 8em;
+}
+#tbl_1 .w20r {
+  width: 20rem;
+}
 #tbl_1 .mg_r  {
   margin-right:10px;
 }
@@ -512,6 +520,17 @@ header button {width:auto;}
   position:absolute;
   top:-120px; left:0px;
 }
+#tbl_1 .stylebg1 {
+  color:#FFFFFF;
+  background: #9cbb1c;
+  letter-spacing: 0.5em;
+}
+#tbl_1 .stylebg2 {
+  color:#333;
+  font-size: 1.6rem;
+}
+
+
 
 
 
@@ -673,6 +692,10 @@ header button {width:auto;}
   text-align: center;
   padding: 0 2px;
 }
+#cal_cnt .days {
+  position: relative;
+  z-index: 3;
+}
 #cal_cnt .today {
   position: relative;
   /*font-weight: bold;*/
@@ -690,6 +713,31 @@ header button {width:auto;}
   text-align: center;
   left:0px;
   top: 2rem;
+  z-index: 2;
+/*
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+*/
+}
+#cal_cnt .viewday1 {
+  position: relative;
+  /*font-weight: bold;*/
+}
+#cal_cnt .viewday1::after {
+  content: "";
+  display:block;
+  /*position:  relative;*/
+  position: absolute;
+  width:  22px;
+  height:  22px;
+  /*background-color: #eecc33;*/
+  border:1px solid #aa00aa;
+  border-radius:  50%;
+  line-height: 22px;
+  text-align: center;
+  left:0px;
+  top: 0px;
   z-index: 1;
 /*
   top: 50%;
@@ -697,6 +745,8 @@ header button {width:auto;}
   transform: translateY(-50%);
 */
 }
+
+
 
 
 #workin {box-sizing: border-box; margin-top:10px;}

@@ -15,7 +15,7 @@ class CalendarSquare extends Model
     use HasFactory;
 
     // カレンダー表示
-    function create_calendar( $num = 1, $set = false, $after_due_date) {
+    function create_calendar( $num = 1, $set = false, $after_due_date = false, $markday1 = false) {
         
         $cal_parts = '<div id="cal_cnt">';
         //今日
@@ -23,6 +23,8 @@ class CalendarSquare extends Model
         $today = $date->format( 'Y-n-j' );
         //該当日（納品日）
         $thisday =  !empty($after_due_date) ? date('Y-n-j', strtotime($after_due_date)) : $today;
+        //特別日1(表示日)
+        $viewday1 =  !empty($markday1) ? date('Y-n-j', strtotime($markday1)) : $today;
     
         //最初の月
         if( $set ) {
@@ -69,15 +71,23 @@ class CalendarSquare extends Model
                 else {
                     $stylecss = "";
                 }
-                //日
-                if ( $month.'-'.$day == $thisday ) {
-                    $cal_parts .= '<td class="'.$stylecss.' color_red"><strong>'.$day.'</strong></td>';	
-                } 
-                elseif ( $month.'-'.$day == $today ) {
-                    $cal_parts .= '<td class="'.$stylecss.' today">'.$day.'</td>';	
+                //特別日
+                if ( $month.'-'.$day == $viewday1 ) {
+                    $viewcss1 = "viewday1";
                 } 
                 else {
-                    $cal_parts .= '<td class="'.$stylecss.'">'.$day.'</td>';
+                    $viewcss1 = "";
+                }
+
+                //日
+                if ( $month.'-'.$day == $thisday ) {
+                    $cal_parts .= '<td class="'.$stylecss.' '.$viewcss1.' color_red"><strong class="days">'.$day.'</strong></td>';	
+                } 
+                elseif ( $month.'-'.$day == $today ) {
+                    $cal_parts .= '<td class="'.$stylecss.' '.$viewcss1.' today"><span class="days">'.$day.'</span></td>';	
+                } 
+                else {
+                    $cal_parts .= '<td class="'.$stylecss.' '.$viewcss1.'"><span class="days">'.$day.'</span></td>';
                 }
                 //最終日かつ土曜日ではない
                 if( $day == $end && $week != 6 ) {

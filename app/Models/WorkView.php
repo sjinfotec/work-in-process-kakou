@@ -15,7 +15,7 @@ use Carbon\Carbon;
 class WorkView extends Model
 {
 
-    protected $table = 'process_details';
+    protected $table_process_details = 'process_details';
     protected $table_process_date = 'process_date';
 
     private $id;
@@ -38,24 +38,16 @@ class WorkView extends Model
     private $is_deleted;            // 削除フラグ
 
 
-    private $id;
     private $work_date;             // 作業日
-    private $product_code;          // 伝票番号
     private $departments_name;      // 部署
     private $departments_code;      // 部署コード
     private $work_name;             // 作業
     private $work_code;             // 作業コード
     private $process_name;          // 工程名
-    private $status;                // ステータス
-    private $created_user;          // 作成ユーザー
-    private $updated_user;          // 修正ユーザー
-    private $created_at;            // 作成日時
-    private $updated_at;            // 修正日時
-    private $is_deleted;            // 削除フラグ
 
 
     use HasFactory;
-    public function daySearch(Request $request)
+    public function SearchData(Request $request)
     {
 
 
@@ -68,7 +60,7 @@ class WorkView extends Model
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
-        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        //$select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
         $action_msg = "";
         $result = "";
         $wd_result = "";
@@ -94,51 +86,19 @@ class WorkView extends Model
 
         $redata = array();
         $redata = [
-            'datacount' => $datacount, 
             'html_after_due_date' => $html_after_due_date,
 			'product_code' => $s_product_code,
-			'after_due_date' => $r_after_due_date,
 			's_customer' => $s_customer,
 			's_product_name' => $s_product_name,
 			's_end_user' => $s_end_user,
-            'result' => $result,
+            'result_details' => $result_details,
+            'result_date' => $result_date,
             'mode' => $mode, 
             'e_message' => $e_message, 
             'result_msg' => $result_msg,
         ];
 
         return $redata;
-
-
-
-            /*
-	        return view('view', [
-                's_product_code' => $s_product_code,
-                'product_code' => $product_code,
-                'after_due_date' => $after_due_date,
-                'customer' => $customer,
-                'product_name' => $product_name,
-                'end_user' => $end_user,
-                'quantity' => $quantity,
-                'comment' => $comment,
-            	'mode' => $mode,
-                'action_msg' => $action_msg,
-                'e_message' => $e_message,
-                'result' => $result_details,
-                'result_date' => $result_date,
-                'wd_result' => '',
-                'html_cal_main' => $html_cal,
-                'select_html' => $select_html,
-                'duedate_start' => $duedate_start,
-                'duedate_end' => $duedate_end,
-                's_customer' => $s_customer,
-                's_product_name' => $s_product_name,
-                's_end_user' => $s_end_user,
-
-
-
-                ]);
-                */
 
     }
 
@@ -169,6 +129,7 @@ class WorkView extends Model
 
         $this->motion = $request->motion;
         $params = $request->only([
+            'pcode',
             's_product_code',
             'duedate_start',
             'duedate_end',
@@ -183,7 +144,7 @@ class WorkView extends Model
 
         try {
 
-                $data = DB::table($this->table)
+                $data = DB::table($this->table_process_details)
                 ->select(
                     'product_code',
                     'serial_code',
@@ -202,6 +163,11 @@ class WorkView extends Model
                     'created_at',
                     'updated_at'
                 );
+                if(!empty($params['pcode'])) {
+                    $data->where('product_code', $params['pcode']);
+                    $viewmode['pcode'] = 1;
+                    $default = false;
+                }
                 if(!empty($params['s_product_code'])) {
                     $data->where('product_code', $params['s_product_code']);
                     $viewmode['pcode'] = 1;
@@ -309,6 +275,7 @@ class WorkView extends Model
 
         $redata = array();
         $redata = [
+            'pcode' => $params['pcode'],
             'datacount' => $datacount, 
             'html_after_due_date' => $html_after_due_date,
 			'product_code' => $s_product_code,
@@ -338,6 +305,16 @@ class WorkView extends Model
         $f_work_date = "";
         $html_f_work_date = "";
         $e_message = "工程 ： ".$s_product_code."";
+        $departments_code_arr = Array('2','4','5','3','6','7');
+
+        $params = $request->only([
+            'pcode',
+            'wday',
+            'departments_code',
+            'work_code',
+            'mode',
+            'submode',
+        ]);
 
         try {
 
@@ -353,7 +330,17 @@ class WorkView extends Model
                     'process_name',
                     'status'
                 );
-                $data->where('product_code', $s_product_code);
+                if(!empty($params['pcode'])) {
+                    $data->where('product_code', $params['pcode']);
+                    $viewmode['pcode'] = 1;
+                    $default = false;
+                }
+                if(!empty($params['wday'])) {
+                    $data->where('work_date', $params['wday']);
+                    $viewmode['wday'] = 1;
+                    $default = false;
+                }
+                $data->orderByRaw('FIELD(departments_code, '.implode(',', $departments_code_arr).')');
                 $result = $data
                 ->get();
                 $datacount = $data->count();
@@ -362,13 +349,14 @@ class WorkView extends Model
 
                 if($datacount > 0) {
                     $f_work_date = $result[0]->work_date;
-                    $html_f_work_date = !empty($f_work_date) ? date('n月j日', strtotime($f_work_date)) : "";
+                    $html_f_work_date = !empty($f_work_date) ? date('n 月 j 日', strtotime($f_work_date)) : "";
                     $result_msg = "OK date";
                     $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> date = ".$html_f_work_date;
 
                 }
                 else {
 
+                    $html_f_work_date = date('n 月 j 日', strtotime($params['wday']));
                     $e_message .= " データがありません <> count = ".$datacount."";
                     $result_msg = "none";
     
@@ -397,6 +385,7 @@ class WorkView extends Model
             'html_f_work_date' => $html_f_work_date,
 			'product_code' => $s_product_code,
 			'f_work_date' => $f_work_date,
+			'wday' => $params['wday'],
             'result' => $result,
             'mode' => $mode, 
             'e_message' => $e_message, 

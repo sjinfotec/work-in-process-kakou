@@ -58,6 +58,20 @@ Route::post('/view/get', [ViewController::class,'getData']);
 Route::post('/view/search', [ViewController::class,'postSearch']);
 Route::get('/view/search', [ViewController::class,'index']);
 
+// 作業詳細
+Route::get('/work', [WorkViewController::class,'index']);
+Route::post('/work', [WorkViewController::class,'index']);
+Route::get('/work/day', [WorkViewController::class,'daySearch']);
+Route::get('/work/one', [WorkViewController::class,'oneSearch']);
+Route::post('/work/get', [WorkViewController::class,'getData']);
+Route::post('/work/workget', [WorkViewController::class,'getWORK']);
+Route::post('/work/update', [WorkViewController::class,'fix']);
+Route::post('/work/insert', [WorkViewController::class,'insertData']);
+Route::post('/work/search', [WorkViewController::class,'postSearch']);
+Route::post('/work/wdget', [WorkViewController::class,'workDate']);   // 部署の作業日取得
+
+
+
 // 詳細編集
 Route::get('/spec', [SpecController::class,'index']);
 Route::post('/spec', [SpecController::class,'index']);
