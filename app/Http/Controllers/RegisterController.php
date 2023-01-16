@@ -252,7 +252,7 @@ class RegisterController extends Controller
                     if($count > 0){
                         $r_after_due_date = $result[0]->after_due_date;
                         $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
-                        $e_message .= " 既に登録されています <> count = ".$count." <> date = ".$html_after_due_date;
+                        $e_message .= " 既に登録されています <> 納期 ： ".$html_after_due_date." <> ".$count."";
                         $result_msg = "already";
                     }
                     else {
@@ -262,7 +262,7 @@ class RegisterController extends Controller
                     ->get();
                     $r_after_due_date = $result[0]->after_due_date;
                     $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
-                    $e_message .= " 日報に登録なし <> count = ".$count." <> date = ".$html_after_due_date;
+                    $e_message .= " 日報に登録なし <> 納期 ： ".$html_after_due_date." <> ".$count."";
                     $result_msg = "NOnippou";
 
 
@@ -277,7 +277,7 @@ class RegisterController extends Controller
                     if($count > 0){
                         $r_after_due_date = $result[0]->after_due_date;
                         $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
-                        $e_message .= " <> count = ".$count." <> date = ".$html_after_due_date;
+                        $e_message .= " 工程登録可能 <> 納期 ： ".$html_after_due_date." <> ".$count."";
                         $result_msg = "OK";
                     }
     

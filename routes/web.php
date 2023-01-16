@@ -65,6 +65,7 @@ Route::get('/work/day', [WorkViewController::class,'daySearch']);
 Route::get('/work/one', [WorkViewController::class,'oneSearch']);
 Route::post('/work/get', [WorkViewController::class,'getData']);
 Route::post('/work/workget', [WorkViewController::class,'getWORK']);
+Route::post('/work/sttsup', [WorkViewController::class,'changeStatus']);
 Route::post('/work/update', [WorkViewController::class,'fix']);
 Route::post('/work/insert', [WorkViewController::class,'insertData']);
 Route::post('/work/search', [WorkViewController::class,'postSearch']);

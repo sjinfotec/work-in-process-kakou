@@ -40,12 +40,12 @@ if(isset($result)) {
 		}
 	}
 	else {
-		$action_msg .= "returnがありません";
+		//$action_msg .= "returnがありません";
 	}
 
 
 } else {
-	$action_msg .= "resultにデータがありません";
+	//$action_msg .= "resultにデータがありません";
 }
 
 //var_dump($result[0]);
@@ -74,8 +74,8 @@ if(isset($result)) {
 
 						<div id="form1">
 						<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
-						<button class="" type="button" onClick="SEARCHcollect()">axios検索</button>
-						<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
+						<button class="" type="button" onClick="SEARCHcollect()">検索</button>
+						<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
 						</div>
 						@csrf 
 					</form>
@@ -115,19 +115,15 @@ if(isset($result)) {
 
 
 
-					<div id="tbl_1">
+					<div id="tbl_2">
 					<form id="new2form" name="new2form" method="POST">
 						<table>
 							<thead>
 							<tr>
 								<th>&emsp;</th>
+								<th>&emsp;</th>
 								<th>伝票番号</th>
-								<th>納期</th>
-								<th>得意先</th>
-								<th>品名</th>
-								<th>エンドユーザー</th>
-								<th>数量</th>
-
+								<th>登録</th>
 							</tr>
 							</thead>
 							<tbody id="result_new_view">
@@ -139,33 +135,13 @@ if(isset($result)) {
 
 					<div id="resultupdate"></div>
 					<div id="resultlist"><ul class="list-group"></ul></div>
-					<div id="error"></div>
+
+					@isset($result['e_message'])<div id="error"> {!! $result['e_message'] !!} </div>@endisset
 
 					<div>{{ $action_msg }}</div>
 					<div>
-						<div>modeの値：{{ $mode }}</div>
+						<div>{{ $mode }}</div>
 					</div>
-
-
-
-<!--
-<form id="addprocessform" name="addprocessform" method="POST">
-	<div id="form_cnt">
-		<div>
-			<input type="radio" name="workin" value="101" id="apple">
-			<label for="apple" class="label transition2">部署1 - 作業A</label>
-		</div>
-		<div>
-			<input type="radio" name="workin" value="102" id="pineapple">
-			<label for="pineapple" class="label transition2">部署1 - 作業B</label>
-		</div>
-		<div>
-			<input type="radio" name="workin" value="103" id="orange">
-			<label for="orange" class="label transition2">部署1 - 作業C</label>
-		</div>
-	</div>
-</form>
--->
 
 
 @endsection
@@ -259,7 +235,7 @@ function appendList(arrdata) {
 		if(data.result_msg) {
 			var BUTTON_collect = '';
 			if(data.result_msg == 'OK') {
-				BUTTON_collect = '<button class="style3" type="button" onClick="NEWcollect('+ appendcount +')">axios登録</button>';
+				BUTTON_collect = '<button class="style3" type="button" onClick="NEWcollect('+ appendcount +')">登録</button>';
 			}
 			if(data.result_msg == 'already') {
 				BUTTON_collect = '<button class="style4" type="button" disabled>登録済</button>';
@@ -326,7 +302,8 @@ function SEARCHcollect() {
 		
 	})
 	.catch(error => {
-		window.error(error.response);
+		console.log('error message = ' + error.message );
+		//window.error(error.response);
 	});
 }
 
@@ -361,7 +338,7 @@ function appendListADD(dataarr,n) {
 			if(data.chk_status === 'esse') {
 				statusv = '<span style="color:orange;">上書き</span>';
 			}
-			$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
+			//$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
 			
 			document.getElementById('btn_cnt_new' + data.listcount).innerHTML = '<span class="color_green">' + '<button class="style5" type="button" disabled>登録完了</button>' + '</span>'+
 			'<button class="style3" type="button" onClick="clickEvent(\'setprocess\','+ n +',\'\',\'confirm_process\',\'下記の工程を作成します\',\'\',\'\')">工程作成</button>';
@@ -415,7 +392,7 @@ function NEWcollect(n) {
 		
 	})
 	.catch(error => {
-		window.error(error.response);
+		console.log('error message = ' + error.message );
 	});
 }
 

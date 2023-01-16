@@ -279,12 +279,12 @@ class ProcessController extends Controller
 
                 if($datacount > 0) {
                     $result_msg = "OK";
-                    $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> ";
+                    $e_message .= " 伝票番号 = ".$result[0]->product_code." <> ヒット件数 = ".$datacount." <> ";
 
                 }
                 else {
 
-                    $e_message .= " データがありません <> count = ".$datacount." <>  = ";
+                    $e_message .= " データがありません <> ヒット件数 = ".$datacount." <>  = ";
                     $result_msg = "none";
     
 
@@ -357,18 +357,30 @@ class ProcessController extends Controller
 
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
+        //var_dump($result_details['result'][0]); 
+        //echo $av = $result_details['datacount'] ?: "なし<br>\n";
+        //echo "<br><br>\n";
+        //var_dump($result_date['result']); 
         //$result = array_merge($result_details, $result_dete);
         $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
-        $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
-        $calendar_data = new Calendar();	// インスタンス作成
-        $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
+
+
+        if($result_details['datacount'] > 0) {
+            $afd = $result_details['result'][0]->after_due_date ?:"";    // return result[]から取得する場合　[0]のキーが必要。
+            $calendar_data = new Calendar();	// インスタンス作成
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
+        }
+        else {
+            $afd = "";
+            $html_cal = "";
+        }
 
 
 
 	        return view('process', [
                 's_product_code' => $s_product_code,
                 'product_code' => $product_code,
-                'after_due_date' => $test,
+                'after_due_date' => $afd,
                 'customer' => $customer,
                 'product_name' => $product_name,
                 'end_user' => $end_user,
@@ -443,13 +455,14 @@ class ProcessController extends Controller
                     $r_after_due_date = $result[0]->after_due_date;
                     $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
                     $result_msg = "OK";
-                    $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> date = ".$html_after_due_date;
+                    $e_message .= " 伝票番号 : ".$result[0]->product_code." <> 納期 : ".$html_after_due_date." <> ".$datacount."";
 
                 }
                 else {
 
-                    $e_message .= " データがありません <> count = ".$datacount." <> date = ".$html_after_due_date;
+                    $e_message .= " データがありません <> ".$datacount."";
                     $result_msg = "none";
+                    $r_after_due_date = "";
     
 
                 }
@@ -826,6 +839,13 @@ class ProcessController extends Controller
                 $count2 = DB::table($this->table)
                 ->where('product_code', $s_product_code)
                 ->delete();
+
+
+                $result_details = "";
+                $result_date = "";
+                $after_due_date = "";
+                $html_cal = "";
+                $select_html = 'Resultview';
     
             }
             else {
@@ -857,51 +877,26 @@ class ProcessController extends Controller
                     ]
                 );
                 
+
+                $result_details = $this->SearchProcessDetails($request);
+                $result_date = $this->SearchProcessDate($request);
+                $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+                $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+                $calendar_data = new Calendar();	// インスタンス作成
+                $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
+
+                $select_html = 'Default';
+    
+                $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
+                $result_msg = "OK";
+        
+
+
             }
 
-
-
-                /*
-                $updateresult = DB::table($this->table)
-                ->updateOrInsert(
-                    [
-                        'product_code' => $s_product_code, 
-                        'created_user' => 'system',
-                    ],
-                    [
-
-                        'serial_code' => $params['serial_code']$serial_code, 
-                        'rep_code' => $rep_code, 
-                        'after_due_date' => $after_due_date, 
-                        'customer' => $customer, 
-                        'product_name' => $product_name, 
-                        'end_user' => $end_user, 
-                        'quantity' => $quantity, 
-                        'receive_date' => $receive_date, 
-                        'platemake_date' => $platemake_date, 
-                        'status' => $status, 
-                        'comment' => $comment, 
-                        'updated_user' => $updated_user, 
-                        'updated_at' => $systemdate,
-
-                    ]
-                );
-                */
-
-
-
-
-            //$re_data['id'] = $id;
             //DB::commit();
             
-            //return $re_data;
             
-            $result_details = $this->SearchProcessDetails($request);
-            $result_date = $this->SearchProcessDate($request);
-            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
-            $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
-            $calendar_data = new Calendar();	// インスタンス作成
-            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
     
             //$wd_result = $this->workdateSearch($request);
 
@@ -917,8 +912,6 @@ class ProcessController extends Controller
 
         
         
-        $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
-        $result_msg = "OK";
 
 
         return view('process', [
@@ -936,7 +929,7 @@ class ProcessController extends Controller
             'result' => $result_details,
             'result_date' => $result_date,
             'html_cal_main' => $html_cal,
-            'select_html' => 'Default',
+            'select_html' => $select_html,
         ]);
 
     }

@@ -168,6 +168,7 @@ class Calendar extends Model
             );
             $redcode = "";
             $rewcode = "";
+            $pc = isset($resdate[0]) ? $resdate[0]->product_code : '';
     
     
             $body = '<div id="calendar">';
@@ -194,12 +195,13 @@ class Calendar extends Model
                     
                     foreach($work_name_wdkey[$ymd_day] AS $key => $val) {
                         $dcode = $wname_dcode_wdkey[$key];
-
-                        $status_str = mb_substr($status_wdkey[$ymd_day][$key], 0, 1) ?: "";
-                        $status = $status_str ? "<span class=\"color6\">".$status_str."</span>": '&nbsp;';
-
                         $departments_name = $departments_name_wdkey[$ymd_day][$key];
                         $wcode = $work_code_wdkey[$ymd_day][$key];
+
+                        $status_str = mb_substr($status_wdkey[$ymd_day][$key], 0, 1) ?: "";
+                        $status = $status_str ? "<span id=\"status".$ymd_day."_".$wcode."\" class=\"color6\">".$status_str."</span>": "<span id=\"status".$ymd_day."_".$wcode."\" class=\"color6 bold\">&nbsp;</span>";
+                        $status_mode = $status_str ? "rechange" : "change"; 
+
                         $dc = $departments_code_wdkey[$ymd_day][$key];
                         $d = $dc % 10;
                         if($d == 0) $d = 10;
@@ -207,7 +209,7 @@ class Calendar extends Model
                         //echo "wc = ".$wc." : w = ".$w." : d = ".$d."<br>\n";
                         //echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
                         $class_w = $class_array1[$d];
-                        $line[$d][$dkey] .= "<a href=\"#\"><div class=\"workitem {$class_w}\" title=\"".$key." , ".$val."\">".$status."".$departments_name."</div></a>";
+                        $line[$d][$dkey] .= "<div onClick=\"return statusChange('{$ymd_day}','{$pc}','{$dc}','{$wcode}','{$val}','{$key}','{$status_mode}');\" class=\"workitem {$class_w}\" title=\"".$key." , ".$val."\">".$status."".$departments_name."</div>";
                         $redcode = $dcode;
                         $rewcode = $wcode;
     
@@ -295,10 +297,10 @@ class Calendar extends Model
 
                 $workdate_html = "";
                 if($viewmode === 'editing')    {
-                    $workdate_html .= '<div class="line">'."\n";
+                    $workdate_html .= '<div class="line"><div class="btn_shade transition2">'."\n";
                     $workdate_html .= '							<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>'."\n";
                     $workdate_html .= '							<label for="work'.$ymd_day.'" class="wclabel transition2"></label>'."\n";
-                    $workdate_html .= '						</div>'."\n";
+                    $workdate_html .= '						</div></div>'."\n";
                 }
 
     
@@ -357,7 +359,8 @@ class Calendar extends Model
     
             }
     
-        $body .= '</div></div><!--end class f--></div><!--end id calendar-->';
+        $body .= "</div></div><!--end class f-->\n";
+        $body .= "</div><!--end id calendar-->\n";
     
         }
     
@@ -366,6 +369,8 @@ class Calendar extends Model
         {$body}
         <!--<div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>-->
         納期 ： {$f_due_date}
+
+
     
     EOF;
     

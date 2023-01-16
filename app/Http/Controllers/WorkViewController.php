@@ -92,6 +92,71 @@ class WorkViewController extends Controller
     }
 
 
+    public function changeStatus(Request $request)
+    {
+
+
+        //$select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $select_html = "dayView";
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $viewmode = "watch";
+        $e_message = "ステータス変更 ： ";
+
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+
+
+        $workview_data = new WorkView();	// インスタンス作成
+        $result_sttschange = $workview_data->STTSchange($request);
+
+
+        return response()->json([
+            'result' => $result_sttschange['result'],
+            'product_code' => $result_sttschange['product_code'],
+            'work_date' => $result_sttschange['work_date'],
+            'work_code' => $result_sttschange['work_code'],
+            'mode' => $result_sttschange['mode'],
+            'result_msg' => $result_sttschange['result_msg'],
+            'e_message' => $result_sttschange['e_message']
+            
+        ]);
+
+
+/*
+
+Config::get('const.RESPONCE_ITEM.messagedata') => $this->array_messagedata
+
+        $redata = array();
+        $redata[] = [
+            's_product_id' => $s_product_id, 
+            'result' => $result, 
+            'html_after_due_date' => $html_after_due_date, 
+            'mode' => $mode, 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg
+        ];
+ 
+
+        if(!empty($redata)) {
+            $jsondata = json_encode($redata, JSON_UNESCAPED_UNICODE);
+            $pattern = ['/"\s*"/', '/null/'];
+            $replace = ['""', '""'];
+            $jsonresult = preg_replace($pattern, $replace, $jsondata);
+
+            echo $jsonresult;
+            //echo json_encode($redata, JSON_UNESCAPED_UNICODE);
+        }
+
+*/
+
+
+
+
+
+
+    }
+
 
 
 

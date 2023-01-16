@@ -398,4 +398,119 @@ class WorkView extends Model
 
     }
 
+
+
+    public function STTSchange(Request $request)
+    {
+        $result_date = $this->updateProcessDate($request);
+        return $result_date;
+
+
+    }
+
+    public function updateProcessDate($request) {
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $e_message = "作業工程 ： ";
+
+        $params = $request->only([
+            'work_date',
+            'product_code',
+            'departments_code',
+            'work_code',
+            'departments_name',
+            'work_name',
+            'mode',
+            'submode',
+        ]);
+
+        try {
+
+            $status_str = $params['submode'] == 'change' ? '完了' : '';
+
+
+
+            if($params['mode'] == 'status_update') {
+                $updateresult = DB::table($this->table_process_date)
+                ->where('work_date', $params['work_date'])
+                ->where('product_code', $params['product_code'])
+                ->where('departments_code', $params['departments_code'])
+                ->where('work_code', $params['work_code'])
+                ->update(
+                    [
+                        'status' => $status_str,
+                    ]
+                );
+
+            }
+
+
+
+                if($updateresult) {
+                    if($params['submode'] == 'rechange') {
+                        $sshtml = "作業未完に変更";
+                    }
+                    elseif($params['submode'] == 'change') {
+                        $sshtml = "完了";
+                    }
+                    else {$sshtml = "";}
+                    $result_msg = "OK";
+                    $e_message .= "".$sshtml." => 作業日 : ".$params['work_date']." => 部署 : ".$params['departments_name']." => 作業名 : ".$params['work_name']."";
+
+                }
+                else {
+
+                    $e_message .= "status_str -> ".$status_str." & ".$params['submode']."<br>";
+                    $result_msg = "none";
+    
+
+                }
+
+            //$e_message .= "work_date ".$params['work_date'].": product_code ".$params['product_code'].": departments_code ".$params['departments_code'].": work_code ".$params['work_code']."";
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+
+        $redata = array();
+        $redata = [
+			'product_code' => $params['product_code'],
+            'work_date' => $params['work_date'],
+            'work_code' => $params['work_code'],
+            'result' => $updateresult,
+            'mode' => $params['mode'], 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+        ];
+
+        return $redata;
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
