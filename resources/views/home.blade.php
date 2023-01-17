@@ -50,66 +50,63 @@ if(isset($result)) {
 @section('content')
 
 <div id="home_cnt">
-					<div class="">
-						<h1>伝票番号登録</h1>
-					</div>
-					<!-- main contentns row -->
-					<div id="maincontents">
+	<div id="tips_cnt">
+          <h3 class="">工程管理システム／使い方</h3>
+          <ul class="lst1">
+          <li>工程（伝票）を登録
+            <ol class="lst2">
+            <li>メニュー欄より『伝票番号登録』をクリック、登録したい伝票番号を入力し、『検索』をクリックすると、登録可能な製品が表示されます</li>
+            <li>登録したい伝票番号列の左端にある『登録』をクリックし、工程を登録します</li>
+            </ol>
+          </li>
+          <li>工程を作成（編集）する　＞その１
+            <ol class="lst2">
+            <li>メニュー欄より『作業工程作成』をクリック、作成・編集したい伝票番号を入力し、『検索』をクリック、検索されると編集画面に変わります</li>
+            <li>製品情報の編集をするには、『編集』をクリックすると入力可能な表示に変わります</li>
+            <li>入稿日や下版日を入力し、追加情報があればコメント欄に記入し『登録』をクリックして編集完了</li>
+            <li>編集を登録せずに破棄する場合は『戻る』をクリック</li>
+            <li>この伝票番号の作業工程を削除する場合は『削除』をクリックすると削除されます<br>削除すると該当伝票番号（製品）の各部署の工程情報も削除されます</li>
+            </ol>
+          </li>
+          <li>工程を作成（部署の作業登録）する　＞その２
+            <ol class="lst2">
+            <li>その１から引き続き</li>
+            <li>カレンダー下部に各部署のボタンがあり、登録したい部署をクリック</li>
+            <li>該当部署の作業ボタンが表示され登録する作業ボタンをクリック</li>
+            <li>ボタンの上部にチェックボタンが表示され、作業日をクリックしていきます（複数日程の同時登録可能）</li>
+            <li>登録する場合は『登録』をクリックします</li>
+            <li>登録を削除する場合は『削除』をクリックします<br>チェックマークが付いている日が削除されます</li>
+            </ol>
+          </li>
+          <li>工程を見る
+            <ol class="lst2">
+            <li>メニュー欄より『作業工程閲覧』をクリック</li>
+            <li>伝票番号で検索、その他の項目で検索ができます<br>『検索』をクリックし、検索にヒットすると該当工程が一覧表示させる</li>
+            <li>『表示』をクリックすることで部署工程のカレンダーも表示されます</li>
+            <li>作業を終えた工程は、■をクリックすると■にマークが付きます</li>
+            <li>カレンダーの日付クリックすると該当日の作業一覧が表示されます</li>
+            </ol>
+          </li>
+          </ul>
+    </div>
 
-					<form id="searchform" name="payform" method="POST">
-						<input type="hidden" name="mode" id="mode" value="payview">
-						<input type="hidden" name="submode" id="submode" value="chkwrite">
-						<input type="hidden" name="motion" id="motion" value="">
-				
+	<div id="version_cnt"><a @click="viewBtn(2)">version 1.0</a></div>
+	<div id="tbl_2">
+		<table>
+		<thead>
+			<tr>
+			<th>version</th>
+			<th>date</th>
+			<th>overview</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td>1.0</td><td>2023/01/18</td><td>初版</td></tr>
+		</tbody>
+		</table>
+	
+	</div>
 
-						<input type="number" name="product_id" id="product_id" value="">
-						<input type="text" name="str1" id="str1" value="">
-						<input type="text" name="str2" id="str2" value="">
-						<input type="text" name="str3" id="str3" value="">
-
-						<input type="date" class="form_style w8" id="today" name="wpdate" value="">&emsp;
-						<button class="btn_style" type="button" onClick="clickEvent('searchform','','1','confirm','『 検索 』 します。','payview','chkwrite')">検索</button>
-						<button class="btn_style" type="button" onClick="UPDATEcollect()">axios検索</button>
-						@csrf 
-					</form>
-
-
-		
-					</div>
-					<!-- /main contentns row -->
-
-					<div>
-						<div>modeの値：{{ $mode }}</div>
-						<div>変数の値1：{{ $str1 }}</div>
-						<div>変数の値2：{{ $str2 }}</div>
-						<div>変数の値3：{{ $str3 }}</div>
-					</div>
-					<div>{{ $action_msg }}</div>
-
-					<div id="tbl_1">
-						<table>
-							<thead>
-							<tr>
-								<th>&emsp;</th>
-								<th>伝票番号</th>
-								<th>納期</th>
-								<th>得意先</th>
-								<th>品名</th>
-								<th>エンドユーザー</th>
-								<th>数量</th>
-
-							</tr>
-							</thead>
-							<tbody>
-							@php echo $html_result;
-							@endphp
-							</tbody>
-						</table>
-					</div>
-
-					<div id="resultupdate"></div>
-					<div id="resultlist"><ul class="list-group"></ul></div>
-					<div id="error"></div>
 
 
 @endsection
@@ -252,7 +249,7 @@ function UPDATEcollect() {
 	}
 
 
-
+/*
 	window.onload = function () {
 		//今日の日時を表示
 		var date = new Date()
@@ -275,6 +272,7 @@ function UPDATEcollect() {
 
 		document.getElementById("today").value = ymd;
 	}
+*/
 </script>
 @endsection
 

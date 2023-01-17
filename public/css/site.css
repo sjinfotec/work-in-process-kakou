@@ -369,6 +369,12 @@ header button {width:auto;}
 */
 }
 
+#version_cnt  {
+  margin-top:20px;
+  margin-right:20px;
+  text-align: right;
+}
+
 
 /*--------------------## 登録検索 / 一覧 ##--------------------*/
 

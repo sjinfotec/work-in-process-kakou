@@ -277,7 +277,7 @@ class RegisterController extends Controller
                     if($count > 0){
                         $r_after_due_date = $result[0]->after_due_date;
                         $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
-                        $e_message .= " 工程登録可能 <> 納期 ： ".$html_after_due_date." <> ".$count."";
+                        $e_message .= " 登録可能 <> 納期 ： ".$html_after_due_date." <> ".$count."";
                         $result_msg = "OK";
                     }
     

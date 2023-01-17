@@ -102,7 +102,7 @@ class ProcessController extends Controller
         $data = json_decode($content, true) ?? [];
         
         $ng_write = "";
-        var_dump($data);
+        //var_dump($data);
 
 
         if(!empty($data)) {
@@ -846,6 +846,10 @@ class ProcessController extends Controller
                 $after_due_date = "";
                 $html_cal = "";
                 $select_html = 'Resultview';
+
+                $e_message = "削除しました -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']."";
+                $result_msg = "DEL";
+
     
             }
             else {
@@ -887,7 +891,7 @@ class ProcessController extends Controller
 
                 $select_html = 'Default';
     
-                $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
+                $e_message = "登録 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
                 $result_msg = "OK";
         
 
@@ -942,28 +946,6 @@ class ProcessController extends Controller
     public function insertData(Request $request)
     {
 
-
-
-
-        //$reqarr = $request->all();
-        //Log::debug("debug --");
-        /*
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
- 
-        $listcount = isset($data['listcount']) ? $data['listcount'] : "";
-        $this->work_date = !empty($data['work_date']) ? $data['work_date'] : "";
-        $this->product_code = !empty($data['product_code']) ? $data['product_code'] : "";
-        $this->departments_name = !empty($data['departments_name']) ? $data['departments_name'] : "";
-        $this->departments_code = !empty($data['departments_code']) ? $data['departments_code'] : "";
-        $this->work_name = !empty($data['work_name']) ? $data['work_name'] : "";
-        $this->work_code = !empty($data['work_code']) ? $data['work_code'] : "";
-        $this->process_name = !empty($data['process_name']) ? $data['process_name'] : "";
-        //$this->status = isset($data['status']) ? $data['status'] : "";
-
-        $mode = isset($data['mode']) ? $data['mode'] : "";
-        $upkind = isset($data['upkind']) ? $data['upkind'] : "";
-        */
         $details = isset($_POST['details']) ? $_POST['details'] : [];
         /*
         foreach($details AS $key => $val) {
@@ -1133,33 +1115,6 @@ class ProcessController extends Controller
         
         $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
         $result_msg = "OK";
-        /*
-        $result = array();
-        $result = [
-            'count' => $count, 
-            'updateresult' => $updateresult, 
-			'product_code' => $s_product_code,
-			'after_due_date' => $after_due_date,
-			'customer' => $customer,
-			'product_name' => $product_name,
-			'end_user' => $end_user,
-			'quantity' => $quantity,
-			'comment' => $comment,
-            'work_date' => $this->work_date, 
-            'product_code' => $this->product_code, 
-            'departments_name' => $this->departments_name, 
-            'departments_code' => $this->departments_code, 
-            'work_name' => $this->work_name, 
-            'work_code' => $this->work_code, 
-            'process_name' => $this->process_name, 
-            'status' => $this->status, 
-            'mode' => $mode, 
-            'e_message' => $e_message, 
-            'result_msg' => $result_msg,
-        ];
-        */
-
-
 
         /*
         $redata = array();
@@ -1207,50 +1162,8 @@ class ProcessController extends Controller
             'select_html' => '',
         ]);
 
-        /*
-        return view('process', [
-            's_product_code' => $s_product_code,
-            'product_code' => $product_code,
-            'after_due_date' => $after_due_date,
-            'customer' => $customer,
-            'product_name' => $product_name,
-            'end_user' => $end_user,
-            'quantity' => $quantity,
-            'comment' => $comment,
-            'action_msg' => $action_msg,
-            'result' => $result,
-            'wd_result' => $wd_result,
-            'listcount' => $listcount, 
-            'work_date' => $this->work_date, 
-            'product_code' => $this->product_code, 
-            'departments_name' => $this->departments_name, 
-            'departments_code' => $this->departments_code, 
-            'work_name' => $this->work_name, 
-            'work_code' => $this->work_code, 
-            'process_name' => $this->process_name, 
-            'status' => $this->status, 
-            'mode' => $mode, 
-            'motion' => $motion,
-            'e_message' => $e_message, 
-            'result_msg' => $result_msg,
-            'updateresult' => $updateresult,
-            'count' => $count,
-
-        ]);
-        */
-
-//            'name' => $details['name'],
-
-
 
     }
-
-
-
-
-
-
-
 
 
 }

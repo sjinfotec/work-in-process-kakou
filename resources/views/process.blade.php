@@ -414,6 +414,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 
 					@elseif($select_html === 'Resultview')
+						@isset($e_message)<div id="error"> {!! $e_message !!} </div>@endisset
 						<form id="updateform" name="updateform" method="POST">
 							<div id="form1" class="mgt20">
 								<input type="hidden" name="mode" id="mode" value="">
@@ -424,14 +425,6 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							</div>
 							@csrf
 						</form>
-
-
-						<div id="resultupdate"></div>
-						<div id="resultstr"></div>
-
-
-
-
 
 					@endif
 
