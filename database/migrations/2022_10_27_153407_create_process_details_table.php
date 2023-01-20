@@ -32,8 +32,8 @@ class CreateProcessDetailsTable extends Migration
             $table->string('status', 10)->nullable()->comment('ステータス');
             $table->string('comment', 255)->nullable()->comment('コメント');
 
-            $table->string('created_user', 10)->nullable()->comment('作成ユーザー');
-            $table->string('updated_user', 10)->nullable()->comment('修正ユーザー');
+            $table->string('created_user', 50)->nullable()->comment('作成ユーザー');
+            $table->string('updated_user', 50)->nullable()->comment('修正ユーザー');
             $table->dateTime('created_at')->nullable()->comment('作成時間');
             $table->dateTime('updated_at')->nullable()->comment('修正時間');
             $table->boolean('is_deleted')->nullable()->comment('削除フラグ')->default(0);

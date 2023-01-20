@@ -270,6 +270,7 @@ class Calendar extends Model
                 $pd4_class =  '';
                 $pd5_class =  '';
                 $pd6_class =  '';
+                $pd7_class =  '';
     
                 $line1 = $line[2][$dkey];
                 $line2 = $line[3][$dkey];
@@ -312,6 +313,7 @@ class Calendar extends Model
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
+                        <div class="line"><div class="%s">%s</div></div>
                         '.$workdate_html.'
                     </div>
                     ',
@@ -327,12 +329,24 @@ class Calendar extends Model
                     $line5,
                     $pd6_class,
                     $line6,
+                    $pd7_class,
+                    $line7,
                     $day->format('j')
                 );
     
     
-                $body .= sprintf(
-                    '<div class="day_cnt" style="%s"><a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s"><div style="%s">%s</div><div class="datestyle %s %s">%s</div></a>%s'.$workspace.'</div>',
+                $body .= sprintf('
+                    <div class="day_cnt" style="%s">
+                    <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
+                    <div style="%s">%s</div><div class="datestyle %s %s">%s</div>
+                    </a>
+                    %s
+                    '.$workspace.'
+                    <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
+                    <div style="%s">%s</div><div class="datestyle %s ">%s</div>
+                    </a>
+                    </div>
+                    ',
                     $due_class,
                     $day->format('Y-m-d'),
                     $style_bg,
@@ -341,6 +355,11 @@ class Calendar extends Model
                     $today_class,
                     $day->format('j'),
                     $re_pl_html,
+                    $day->format('Y-m-d'),
+                    $style_bg,
+                    $weekarr[$fdw],
+                    $company_class,
+                    $day->format('j'),
                 );
     
                 

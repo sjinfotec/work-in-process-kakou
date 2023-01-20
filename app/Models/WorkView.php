@@ -413,6 +413,8 @@ class WorkView extends Model
         $result = "";
         $result_msg = "";
         $e_message = "作業工程 ： ";
+        $systemdate = Carbon::now();
+        $ipaddr = mb_substr($_SERVER["REMOTE_ADDR"].'', 0, 50);
 
         $params = $request->only([
             'work_date',
@@ -440,6 +442,8 @@ class WorkView extends Model
                 ->update(
                     [
                         'status' => $status_str,
+                        'updated_user' => $ipaddr,
+                        'updated_at' => $systemdate
                     ]
                 );
 

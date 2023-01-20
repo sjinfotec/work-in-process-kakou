@@ -612,6 +612,13 @@ header button {width:auto;}
   border:2px solid #EC3;
 }
 
+#confirm_area {
+  display: flex;
+}
+#confirm_area .result_log {
+  border: 2px solid #FF0000;
+}
+
 
 
 #form_cnt {
@@ -697,7 +704,7 @@ header button {width:auto;}
   /*position:  relative;*/
   position: absolute;
   width:  22px;
-  height:  530px;
+  height:  616px;
   background-color: #f4c836;
   /*border-radius:  50%;*/
   line-height: 3px;

@@ -14,7 +14,7 @@ $action_msg .= "".$mode."<br>\n";
 $select_html = !empty($select_html) ? $select_html : "Default";
 
 
-//var_dump($result);
+var_dump($result);
 //echo "<br><br>1:\n";
 //echo $result;
 //echo "<br><br>2:\n";
@@ -84,6 +84,14 @@ if(isset($result['result'])) {
 } else {
 	//$action_msg .= "resultにデータがありません<br>\n";
 	$action_msg .= "伝票番号を入力して検索しましょう<br>\n";
+}
+
+
+if(isset($result['resultlog'])) {
+	$resultlog = $result['resultlog'];
+}
+else {
+	$resultlog = Array();
 }
 
 
@@ -283,6 +291,39 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 							</div>
 
+							<div id="confirm_area">
+								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','','Edit','goedit','『 確定 』','process_confirm','')">工程確定</button></div>
+								<div class="result_log">
+									<table>
+										<tr>
+											<th>内容</th><th>作業日</th><th>部署</th><th>作業</th><th>更新日</th>
+										</tr>
+
+
+										@forelse ($resultlog as $val)
+										<tr>
+											<td class="">{{ $val->product_code }}</td>
+											<td class="">{!! date('Y年m月d日', strtotime($val->after_due_date)) !!}</td>
+											<td class="">{{ $val->departments_name }}</td>
+											<td class="">{{ $val->work_name }}</td>
+											<td class="">@php echo isset($val->created_at) ? date('Y年m月d日', strtotime($val->created_at)) : ""; @endphp</td>
+										</tr>
+										@empty
+										<tr><td colspan="5">no data</td></tr>
+										@endforelse
+
+
+
+										<tr>
+											<td>削除</td><td>○月○日</td><td>情報処理</td><td>オンデマンド</td><td>△年△月△日</td>
+										</tr>
+									</table>
+								</div>
+
+
+							</div>
+
+
 							@csrf
 						</form>
 
@@ -309,6 +350,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							@if ($editzone === true)
 								<div id="form_cnt">
 									<div>
+										<input type="radio" name="departments_code" value="8" id="departments_code8">
+										<label for="departments_code8" class="label transition2" onclick="WORKcollect(8,'業務課')">業務課</label>
+									</div>
+									<div>
 										<input type="radio" name="departments_code" value="2" id="departments_code2">
 										<label for="departments_code2" class="label transition2" onclick="WORKcollect(2,'情報処理課［制作］')">情報処理課［制作］</label>
 									</div>
@@ -331,6 +376,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<div>
 										<input type="radio" name="departments_code" value="7" id="departments_code7">
 										<label for="departments_code7" class="label transition2" onclick="WORKcollect(7,'加工課２')">加工課２</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="10" id="departments_code10">
+										<label for="departments_code10" class="label transition2" onclick="WORKcollect(10,'品質保証')">品質保証</label>
 									</div>
 									<div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>
 								</div>
@@ -514,7 +563,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			var result = window.confirm('部署名 : ' + Jdepartments_name + '\n工程 : ' + Jwork_name + '\n' + com1 + 'します');
 			if( result ) {
 				//fm.mode.value = md;
-				fm.motion.value = 'reload';
+				fm.motion.value = val1;
 				fm.action = '/process/insert';
 				fm.submit();
 			}
@@ -561,6 +610,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			var result = window.confirm('部署名 : ' + val1 + '\n' + com1 + 'します');
 			if( result ) {
 				//fm.work_code.value = 'DEL';
+				fm.motion.value = val1;
 				fm.mode.value = md;
 				fm.action = '/process/insert';
 				fm.submit();
@@ -674,7 +724,7 @@ function WORKcollect(n,dn) {
 	var Mode = document.getElementById('mode').value;
 	//var Jdepartments_name = document.getElementById('departments_name' + n).value;
 	document.getElementById('departments_name').value = dn;
-	//console.log('WORKcollect in depa ' + n);
+	console.log('WORKcollect in depa ' + n);
 
 	var details = {name: "pro", team: ""};
 	//var Wpdate = document.getElementById('today').value;
@@ -748,8 +798,8 @@ function appendWORKDATE(dataarr) {
 		text2.push(
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="DEL" id="work_code_del">\n' + 
-				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'\',\'\',\'select_del\',\'削除\',\'delete\',\'\')">削除</label>\n' +
-				'<button class="" type="button" onClick="clickEvent(\'addprocessform\',\'1\',\'1\',\'confirm_update\',\'『 登録 』\',\'product_search\',\'chkwrite\')">登録</button>\n' +
+				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'削除\',\'\',\'select_del\',\'削除\',\'delete\',\'\')">削除</label>\n' +
+				'<button class="" type="button" onClick="clickEvent(\'addprocessform\',\'更新\',\'1\',\'confirm_update\',\'『 登録 』\',\'product_search\',\'chkwrite\')">登録</button>\n' +
 				'	\n' +
 				'	<input type="radio" name="status" value="" id="status">\n' + 
 				'	<label for="status" class="label comp transition2" onclick="clickEvent(\'addprocessform\',\'' + data.departments_code + '\',\'完了\',\'status_up\',\'作業完了\',\'status_update\',\'\')">作業完了</label>\n' +
