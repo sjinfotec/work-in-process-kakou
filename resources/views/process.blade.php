@@ -14,7 +14,7 @@ $action_msg .= "".$mode."<br>\n";
 $select_html = !empty($select_html) ? $select_html : "Default";
 
 
-var_dump($result);
+//var_dump($result);
 //echo "<br><br>1:\n";
 //echo $result;
 //echo "<br><br>2:\n";
@@ -87,8 +87,10 @@ if(isset($result['result'])) {
 }
 
 
-if(isset($result['resultlog'])) {
-	$resultlog = $result['resultlog'];
+if(isset($result_log)) {
+	//echo "<br><br>\n";
+	//var_dump($result_log['result_log']['result']);
+	$resultlog = $result_log['result_log']['result'];
 }
 else {
 	$resultlog = Array();
@@ -291,7 +293,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 							</div>
 
-							<div id="confirm_area">
+							<div id="confirm_area" class="mgt20">
 								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','','Edit','goedit','『 確定 』','process_confirm','')">工程確定</button></div>
 								<div class="result_log">
 									<table>
@@ -302,8 +304,8 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 										@forelse ($resultlog as $val)
 										<tr>
-											<td class="">{{ $val->product_code }}</td>
-											<td class="">{!! date('Y年m月d日', strtotime($val->after_due_date)) !!}</td>
+											<td class="{{ $val->motion == '削除' ? 'color2' : 'color1'}}">{{ $val->motion }}</td>
+											<td class="">{!! date('Y年m月d日', strtotime($val->work_date)) !!}</td>
 											<td class="">{{ $val->departments_name }}</td>
 											<td class="">{{ $val->work_name }}</td>
 											<td class="">@php echo isset($val->created_at) ? date('Y年m月d日', strtotime($val->created_at)) : ""; @endphp</td>
@@ -312,11 +314,6 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										<tr><td colspan="5">no data</td></tr>
 										@endforelse
 
-
-
-										<tr>
-											<td>削除</td><td>○月○日</td><td>情報処理</td><td>オンデマンド</td><td>△年△月△日</td>
-										</tr>
 									</table>
 								</div>
 
@@ -799,7 +796,7 @@ function appendWORKDATE(dataarr) {
 				'<div id="workname">\n' +
 				'	<input type="radio" name="work_code" value="DEL" id="work_code_del">\n' + 
 				'	<label for="work_code_del" class="label del transition2" onclick="clickEvent(\'addprocessform\',\'削除\',\'\',\'select_del\',\'削除\',\'delete\',\'\')">削除</label>\n' +
-				'<button class="" type="button" onClick="clickEvent(\'addprocessform\',\'更新\',\'1\',\'confirm_update\',\'『 登録 』\',\'product_search\',\'chkwrite\')">登録</button>\n' +
+				'<button class="" type="button" onClick="clickEvent(\'addprocessform\',\'登録\',\'1\',\'confirm_update\',\'『 登録 』\',\'product_search\',\'chkwrite\')">登録</button>\n' +
 				'	\n' +
 				'	<input type="radio" name="status" value="" id="status">\n' + 
 				'	<label for="status" class="label comp transition2" onclick="clickEvent(\'addprocessform\',\'' + data.departments_code + '\',\'完了\',\'status_up\',\'作業完了\',\'status_update\',\'\')">作業完了</label>\n' +

@@ -58,6 +58,13 @@ Route::post('/view/get', [ViewController::class,'getData']);
 Route::post('/view/search', [ViewController::class,'postSearch']);
 Route::get('/view/search', [ViewController::class,'index']);
 
+// ログ
+Route::post('/log/search', [LogController::class,'postSearch']);
+
+
+
+
+
 // 作業詳細
 Route::get('/work', [WorkViewController::class,'index']);
 Route::post('/work', [WorkViewController::class,'index']);

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Calendar;
+use App\Models\ProcessLog;
 
 class ProcessController extends Controller
 {
@@ -358,6 +359,9 @@ class ProcessController extends Controller
 
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
+        $processlog_data = new ProcessLog();	// インスタンス作成
+        $result_logsearch = $processlog_data->LogSearch($request);
+
         //var_dump($result_details['result'][0]); 
         //echo $av = $result_details['datacount'] ?: "なし<br>\n";
         //echo "<br><br>\n";
@@ -392,6 +396,7 @@ class ProcessController extends Controller
                 'e_message' => $e_message,
                 'result' => $result_details,
                 'result_date' => $result_date,
+                'result_log' => $result_logsearch,
                 'wd_result' => '',
                 'html_cal_main' => $html_cal,
                 'select_html' => $select_html,
@@ -1030,6 +1035,36 @@ class ProcessController extends Controller
         try {
             $re_data = [];
             $systemdate = Carbon::now();
+
+
+/*
+            $data = DB::table($this->table)
+            ->select(
+                'work_date',
+                'product_code',
+                'departments_name',
+                'departments_code',
+                'work_name',
+                'work_code',
+                'process_name',
+                'status'
+            );
+            $data->where('product_code', $s_product_code);
+            $result = $data
+            ->get();
+            $datacount = $data->count();
+
+
+
+            if($datacount > 0) {
+                $f_work_date = $result[0]->work_date;
+                $html_f_work_date = !empty($f_work_date) ? date('n月j日', strtotime($f_work_date)) : "";
+                $result_msg = "OK date";
+                $e_message .= " 伝票番号 = ".$result[0]->product_code." <> count = ".$datacount." <> date = ".$html_f_work_date;
+
+            }
+*/
+
 
             $work_date_arr = $request->only(['work_date']);
             $str = "";

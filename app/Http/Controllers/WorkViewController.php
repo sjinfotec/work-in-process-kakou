@@ -16,7 +16,6 @@ use App\Models\WorkView;
 class WorkViewController extends Controller
 {
 
-    
     public function daySearch(Request $request)
     {
 
