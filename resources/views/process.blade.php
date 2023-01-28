@@ -16,7 +16,7 @@ $select_html = !empty($select_html) ? $select_html : "Default";
 
 //var_dump($result);
 //echo "<br><br>1:\n";
-//echo $result;
+//var_dump($result['action_msg']);
 //echo "<br><br>2:\n";
 
 
@@ -294,7 +294,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							</div>
 
 							<div id="confirm_area" class="mgt20">
-								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','','Edit','goedit','『 確定 』','process_confirm','')">工程確定</button></div>
+								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','','Edit','goedit','『 確定 』','process_confirm','')">工程登録</button></div>
 								<div class="result_log">
 									<table>
 										<tr>
