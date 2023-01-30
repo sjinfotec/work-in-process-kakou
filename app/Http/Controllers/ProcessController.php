@@ -775,7 +775,6 @@ class ProcessController extends Controller
         /*
         foreach($details AS $key => $val) {
             $name = $val;
-
         }
         */
 
@@ -838,34 +837,9 @@ class ProcessController extends Controller
 
 
         try {
-            $re_data = [];
             $systemdate = Carbon::now();
-            if($upkind == 3) {
-            //$this->company_id = DB::table($this->table)->max('company_id') + 1;
-            //$this->product_id = DB::table($this->table)->max('product_id') + 1;
-            //$this->order_info = 'a';
-            //$this->created_user = 'system';
-            }
-            if($upkind == 2) {
-                //$this->product_id = DB::table($this->table)->max('product_id') + 1;
-                //$this->order_info = 'a';
-                //$this->created_user = 'system';
-            }
-            //$this->now_inventory = isset($this->now_inventory) ? $this->now_inventory : "";
-            //$this->nbox = isset($this->nbox) ? $this->nbox : "";
-
-            /*
-            //例：user_idが1001かつemailがtest@test.comを検索し、見つかった場合は、nameをnishiyamaへ、ageを33にupdateします。
-                        DB::table($this->table_process_date)
-                        ->updateOrInsert(
-                            ['user_id' => 1001, 'email' => 'test@test.com'],
-                            ['name' => 'nishiyama', 'age' => 33]
-                        );
-
-            */
-
-
-
+            $re_data = [];
+            $make_instance_true = false;
 
             if($mode == 'delete') {
                 $count1 = DB::table($this->table_process_date)
@@ -887,9 +861,28 @@ class ProcessController extends Controller
 
     
             }
+            else if($mode == 'process_status') {
+                $update = [
+                    'status'    => 'REC',
+                    'updated_at'    => now(),
+                ];
+                $updateresult = DB::table($this->table)
+                ->where('product_code', $s_product_code)
+                ->update($update);
+
+                $updateresult = DB::table($this->table_process_log)
+                ->where('product_code', $s_product_code)
+                ->increment('status',1);
+                //->update($update);
+
+
+                $make_instance_true = true;
+                $select_html = 'Default';
+                $e_message = "工程確定 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
+
+
+            }
             else {
-
-
 
                 $updateresult = DB::table($this->table)
                 ->updateOrInsert(
@@ -916,24 +909,28 @@ class ProcessController extends Controller
                     ]
                 );
                 
+                $make_instance_true = true;
 
+                $select_html = 'Default';
+                $e_message = "登録 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
+                $result_msg = "OK";
+
+
+            }
+
+            //DB::commit();
+
+            if($make_instance_true) {
                 $result_details = $this->SearchProcessDetails($request);
                 $result_date = $this->SearchProcessDate($request);
                 $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
                 $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
                 $calendar_data = new Calendar();	// インスタンス作成
                 $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
-
-                $select_html = 'Default';
-    
-                $e_message = "登録 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
-                $result_msg = "OK";
+                $processlog_data = new ProcessLog();	// インスタンス作成
+                $result_logsearch = $processlog_data->LogSearch($request);
         
-
-
             }
-
-            //DB::commit();
             
             
     
@@ -967,6 +964,7 @@ class ProcessController extends Controller
             'e_message' => $e_message,
             'result' => $result_details,
             'result_date' => $result_date,
+            'result_log' => $result_logsearch,
             'html_cal_main' => $html_cal,
             'select_html' => $select_html,
         ]);
@@ -1083,6 +1081,7 @@ class ProcessController extends Controller
                 foreach($work_date_arr AS $key => $wdarr) {
                     foreach($wdarr AS $wdkey => $val) {
                         $str .= "wdkey=".$wdkey.":val=".$val;
+                        $loginserttrue = false;
     
                         if($mode == 'delete') {
                             $updateresult = DB::table($this->table_process_date)
@@ -1091,6 +1090,7 @@ class ProcessController extends Controller
                             ->where('departments_code', $params['departments_code'])
                             ->where('work_code', $params['work_code'])
                             ->delete();
+                            $loginserttrue = true;
                 
                         }
                         /*
@@ -1159,35 +1159,55 @@ class ProcessController extends Controller
                                         'created_at' => $systemdate
                                     ]
                                 );
+                                $loginserttrue = true;
+                                //echo "updateresult ->> ".$updateresult."<br>\n";
+                                /*
+                                $insertdata[] = array(
+                                    'work_date' => $val,
+                                    'product_code' => $s_product_code,
+                                    'motion' => $motion,
+                                    'departments_name' => $params['departments_name'], 
+                                    'departments_code' => $params['departments_code'],
+                                    'work_name' => $params['work_name'], 
+                                    'work_code' => $params['work_code'],
+                                    'process_name' => '', 
+                                    'created_user' => $ipaddr,
+                                    'created_at' => $systemdate
+                                );
+                                */
+
                             }     
 
 
                         }
 
-                        $insertdata[] = array(
-                            'work_date' => $val,
-                            'product_code' => $s_product_code,
-                            'motion' => $motion,
-                            'departments_name' => $params['departments_name'], 
-                            'departments_code' => $params['departments_code'],
-                            'work_name' => $params['work_name'], 
-                            'work_code' => $params['work_code'],
-                            'process_name' => '', 
-                            'created_user' => $ipaddr,
-                            'created_at' => $systemdate
-                        );
+                        if($loginserttrue) {
+                            $insertdata[] = array(
+                                'work_date' => $val,
+                                'product_code' => $s_product_code,
+                                'motion' => $motion,
+                                'departments_name' => $params['departments_name'], 
+                                'departments_code' => $params['departments_code'],
+                                'work_name' => $params['work_name'], 
+                                'work_code' => $params['work_code'],
+                                'process_name' => '', 
+                                'created_user' => $ipaddr,
+                                'created_at' => $systemdate
+                            );
+                        }
 
-                    }
+
+                    }   // end foreach
 
                     
 
 
-                }
+                }  // end foreach
             }
 
-            if(isset($updateresult)) {
+            if($updateresult == 1) {
                 //$updateresult = 'yes';
-                if($pddata == 'rec') {
+                if($pddata[0] == 'REC') {
                     $logresult = DB::table($this->table_process_log)->insert($insertdata); 
                 }
             }

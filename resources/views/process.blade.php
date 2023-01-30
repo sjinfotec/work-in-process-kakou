@@ -95,7 +95,9 @@ if(isset($result_log)) {
 else {
 	$resultlog = Array();
 }
-
+//var_dump($resultlog);
+//echo "<br><br>\n";
+//echo "log --> ".$resultlog[0]->work_date."<br>\n";
 
 //var_dump($result[0]);
 //echo $result[0]->customer;
@@ -294,7 +296,11 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							</div>
 
 							<div id="confirm_area" class="mgt20">
-								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','','Edit','goedit','『 確定 』','process_confirm','')">工程登録</button></div>
+								@isset($resultlog[0]->work_date)
+								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','Edit','upprocessdetails','『 工程確定 』','process_status','')">工程確定</button></div>
+								@else
+								<div></div>
+								@endisset
 								<div class="result_log">
 									<table>
 										<tr>
@@ -311,7 +317,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 											<td class="">@php echo isset($val->created_at) ? date('Y年m月d日', strtotime($val->created_at)) : ""; @endphp</td>
 										</tr>
 										@empty
-										<tr><td colspan="5">no data</td></tr>
+										<tr><td colspan="5">変更はありません</td></tr>
 										@endforelse
 
 									</table>
@@ -604,7 +610,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			//var Js_product_code = fm.s_product_code.value;
 			//value="DEL" id="work_code_del"
 			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
-			var result = window.confirm('部署名 : ' + val1 + '\n' + com1 + 'します');
+			var result = window.confirm('' + val1 + '\n' + com1 + 'します');
 			if( result ) {
 				//fm.work_code.value = 'DEL';
 				fm.motion.value = val1;
@@ -624,6 +630,20 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 				fm.mode.value = md;
 				fm.status.value = val2;
 				fm.action = '/process/insert';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
+
+		}
+		else if(cf == 'upprocessdetails') {
+			var result = window.confirm('伝票番号 : ' + val1 + '\n' + com1 + 'します');
+			if( result ) {
+				//fm.work_code.value = '';upprocessdetails
+				fm.mode.value = md;
+				//fm.status.value = val2;
+				fm.action = '/process/update';
 				fm.submit();
 			}
 			else {
