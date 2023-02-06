@@ -50,6 +50,11 @@ Route::post('/process/updates', [ProcessController::class,'fix']);
 Route::post('/process/insert', [ProcessController::class,'insertData']);
 Route::post('/process/search', [ProcessController::class,'postSearch']);
 Route::post('/process/wdget', [ProcessController::class,'workDate']);   // 部署の作業日取得
+Route::any('/process/{getpost}', function ($getpost) {
+    // {}がワイルドカード　なんでも入る。　$getpost 引数を設定して変数として使える
+    return redirect('/process');
+});
+
 
 // 閲覧
 Route::get('/view', [ViewController::class,'index']);

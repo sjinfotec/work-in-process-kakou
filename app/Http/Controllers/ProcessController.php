@@ -767,6 +767,9 @@ class ProcessController extends Controller
 
 
 
+
+
+
     public function updateProcessDetails(Request $request)
     {
 
@@ -815,6 +818,7 @@ class ProcessController extends Controller
         $action_msg = "";
         $result = "";
         $result_date = "";
+        $result_logsearch = "";
         $wd_result = "";
         $result_msg = "";
         $html_after_due_date = "";
@@ -826,9 +830,11 @@ class ProcessController extends Controller
         $listcount = isset($_POST['listcount']) ? $_POST['listcount'] : "";
         $this->status = isset($_POST['status']) ? $_POST['status'] : "";
 
-        $mode = isset($_POST['mode']) ? $_POST['mode'] : "";
+        //$mode = isset($_POST['mode']) ? $_POST['mode'] : "";
         $upkind = isset($_POST['upkind']) ? $_POST['upkind'] : "";
         $details = isset($_POST['details']) ? $_POST['details'] : [];
+
+        //echo "processController mode = ".$mode."<br>\n";
 
         $reqarr = $request->only([
             'work_name', 
@@ -861,7 +867,7 @@ class ProcessController extends Controller
 
     
             }
-            else if($mode == 'process_status') {
+            else if($mode == 'process_status_rec') {
                 $update = [
                     'status'    => 'REC',
                     'updated_at'    => now(),
@@ -878,7 +884,22 @@ class ProcessController extends Controller
 
                 $make_instance_true = true;
                 $select_html = 'Default';
-                $e_message = "工程確定 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
+                $e_message = "再確定 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
+
+
+            }
+            else if($mode == 'process_status_change') {
+                $update = [
+                    'status'    => $params['status'],
+                    'updated_at'    => now(),
+                ];
+                $updateresult = DB::table($this->table)
+                ->where('product_code', $s_product_code)
+                ->update($update);
+
+                $make_instance_true = true;
+                $select_html = 'Default';
+                $e_message = "初期工程確定 -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']." ／ 納期 : ".$params['after_due_date'];
 
 
             }

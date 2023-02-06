@@ -296,18 +296,15 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							</div>
 
 							<div id="confirm_area" class="mgt20">
-								@isset($resultlog[0]->work_date)
-								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','Edit','upprocessdetails','『 工程確定 』','process_status','')">工程確定</button></div>
-								@else
-								<div></div>
-								@endisset
+								<input type="hidden" name="status" id="status" value="">
+								{!! isset($status) ? $status:""; !!}
+								@if(isset($resultlog[0]->work_date))
+								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','','upprocessdetails','『 再確定 』','process_status_rec','')">再確定</button></div>
 								<div class="result_log">
 									<table>
 										<tr>
 											<th>内容</th><th>作業日</th><th>部署</th><th>作業</th><th>更新日</th>
 										</tr>
-
-
 										@forelse ($resultlog as $val)
 										<tr>
 											<td class="{{ $val->motion == '削除' ? 'color2' : 'color1'}}">{{ $val->motion }}</td>
@@ -319,14 +316,26 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										@empty
 										<tr><td colspan="5">変更はありません</td></tr>
 										@endforelse
-
 									</table>
 								</div>
+								@else
 
+									@if(isset($status))
+										@if($status == "REC")
+									<!--<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','','upprocessdetails','『 工程確定済 』','process_status_rec','')">工程確定済</button></div>-->
+											<div class="btn_result">工程確定済み</div>
+										@else
 
+											<div><button class="btn_button transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','REC','upprocessdetails','『 確定登録 』','process_status_change','')">確定登録</button></div>
+
+										@endif
+
+									@else
+
+									@endif
+
+								@endif
 							</div>
-
-
 							@csrf
 						</form>
 
@@ -642,7 +651,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			if( result ) {
 				//fm.work_code.value = '';upprocessdetails
 				fm.mode.value = md;
-				//fm.status.value = val2;
+				fm.status.value = val2;
 				fm.action = '/process/update';
 				fm.submit();
 			}

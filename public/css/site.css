@@ -648,7 +648,18 @@ header button {width:auto;}
   border-bottom:1px solid #888888;
 
 }
+#confirm_area .btn_result  {
+  padding:0.75rem;
+  border:1px solid #578a3d;
 
+}
+
+#confirm_area .btn_button  {
+  border:1px solid #578a3d;
+  background: #FFF;
+  color: #578a3d;
+
+}
 
 #form_cnt {
   display: flex;
