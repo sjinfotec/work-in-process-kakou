@@ -68,6 +68,15 @@ if(isset($result['result'])) {
 	$resultdata = Array();
 }
 
+//var_dump($result_log);
+if(!empty($result_log)) {
+	//echo "<br><br>\n";
+	//var_dump($result_log['result_log']['result']);
+	$resultlog = $result_log['result_log']['result'];
+}
+else {
+	$resultlog = Array();
+}
 
 	//var_dump($result[0]);
 	//echo $result[0]->customer;
@@ -219,8 +228,49 @@ if(isset($result['result'])) {
 					@elseif($select_html === 'oneView')
 							<div id="tbl_1" class="">
 								<div id="top_cnt">
-									<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
-									<button class="mgla style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
+									<div>
+										<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
+									</div>
+
+									<div id="confirm_area" class="mgt20">
+									<input type="hidden" name="status" id="status" value="">
+									<!--{!! isset($status) ? $status:""; !!}-->
+										@if(isset($resultlog[0]->work_date))
+										<div class="btn_result b1">再確定待ち</div>
+										<div class="result_log">
+											<table>
+												<tr>
+													<th>内容</th><th>作業日</th><th>部署</th><th>作業</th><th>更新日</th>
+												</tr>
+												@forelse ($resultlog as $val)
+												<tr>
+													<td class="{{ $val->motion == '削除' ? 'color2' : 'color1'}}">{{ $val->motion }}</td>
+													<td class="">{!! date('Y年m月d日', strtotime($val->work_date)) !!}</td>
+													<td class="">{{ $val->departments_name }}</td>
+													<td class="">{{ $val->work_name }}</td>
+													<td class="">@php echo isset($val->created_at) ? date('Y年m月d日', strtotime($val->created_at)) : ""; @endphp</td>
+												</tr>
+												@empty
+												<tr><td colspan="5">変更はありません</td></tr>
+												@endforelse
+											</table>
+										</div>
+										@else
+											@if(isset($status))
+												@if($status == "REC")
+													<div class="btn_result">工程確定済み</div>
+												@else
+													<div class="btn_result">未確定</div>
+												@endif
+											@else
+
+											@endif
+										@endif
+									</div>
+
+									<div>
+										<button class="mgla style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
+									</div>
 								</div>
 								<table>
 									<thead>

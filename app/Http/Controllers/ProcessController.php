@@ -854,6 +854,9 @@ class ProcessController extends Controller
                 $count2 = DB::table($this->table)
                 ->where('product_code', $s_product_code)
                 ->delete();
+                $count3 = DB::table($this->table_process_log)
+                ->where('product_code', $s_product_code)
+                ->delete();
 
 
                 $result_details = "";
@@ -1013,9 +1016,11 @@ class ProcessController extends Controller
         $action_msg = "";
         $result = "";
         $result_date = "";
+        $wd_result = "";
         $result_msg = "";
         $html_after_due_date = "";
         $html_cal = "";
+        $viewmode = "editing";
         $e_message = "検索 ： ".$s_product_code."";
 
 
@@ -1114,9 +1119,9 @@ class ProcessController extends Controller
                             $loginserttrue = true;
                 
                         }
-                        /*
+                        
                         elseif($mode == 'status_update') {
-                            $updateresult = DB::table($this->table_process_date)
+                            $statusresult = DB::table($this->table_process_date)
                             ->where('work_date', $val)
                             ->where('product_code', $s_product_code)
                             ->where('departments_code', $this->departments_code)
@@ -1133,7 +1138,7 @@ class ProcessController extends Controller
 
                 
                         }
-                        */
+                        
                         else {
 
                             $chkupdate = DB::table($this->table_process_date)
@@ -1240,7 +1245,23 @@ class ProcessController extends Controller
 
        
             //DB::commit();
-            $wd_result = $this->workdateSearch($request);
+            //$wd_result = $this->workdateSearch($request);
+
+
+            $result_details = $this->SearchProcessDetails($request);
+            $result_date = $this->SearchProcessDate($request);
+            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+            $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+            $product_code = $result_details['result'][0]->product_code;
+            $product_name = $result_details['result'][0]->product_name;
+            $calendar_data = new Calendar();	// インスタンス作成
+            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
+            $processlog_data = new ProcessLog();	// インスタンス作成
+            $result_logsearch = $processlog_data->LogSearch($request);
+
+
+
+
 
         }catch(\PDOException $pe){
             Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$pe');
@@ -1254,8 +1275,9 @@ class ProcessController extends Controller
 
         
         
-        $e_message = "登録 ： ".$product_code." ＆ ".$product_name."　納期 ： ".$after_due_date;
+        $e_message = "伝票番号 : ".$product_code.", 品名 : ".$product_name.", 納期 : ".$after_due_date;
         $result_msg = "OK";
+        $action_msg .= $updateresult;
 
         /*
         $redata = array();
@@ -1296,8 +1318,9 @@ class ProcessController extends Controller
             'mode' => $mode,
             'action_msg' => $action_msg,
             'e_message' => $e_message,
-            'result' => $updateresult,
+            'result' => $result_details,
             'result_date' => $result_date,
+            'result_log' => $result_logsearch,
             'wd_result' => $wd_result,
             'html_cal_main' => $html_cal,
             'select_html' => '',

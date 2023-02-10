@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Calendar;
+use App\Models\ProcessLog;
 
 class ViewController extends Controller
 {
@@ -197,6 +198,7 @@ class ViewController extends Controller
         $action_msg = "";
         $result = "";
         $wd_result = "";
+        $result_logsearch = "";
         $result_msg = "";
         $html_after_due_date = "";
         $html_cal = "";
@@ -213,12 +215,14 @@ class ViewController extends Controller
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
         //echo "result_details['datacount'] = ".$result_details['datacount']."<br>\n";
-        if($result_details['datacount'] === 1) {
+        if($result_details['datacount'] == 1) {
             $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
             //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
             $calendar_data = new Calendar();	// インスタンス作成
             $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
-    
+            $processlog_data = new ProcessLog();	// インスタンス作成
+            $result_logsearch = $processlog_data->LogSearch($request);
+
         }
         //$result = array_merge($result_details, $result_dete);
 
@@ -236,6 +240,7 @@ class ViewController extends Controller
                 'e_message' => $e_message,
                 'result' => $result_details,
                 'result_date' => $result_date,
+                'result_log' => $result_logsearch,
                 'wd_result' => '',
                 'html_cal_main' => $html_cal,
                 'select_html' => $select_html,

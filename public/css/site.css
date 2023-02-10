@@ -614,6 +614,7 @@ header button {width:auto;}
 
 #confirm_area {
   display: flex;
+  align-items: start;
   gap: 0 10px;
 }
 #confirm_area .result_log {
@@ -652,6 +653,10 @@ header button {width:auto;}
   padding:0.75rem;
   border:1px solid #578a3d;
 
+}
+#confirm_area .b1  {
+  border:1px solid #FF0000;
+  color: #FF0000;
 }
 
 #confirm_area .btn_button  {

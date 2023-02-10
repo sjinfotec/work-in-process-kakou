@@ -87,7 +87,7 @@ if(isset($result['result'])) {
 }
 
 
-if(isset($result_log)) {
+if(!empty($result_log)) {
 	//echo "<br><br>\n";
 	//var_dump($result_log['result_log']['result']);
 	$resultlog = $result_log['result_log']['result'];
@@ -297,7 +297,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 							<div id="confirm_area" class="mgt20">
 								<input type="hidden" name="status" id="status" value="">
-								{!! isset($status) ? $status:""; !!}
+								<!--{!! isset($status) ? $status:""; !!}-->
 								@if(isset($resultlog[0]->work_date))
 								<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','','upprocessdetails','『 再確定 』','process_status_rec','')">再確定</button></div>
 								<div class="result_log">
@@ -406,7 +406,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 						@php
 							//echo $html_cal;
 						@endphp
-						@isset($result['e_message'])<div id="error"> {!! $result['e_message'] !!} </div>@endisset
+						@isset($result['e_message'])<div>message</div><div id="error"> {!! $result['e_message'] !!} </div>@endisset
 						<div>{!! $action_msg !!}</div>
 
 
