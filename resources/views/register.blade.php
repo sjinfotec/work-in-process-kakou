@@ -1,59 +1,3 @@
-<?php
-$html_result = "";
-if(isset($result)) {
-		var_dump($result);
-	
-	if(isset($result[0])) {
-		foreach($result as $key => $val) {
-
-			//echo "key".$key."<br>\n";
-			//$res = $result[$key];
-			$number = 1 + $key;
-			$product_id = $val->product_id;
-			$customer = $val->customer;
-			$product_name = $val->product_name;
-			$end_user = $val->end_user;
-			$after_due_date = $val->after_due_date;
-			$quantity = $val->quantity;
-			$serial_id = $val->serial_id;
-			$rep_id = $val->rep_id;
-			$comment = $val->comment;
-			$html_after_due_date = !empty($after_due_date) ? date('n月j日', strtotime($after_due_date)) : "";
-			$html_result .= <<<EOF
-				<tr>
-					<td><input type="hidden" name="listcount" id="listcount{$key}" value="{$key}">{$number} <span id="btn_cnt_new{$key}"><button class="" type="button" onClick="NEWcollect({$key})">axios登録</button></span></td>
-					<td><input type="hidden" name="product_code" id="product_code{$key}" value="{$product_id}">{$product_id}</td>
-					<td><input type="hidden" name="after_due_date" id="after_due_date{$key}" value="{$after_due_date}">{$html_after_due_date}</td>
-					<td><input type="hidden" name="customer" id="customer{$key}" value="{$customer}">{$customer}</td>
-					<td><input type="hidden" name="product_name" id="product_name{$key}" value="{$product_name}">{$product_name}</td>
-					<td><input type="hidden" name="end_user" id="end_user{$key}" value="{$end_user}">{$end_user}</td>
-					<td><input type="hidden" name="quantity" id="quantity{$key}" value="{$quantity}">{$quantity}
-						<input type="hidden" name="serial_code" id="serial_code{$key}" value="{$serial_id}">
-						<input type="hidden" name="rep_code" id="rep_code{$key}" value="{$rep_id}">
-						<input type="hidden" name="comment" id="comment{$key}" value="{$comment}">
-					
-					</td>
-				</tr>
-
-			EOF;
-
-		}
-	}
-	else {
-		//$action_msg .= "returnがありません";
-	}
-
-
-} else {
-	//$action_msg .= "resultにデータがありません";
-}
-
-//var_dump($result[0]);
-//echo $result[0]->customer;
-
-
-
-?>
 @extends('layouts.main')
 @section('content')
 
@@ -63,27 +7,22 @@ if(isset($result)) {
 					</div>
 					<!-- main contentns row -->
 					<div id="maincontents">
+						<div id="search_fcnt">
+							<h4>伝票番号検索</h4>
 
-					<div id="search_fcnt">
-						<h4>伝票番号検索</h4>
+							<form id="searchform" name="searchform" method="POST">
+								<input type="hidden" name="mode" id="mode" value="product_search">
+								<input type="hidden" name="submode" id="submode" value="chkwrite">
+								<input type="hidden" name="motion" id="motion" value="">
 
-					<form id="searchform" name="searchform" method="POST">
-						<input type="hidden" name="mode" id="mode" value="product_search">
-						<input type="hidden" name="submode" id="submode" value="chkwrite">
-						<input type="hidden" name="motion" id="motion" value="">
-
-						<div id="form1">
-						<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
-						<button class="" type="button" onClick="SEARCHcollect()">検索</button>
-						<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
+								<div id="form1">
+								<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
+								<button class="" type="button" onClick="SEARCHcollect()">検索</button>
+								<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
+								</div>
+								@csrf 
+							</form>
 						</div>
-						@csrf 
-					</form>
-
-					</div>
-
-
-		
 					</div>
 					<!-- /main contentns row -->
 					<div id="tbl_1">
@@ -102,7 +41,7 @@ if(isset($result)) {
 							</tr>
 							</thead>
 							<tbody id="result_search_view">
-							@php echo $html_result;
+							@php //echo $html_result;
 							@endphp
 							</tbody>
 						</table>
@@ -115,7 +54,7 @@ if(isset($result)) {
 
 
 
-					<div id="tbl_2">
+					<div id="tbl_2" class="mgt40">
 					<form id="new2form" name="new2form" method="POST">
 						<table>
 							<thead>
@@ -133,7 +72,7 @@ if(isset($result)) {
 					</div>
 
 
-					<div id="resultupdate"></div>
+					<div id="resultupdate" class="mgt40"></div>
 					<div id="resultlist"><ul class="list-group"></ul></div>
 
 					@isset($result['e_message'])<div id="error"> {!! $result['e_message'] !!} </div>@endisset
@@ -152,22 +91,15 @@ if(isset($result)) {
 	function clickEvent(fname,val1,val2,cf,com1,md,smd) {
 	var fm = document.getElementById(fname);
 	//var tname = document.getElementsByName(val1);
-	//Submit値を操作
-	//fm.edit_id.value = val;
 	//fm.tname.value = val;
 	//tname[0].value = val;	//[0]を付けないとundefind
-
 	//alert('clickEvent 引数 = ' + fname + ' 、 ' + tn + ' 、 ' + val + ' 、 ' + cf);
 
 		if(cf == 'confirm') {
-			//var Jname = fm.name.value;
 			var Js_product_id = fm.s_product_id.value;
-			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
-			//var result = window.confirm(Jproduct_id + ' ' + com1 + 'します');
+			//var result = window.confirm(Js_product_id + ' ' + com1 + 'します');
 			var result = val1;
 			if( result ) {
-				//document.defineedit.edit_id.value = val;
-				//document.defineedit.submit();
 				fm.mode.value = md;
 				fm.submit();
 			}
@@ -181,14 +113,11 @@ if(isset($result)) {
 			var result = window.confirm( com1 +'\n伝票番号 : '+ Jproduct_code +'');
 			if( result ) {
 				fm.s_product_code.value = Jproduct_code;
-				//fm.submode.value = smd;
 				fm.action = 'process';
 				fm.submit();
 			}
 		}
 		else if(cf == 'confirm_pay') {
-			//var result = window.confirm( com1 +'');
-				//tname[0].value = val;
 				fm.pay_month.value = val;
 				fm.mode.value = md;
 				fm.submit();
@@ -200,10 +129,6 @@ if(isset($result)) {
 			var Jstatus = fm.status.value;
 			var result = window.confirm( com1 +'\\nショップ : '+ Jshop +'\\nコード : '+ Jshop_code +'\\n : '+ Jpay_month +'');
 			if( result ) {
-				//document.defineedit.edit_id.value = val;
-				//document.defineedit.submit();
-				//tname[0].value = val;
-				//fm.pay_month.value = val;
 				fm.motion.value = val;
 				fm.mode.value = md;
 				fm.submode.value = smd;
@@ -319,18 +244,6 @@ function appendListADD(dataarr,n) {
 		//console.log('appendList addcount ' + addcount);
 		//$('#list ul').append("No. : " + data.t_number + "<br>名前 : " + data.name + "<br>name_code : " + data.name_code + '');
 		//$('#resultupdate').html = ( "message--" + data.e_message );
-
-		/*
-		'product_id' => $product_id, 
-		'after_due_date' => $after_due_date, 
-		'customer' => $customer, 
-		'product_name' => $product_name, 
-		'end_user' => $end_user, 
-		'quantity' => $quantity, 
-		'mode' => $mode, 
-		'e_message' => $e_message, 
-		'result_msg' => $result_msg
-		*/
 
 		document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data.e_message + '</div>\n';
 		var statusv = '<span style="color:green;">OK</span>';

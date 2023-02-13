@@ -8,7 +8,7 @@
                                         <li class="gc1"><a class="" href="{{ url('/regi') }}">伝票番号登録</a></li>
                                         <li class="gc1"><a class="" href="{{ url('/process') }}">作業工程作成</a></li>
                                         <li class="gc1"><a class="" href="{{ url('/view') }}">作業工程閲覧</a></li>
-                                        <li class="gc1"><a class="" href="" onClick="return false;"></a></li>
+                                        <li class="gc1"><a class="" href="{{ url('/home') }}">マニュアル</a></li>
                                         <li class="gc1"><a class="" href="" onClick="return false;"></a></li>
                                         <!--
                                         <li><a class="" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img class="iconsize_sm" src="{{ asset('images/round-lock-w.svg') }}" alt="">ログアウト</a></li>

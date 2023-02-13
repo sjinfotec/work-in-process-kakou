@@ -31,9 +31,13 @@ Route::get('/', function () {
 //ログインが必要な場合は、 ->middleware('auth') を追加する
 //Route::get('/', [HomeController::class,'index'])->middleware('auth');
 
-Route::get('/', [HomeController::class,'index']);
+//Route::get('/', [HomeController::class,'index']);
+Route::get('/', [ProcessController::class,'index']);
 //Route::post('/home', [HomeController::class,'index'])->name('login');
+// マニュアル
 Route::get('/home', [HomeController::class,'index']);
+
+// 工程登録
 Route::get('/regi', [RegisterController::class,'getRequestFunc']);
 Route::post('/regi', [RegisterController::class,'postRequestFunc']);
 Route::post('/regi/search', [RegisterController::class,'searchData']);

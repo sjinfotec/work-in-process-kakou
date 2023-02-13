@@ -374,7 +374,7 @@ header button {width:auto;}
   margin-right:20px;
   text-align: right;
 }
-
+#view_switch  {display: none;}
 
 /*--------------------## 登録検索 / 一覧 ##--------------------*/
 
