@@ -374,6 +374,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										<label for="departments_code3" class="label transition2" onclick="WORKcollect(3,'情報処理課［データ］')">情報処理課［データ］</label>
 									</div>
 									<div>
+										<input type="radio" name="departments_code" value="13" id="departments_code13">
+										<label for="departments_code13" class="label transition2" onclick="WORKcollect(13,'情報処理課［印刷］')">情報処理課［印刷］</label>
+									</div>
+									<div>
 										<input type="radio" name="departments_code" value="4" id="departments_code4">
 										<label for="departments_code4" class="label transition2" onclick="WORKcollect(4,'印刷課１')">印刷課１</label>
 									</div>
