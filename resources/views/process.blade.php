@@ -279,7 +279,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										<input type="hidden" name="serial_code" id="serial_code" value="{{ $serial_code }}">
 										<input type="hidden" name="rep_code" id="rep_code" value="{{ $rep_code }}">
 										<input type="hidden" name="s_product_code" id="s_product_code" value="{{ $product_code }}">
-										<button class="gc5 transition1 " type="button" onClick="clickEvent('updateform','1','Edit','goedit','『 編集 』','product_search','chkwrite')">編集</button>
+										<button class="gc6 transition1 " type="button" onClick="clickEvent('updateform','1','Edit','goedit','『 編集 』','product_search','chkwrite')">編集</button>
 									</div>
 									@endif
 
@@ -397,7 +397,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										<input type="radio" name="departments_code" value="10" id="departments_code10">
 										<label for="departments_code10" class="label transition2" onclick="WORKcollect(10,'品質保証')">品質保証</label>
 									</div>
-									<div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>
+									<div class="mgla"><button type="button" class="gc1" style="width:auto;" onClick="unChecked('.chkonff')">CHECKクリア</button></div>
 								</div>
 								<div id="resultwp"></div>
 								<div id="resultbtn"></div>

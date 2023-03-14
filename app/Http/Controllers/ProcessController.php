@@ -677,29 +677,34 @@ class ProcessController extends Controller
 
                     if($count > 0){
                         if($department == 3) {
-//削除実行
-//$result = array_diff($target, array('c', 'e'));
-/*
-foreach ($result as $key => $val) {
-    if($key <= 2){
-  
-        //削除実行
-        unset($result[$key]);
-    }
-  }
-  */
-  //indexを詰める
-//$result = array_values($result);
-//$result = array_splice($result, 1, 2);
-//unset($result[2]);
-//$result[2] = [];
-//unset($result[2]);
-//$result = array_values($result);
-
-                            $result[] = [
+                            //削除実行
+                            /*
+                            foreach ($result as $key => $val) {
+                                if($key <= 2){
+                                    unset($result[$key]);   //削除実行
+                                }
+                            }
+                            //indexを詰める
+                            $result = array_values($result);
+                            */
+                            //その他の手法
+                            //$result = array_diff($target, array('c', 'e'));
+                            //$result = array_splice($result, 1, 2);
+                            $result = Array();
+                            $result[0] = [
+                                'id' => '44',
+                                'name' => 'PC',
+                                'department_id' => '3'
+                                ];
+                            $result[1] = [
                                 'id' => '1031',
                                 'name' => '作成',
-                                'department_id' => '6'
+                                'department_id' => '3'
+                                ];
+                            $result[] = [
+                                'id' => '61',
+                                'name' => '打ち合わせ',
+                                'department_id' => '3'
                                 ];
                                 
                         }

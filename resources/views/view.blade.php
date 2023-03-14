@@ -232,7 +232,7 @@ else {
 										<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
 									</div>
 
-									<div id="confirm_area" class="mgt20">
+									<div id="confirm_area" class="">
 									<input type="hidden" name="status" id="status" value="">
 									<!--{!! isset($status) ? $status:""; !!}-->
 										@if(isset($resultlog[0]->work_date))

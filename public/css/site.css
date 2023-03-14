@@ -271,10 +271,12 @@ header button {width:auto;}
 .bc4  {  border:2px solid #eecc55;}
 .bcc4 {  border-color:#eecc55;}
 .gc5  {  background:#EC3;}
+.gc6  {  background:#337eee;}
 
 .color_green  {color: green;}
 .color_red  {color: red;}
 .color_gray  {color: gray;}
+.color_dimgray  {color: dimgray;}
 .color1 {color:#33aa55;}
 .color2 {color:#cc3333;}
 .color3  {  color:#e86;}
@@ -946,6 +948,9 @@ header button {width:auto;}
 #workin .d10c1 {
   background:#399;
 }
+#workin .d13c1 {
+  background:#C36;
+}
       
 
 #workin input[type="checkbox"]:checked + label {
@@ -984,7 +989,7 @@ input[type="radio"]:checked + label {
   background-color: #dae0c3; /* マウスオーバー時の背景色を指定する */
 }
 .label {
-  /*display: block; /* ブロックレベル要素化する */
+  /*display: inline-block; /* ブロックレベル要素化する */
   /*float: left; /* 要素の左寄せ・回り込を指定する */
   margin: 5px; /* ボックス外側の余白を指定する */
   width: 100px; /* ボックスの横幅を指定する */
@@ -997,6 +1002,8 @@ input[type="radio"]:checked + label {
   cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
   border: 2px solid #578a3d;/* ボックスの境界線を実線で指定する */
   border-radius: 5px; /* 角丸を指定する */
+  white-space: nowrap;
+
 }
 
 #workname input[type="radio"]:checked + label {

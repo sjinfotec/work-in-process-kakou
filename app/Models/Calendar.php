@@ -209,6 +209,7 @@ class Calendar extends Model
                         //echo "wc = ".$wc." : w = ".$w." : d = ".$d."<br>\n";
                         //echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
                         $class_w = $class_array1[$d];
+                        if($dc == 13) $class_w = 'd13c1';
                         $line[$d][$dkey] .= "<div onClick=\"return statusChange('{$ymd_day}','{$pc}','{$dc}','{$wcode}','{$val}','{$key}','{$status_mode}');\" class=\"workitem {$class_w}\" title=\"".$key." , ".$val."\">".$status."".$departments_name."</div>";
                         $redcode = $dcode;
                         $rewcode = $wcode;
