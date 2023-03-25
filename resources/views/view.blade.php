@@ -171,6 +171,7 @@ else {
 										<tr>
 											<td class="">
 												<button type="button" onClick="clickEvent('searchform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
+												<button class="style5" type="button" onClick="clickEvent('searchform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
 											</td>
 											<td class="">{{ $val->product_code }}</td>
 											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
@@ -422,6 +423,17 @@ else {
 				fm.select_html.value = val2;
 				fm.action = '/view/search';
 				fm.submit();
+		}
+		else if(cf == 'confirm_process') {
+			//var Jproduct_code = document.getElementById('product_code' + val1).value;
+			//var Jstatus = fm.status.value;
+			//var result = window.confirm( com1 +'\n伝票番号 : '+ Jproduct_code +'');
+			var result = window.confirm( com1 +'\n伝票番号 : '+ val1 +'');
+			if( result ) {
+				fm.s_product_code.value = val1;
+				fm.action = '/process';
+				fm.submit();
+			}
 		}
 		else {
 			fm.submit();

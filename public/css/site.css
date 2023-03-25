@@ -515,6 +515,18 @@ header button {width:auto;}
   width:5em;
   box-sizing: border-box;
 }
+#tbl_1 .form_style2 {
+  font-size:1.6rem;
+  line-height:1.2em;
+  /*width:calc(100% - 8px);*/
+  padding: 0 4px;
+  width: 100%;
+  min-width: 10em;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  border-bottom: 1px dashed #CCC;
+}
 #tbl_1 .color1 {
   color:#33aa55;
 }

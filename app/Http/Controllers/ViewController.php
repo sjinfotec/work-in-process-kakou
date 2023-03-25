@@ -472,7 +472,9 @@ class ViewController extends Controller
                     'work_name',
                     'work_code',
                     'process_name',
-                    'status'
+                    'status',
+                    'performance',
+                    'comment'
                 );
                 $data->where('product_code', $s_product_code);
                 $result = $data

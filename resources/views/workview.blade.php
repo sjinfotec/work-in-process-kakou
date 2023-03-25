@@ -325,6 +325,7 @@ if(isset($result['result_details'])) {
 
 
 					@elseif($select_html === 'dayView')
+						<form id="updateform" name="updateform" method="POST">
 							<div id="tbl_1" class="">
 								<div id="top_cnt">
 									<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
@@ -339,13 +340,16 @@ if(isset($result['result_details'])) {
 								<h2 class="color5">{{ $result['result_date']['html_f_work_date'] }}</h2>
 								@endempty
 
-
+								<input type="hidden" name="s_id" id="s_id" value="">
+								<input type="hidden" name="s_performance" id="s_performance" value="">
+								<input type="hidden" name="s_comment" id="s_comment" value="">
 								<table>
 									<thead>
 										<tr>
-											<!--<th>作業日</th>-->
+											<th class="stylebg1">&nbsp;</th>
 											<th class="stylebg1 w20r">部署名</th>
 											<th class="stylebg1">作業名</th>
+											<th class="stylebg1">実績</th>
 											<th class="stylebg1 w20r">進捗</th>
 										</tr>
 									</thead>
@@ -353,8 +357,13 @@ if(isset($result['result_details'])) {
 									@forelse ($resultdate as $val)
 										<tr>
 											<!--<td class="">{!! date('Y 年 m 月 d 日', strtotime($val->work_date)) !!}</td>-->
+											<td class="stylebg2">
+												<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->id }}','','confirm_work_update','『 更新 』','','')">更新</button>	
+												<input type="hidden" class="input_style" name="id" id="id" value="{{ $val->id }}">
+											</td>
 											<td class="stylebg2">{{ $val->departments_name }}</td>
 											<td class="stylebg2">{{ $val->work_name }}</td>
+											<td class="stylebg2"><input type="text" class="form_style2" name="performance" id="performance_{{ $val->id }}" value="{{ $val->performance }}"></td>
 											<td class="stylebg2">{{ $val->status }}</td>
 										</tr>
 
@@ -402,6 +411,7 @@ if(isset($result['result_details'])) {
 								</table>
 
 							</div>
+						</form>
 
 							@if($result['result_details']['datacount'] === 1)
 								<div class="mgt20">
@@ -469,6 +479,18 @@ if(isset($result['result_details'])) {
 				fm.select_html.value = val2;
 				fm.action = '/view/search';
 				fm.submit();
+		}
+		else if(cf == 'confirm_work_update') {
+			var Jperformance = document.getElementById('performance_' + val1).value;
+			//var Jstatus = fm.status.value;
+			//var result = window.confirm( com1 +'\n伝票番号 : '+ Jproduct_code +'');
+			var result = window.confirm( com1 +'\n'+ Jperformance +'');
+			if( result ) {
+				fm.s_id.value = val1;
+				fm.s_performance.value = Jperformance;
+				fm.action = '/w';
+				fm.submit();
+			}
 		}
 		else if(cf == 'process_details_update') {
 			var Jcustomer = fm.customer.value;

@@ -44,6 +44,7 @@ class WorkView extends Model
     private $work_name;             // 作業
     private $work_code;             // 作業コード
     private $process_name;          // 工程名
+    private $performance;           // 作業実績
 
 
     use HasFactory;
@@ -321,6 +322,7 @@ class WorkView extends Model
             if(isset($s_product_code)) {
                 $data = DB::table($this->table_process_date)
                 ->select(
+                    'id',
                     'work_date',
                     'product_code',
                     'departments_name',
@@ -328,7 +330,9 @@ class WorkView extends Model
                     'work_name',
                     'work_code',
                     'process_name',
-                    'status'
+                    'status',
+                    'performance',
+                    'comment'
                 );
                 if(!empty($params['pcode'])) {
                     $data->where('product_code', $params['pcode']);
