@@ -122,9 +122,9 @@ class WorkViewController extends Controller
         ]);
 
 
-/*
+        /*
 
-Config::get('const.RESPONCE_ITEM.messagedata') => $this->array_messagedata
+        Config::get('const.RESPONCE_ITEM.messagedata') => $this->array_messagedata
 
         $redata = array();
         $redata[] = [
@@ -147,14 +147,41 @@ Config::get('const.RESPONCE_ITEM.messagedata') => $this->array_messagedata
             //echo json_encode($redata, JSON_UNESCAPED_UNICODE);
         }
 
-*/
+        */
+    }
 
 
+    public function fix(Request $request)
+    {
 
 
+        //$select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $select_html = "dayView";
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $viewmode = "watch";
+        $e_message = "ステータス変更 ： ";
+
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+
+
+        $workview_data = new WorkView();	// インスタンス作成
+        $result_sttschange = $workview_data->uodateWork($request);
+
+
+        return response()->json([
+            'id' => $result_sttschange['id'],
+            'result' => $result_sttschange['result'],
+            'mode' => $result_sttschange['mode'],
+            'result_msg' => $result_sttschange['result_msg'],
+            'e_message' => $result_sttschange['e_message']
+            
+        ]);
 
 
     }
+
 
 
 

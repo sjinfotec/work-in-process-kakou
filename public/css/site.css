@@ -1184,8 +1184,8 @@ input[type="radio"]:checked + label {
 /*--------------------##  /  ##--------------------*/
 
 
-
-
+.display_none {display: none;}
+.display_block {display: block;}
 
 
 .print_view {display:none;}

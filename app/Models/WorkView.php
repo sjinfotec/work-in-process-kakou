@@ -503,6 +503,96 @@ class WorkView extends Model
 
 
 
+    public function uodateWork(Request $request)
+    {
+        $result_data = $this->updateWorkData($request);
+        return $result_data;
+
+    }
+
+    public function updateWorkData($request) {
+        $action_msg = "";
+        $result = "";
+        $result_msg = "";
+        $e_message = "";
+        $systemdate = Carbon::now();
+        $ipaddr = mb_substr($_SERVER["REMOTE_ADDR"].'', 0, 50);
+
+        $params = $request->only([
+            's_id',
+            'performance',
+            //'comment',
+            'mode',
+        ]);
+
+        try {
+
+            //$status_str = $params['submode'] == 'change' ? '完了' : '';
+
+
+
+            if($params['mode'] == 'performance_update') {
+                $updateresult = DB::table($this->table_process_date)
+                ->where('id', $params['s_id'])
+                ->update(
+                    [
+                        'performance' => $params['performance'],
+                        'updated_user' => $ipaddr,
+                        'updated_at' => $systemdate
+                    ]
+                );
+
+            }
+
+
+
+                if($updateresult) {
+                    /*
+                    if($params['submode'] == 'rechange') {
+                        $sshtml = "作業未完に変更";
+                    }
+                    elseif($params['submode'] == 'change') {
+                        $sshtml = "完了";
+                    }
+                    else {$sshtml = "";}
+                    */
+                    $result_msg = "OK";
+                    $e_message .= "実績 : ".$params['performance']." ";
+
+                }
+                else {
+
+                    $result_msg = "none";
+                    $e_message .= "performance -> ".$params['performance']."<br>";
+    
+
+                }
+
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+
+        $redata = array();
+        $redata = [
+			'id' => $params['s_id'],
+            'performance' => $params['performance'],
+            'result' => $updateresult,
+            'mode' => $params['mode'], 
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+        ];
+
+        return $redata;
+
+
+
+    }
+
+
 
 
 
