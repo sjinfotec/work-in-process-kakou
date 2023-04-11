@@ -276,7 +276,7 @@ class ViewController extends Controller
         $html_after_due_date = "";
         $e_message = "";
         $systemdate = Carbon::now();
-        $lnum = 20;  // limitの件数
+        $lnum = 5000;  // limitの件数
         $default = true;
         $viewmode = Array();
 
@@ -322,14 +322,14 @@ class ViewController extends Controller
                     $default = false;
                 }
                 if(!empty($params['duedate_start'])) {
-                    $data->where('after_due_date', '>=', $params['duedate_start'])->limit(30);
+                    $data->where('after_due_date', '>=', $params['duedate_start'])->limit(300);
                     $viewmode['duedatestart'] = 1;
                     $default = false;
                     $limiton = true;
                 }
                 if(!empty($params['duedate_end'])) {
                     $data->where('after_due_date', '<=', $params['duedate_end'])
-                    ->limit(30);
+                    ->limit(300);
                     $duecount = $data->count();
                     $viewmode['duedatestart'] = 1;
                     $default = false;
@@ -391,7 +391,7 @@ class ViewController extends Controller
                         $e_message .= "納期　本日以降  ".$limitcount." 件の表示<br>\n";
                     }
                     if(isset($limiton)) {
-                        $e_message .= "結果表示は 30件までです。<br>\n";
+                        $e_message .= "結果表示は 300件までです。<br>\n";
                     }
 
 

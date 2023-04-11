@@ -117,8 +117,8 @@ class WorkViewController extends Controller
             'work_code' => $result_sttschange['work_code'],
             'mode' => $result_sttschange['mode'],
             'result_msg' => $result_sttschange['result_msg'],
-            'e_message' => $result_sttschange['e_message']
-            
+            'e_message' => $result_sttschange['e_message'],
+            'uid' => $result_sttschange['uid'],
         ]);
 
 

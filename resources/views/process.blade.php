@@ -362,6 +362,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							@if ($editzone === true)
 								<div id="form_cnt">
 									<div>
+										<input type="radio" name="departments_code" value="1" id="departments_code1">
+										<label for="departments_code1" class="label transition2" onclick="WORKcollect(1,'営業部')">営業部</label>
+									</div>
+									<div>
 										<input type="radio" name="departments_code" value="8" id="departments_code8">
 										<label for="departments_code8" class="label transition2" onclick="WORKcollect(8,'業務課')">業務課</label>
 									</div>
@@ -396,6 +400,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<div>
 										<input type="radio" name="departments_code" value="10" id="departments_code10">
 										<label for="departments_code10" class="label transition2" onclick="WORKcollect(10,'品質保証')">品質保証</label>
+									</div>
+									<div>
+										<input type="radio" name="departments_code" value="29" id="departments_code29">
+										<label for="departments_code29" class="label transition2" onclick="WORKcollect(29,'コメント')">コメント</label>
 									</div>
 									<div class="mgla"><button type="button" class="gc1" style="width:auto;" onClick="unChecked('.chkonff')">CHECKクリア</button></div>
 								</div>
@@ -899,7 +907,7 @@ function WORKDATEchecked(fname,val1,val2,cf,com1,wc,dc) {
 function appendSTTS(dataarr) {
 	$.each(dataarr, function(index, data) {
 		//console.log('appendSTTS in each data -> ' + data + ' index -> ' + index);
-		var id_status = 'status' + dataarr['work_date'] + '_' + dataarr['work_code'];
+		var id_status = 'status' + dataarr['work_date'] + '_' + dataarr['work_code'] + '_' + dataarr['uid'];
 		//console.log('appendSTTS in each id_status -> ' + id_status);
 
 		if(index == 'e_message') document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data + '</div>\n';

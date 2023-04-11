@@ -14,7 +14,7 @@ $action_msg .= "mode：".$mode."<br>\n";
 
 //var_dump($result);
 //echo "<br><br>1:\n";
-echo "select_html = ".$select_html."<br>\n";
+//echo "select_html = ".$select_html."<br>\n";
 //echo "<br><br>2:\n";
 
 if(isset($result['result_date'])) {
@@ -351,6 +351,7 @@ if(isset($result['result_details'])) {
 											<th class="stylebg1 w20r">部署名</th>
 											<th class="stylebg1">作業名</th>
 											<th class="stylebg1">実績</th>
+											<th class="stylebg1">コメント</th>
 											<th class="stylebg1 w20r">進捗</th>
 										</tr>
 									</thead>
@@ -365,15 +366,18 @@ if(isset($result['result_details'])) {
 											</td>
 											<td class="stylebg2">{{ $val->departments_name }}</td>
 											<td class="stylebg2">{{ $val->work_name }}</td>
-											<td class="stylebg2"><input type="text" class="form_style2" name="performance" id="performance_{{ $val->id }}" value="{{ $val->performance }}"></td>
+											<td class="stylebg2 w10e"><input type="text" class="form_style2" name="performance" id="performance_{{ $val->id }}" value="{{ $val->performance }}"></td>
+											<td class="stylebg2 "><input type="text" class="form_style2" name="comment" id="comment_{{ $val->id }}" value="{{ $val->comment }}"></td>
 											<td class="stylebg2">{{ $val->status }}</td>
 										</tr>
 
 										<script type="text/javascript">
 											const input{{ $val->id }} = document.getElementById('performance_{{ $val->id }}');
+											const inputcom{{ $val->id }} = document.getElementById('comment_{{ $val->id }}');
 											const log{{ $val->id }} = document.getElementById('log_{{ $val->id }}');
 											const btn{{ $val->id }} = document.getElementById('btn_{{ $val->id }}');
 											input{{ $val->id }}.addEventListener('input', updateValue);
+											inputcom{{ $val->id }}.addEventListener('input', updateValue);
 											// addEventListener('change', updateValue)
 											function updateValue(e) {
 												//log{{ $val->id }}.textContent = e.target.value;
@@ -621,12 +625,10 @@ function appendListADD(dataarr,n) {
 		//console.log('appendList in 配列index = ' + index + ' ; data =' + data );
 		//$('#list ul').append("No. : " + data.t_number + "<br>名前 : " + data.name + "<br>name_code : " + data.name_code + '');
 		//$('#resultupdate').html = ( "message--" + data.e_message );
-
 		var btnid = document.getElementById('btn_' + dataarr.id);
 		var logid = document.getElementById('log_' + dataarr.id);
-
 		//document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + dataarr.e_message + '</div>\n';
-		const statusv = '<span style="color:green;">OK</span>';
+		const statusv = '<span style="color:green;">更新OK</span>';
 		if(dataarr.result_msg == 'OK') {
 			//$('#resultlist ul').prepend('<li><span>' + index + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data + '</span> ' + statusv + '</li>\n');
 			$('#resultlist ul').prepend('<li><span>' + dataarr.id + '</span>&emsp;<span class="dtnum">' + dataarr.e_message + '</span> ' + statusv + '</li>\n');
@@ -650,28 +652,13 @@ function appendListADD(dataarr,n) {
 
 function ListUpdate(n) {
 	var Jperformance = document.getElementById('performance_' + n).value;
-	//var Jcomment = document.getElementById('comment_' + n).value;
+	var Jcomment = document.getElementById('comment_' + n).value;
 	var Mode = document.getElementById('mode').value;
-
-	//var Jlistcount = document.getElementById('listcount' + n).value;
-	//var Jproduct_code = document.getElementById('product_code' + n).value;
-	//var Jserial_code = document.getElementById('serial_code' + n).value;
-	//var Jrep_code = document.getElementById('rep_code' + n).value;
-	//var Jafter_due_date = document.getElementById('after_due_date' + n).value;
-	//var Jcustomer = document.getElementById('customer' + n).value;
-	//var Jproduct_name = document.getElementById('product_name' + n).value;
-	//var Jend_user = document.getElementById('end_user' + n).value;
-	//var Jquantity = document.getElementById('quantity' + n).value;
-	//var Jcomment = document.getElementById('comment' + n).value;
-	//var collectdate = document.getElementById('collect_date').value;
-	//var Mode = document.getElementById('mode').value;
-	//var Wpdate = document.getElementById('today').value;
-	//console.log("mode :" + Mode);
 	//console.log("Jproduct_code :" + Jproduct_code);
 	const res = axios.post("/work/update", {
 		s_id: n,
 		performance: Jperformance,
-		//comment: Jcomment,
+		comment: Jcomment,
 		mode: Mode,
 	})
 	.then(response => {

@@ -447,9 +447,11 @@ class WorkView extends Model
                     [
                         'status' => $status_str,
                         'updated_user' => $ipaddr,
-                        'updated_at' => $systemdate
+                        'updated_at' => $systemdate,
+                        'id' => DB::raw('LAST_INSERT_ID(`id`)'),
                     ]
                 );
+                $uid = (int)DB::getPdo()->lastInsertId() ?: null;
 
             }
 
@@ -493,6 +495,7 @@ class WorkView extends Model
             'mode' => $params['mode'], 
             'e_message' => $e_message, 
             'result_msg' => $result_msg,
+            'uid' => $uid,
         ];
 
         return $redata;
@@ -521,7 +524,7 @@ class WorkView extends Model
         $params = $request->only([
             's_id',
             'performance',
-            //'comment',
+            'comment',
             'mode',
         ]);
 
@@ -537,6 +540,7 @@ class WorkView extends Model
                 ->update(
                     [
                         'performance' => $params['performance'],
+                        'comment' => $params['comment'],
                         'updated_user' => $ipaddr,
                         'updated_at' => $systemdate
                     ]
@@ -557,13 +561,13 @@ class WorkView extends Model
                     else {$sshtml = "";}
                     */
                     $result_msg = "OK";
-                    $e_message .= "実績 : ".$params['performance']." ";
+                    $e_message .= "実績 : ".$params['performance']." , コメント : ".$params['comment'];
 
                 }
                 else {
 
                     $result_msg = "none";
-                    $e_message .= "performance -> ".$params['performance']."<br>";
+                    $e_message .= "performance -> ".$params['performance']."<br>"."comment -> ".$params['comment']."<br>";
     
 
                 }

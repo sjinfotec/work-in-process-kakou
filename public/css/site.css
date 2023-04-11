@@ -294,6 +294,7 @@ header button {width:auto;}
 
 .w4e  {width: 4em;}
 .w10e {width: 10em;}
+.w14e {width: 14em;}
 
 .ta_r {text-align: right;}
 
@@ -693,6 +694,25 @@ header button {width:auto;}
 }
 
 
+
+
+#tbl_com  {
+  margin-top: 20px;
+}
+#tbl_com th {
+  font-size: 1.4rem;
+  color: #9cbb1c;
+}
+#tbl_com td {
+  font-size: 1.4rem;
+  padding: 0 8px;
+}
+#tbl_com h4 {
+  color: #555555;
+  border-bottom: 2px solid #9cbb1c;
+}
+
+
 #calendar {
   display: flex;
   margin-top: 20px;
@@ -882,7 +902,7 @@ header button {width:auto;}
 #workin {box-sizing: border-box; margin-top:10px;}
 #workin .line {
   position: relative;
-  height:88px;
+  min-height:88px;
   z-index: 2;
   /*overflow:hidden;*/
   border-top:1px solid transparent;
@@ -913,6 +933,17 @@ header button {width:auto;}
   text-align: left;
   padding-left: 2px;
   white-space: nowrap;
+}
+#workin .wt2 {
+  overflow: hidden;
+  min-width: 112px;
+  height:  54px;
+  left:-5px;
+  background-color: #ffffff;
+  border-left:4px solid #0f7bd4;
+  padding-left: 2px;
+  padding-right: 4px;
+  white-space: normal;
 }
 #workin .worktextxxx::after {
   content: "";
@@ -962,6 +993,9 @@ header button {width:auto;}
 }
 #workin .d13c1 {
   background:#C36;
+}
+#workin .d29c1 {
+  background:#0f7bd4;
 }
       
 

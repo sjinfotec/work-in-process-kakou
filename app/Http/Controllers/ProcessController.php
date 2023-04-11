@@ -528,6 +528,7 @@ class ProcessController extends Controller
             if(isset($s_product_code)) {
                 $data = DB::table($this->table_process_date)
                 ->select(
+                    'id',
                     'work_date',
                     'product_code',
                     'departments_name',
@@ -535,7 +536,9 @@ class ProcessController extends Controller
                     'work_name',
                     'work_code',
                     'process_name',
-                    'status'
+                    'status',
+                    'performance',
+                    'comment'
                 );
                 $data->where('product_code', $s_product_code);
                 $result = $data
@@ -692,11 +695,26 @@ class ProcessController extends Controller
                             //$result = array_splice($result, 1, 2);
                             $result = Array();
                             $result[0] = [
+                                'id' => '1032',
+                                'name' => 'テストデータ',
+                                'department_id' => '3'
+                                ];
+                            $result[1] = [
+                                'id' => '1033',
+                                'name' => '本番データ',
+                                'department_id' => '3'
+                                ];
+                            $result[2] = [
+                                'id' => '1034',
+                                'name' => '発送',
+                                'department_id' => '3'
+                                ];
+                            $result[3] = [
                                 'id' => '44',
                                 'name' => 'PC',
                                 'department_id' => '3'
                                 ];
-                            $result[1] = [
+                            $result[4] = [
                                 'id' => '1031',
                                 'name' => '作成',
                                 'department_id' => '3'
@@ -735,6 +753,14 @@ class ProcessController extends Controller
                     */
                     $result_msg = "nothing";
 
+                        if($department == 1) {
+                            $result[] = [
+                                'id' => '1041',
+                                'name' => '納期変更',
+                                'department_id' => '1'
+                                ];
+                            $result_msg = "OK";
+                        }
                         if($department == 8) {
                             $result[] = [
                                 'id' => '1001',
@@ -754,6 +780,11 @@ class ProcessController extends Controller
                             $result[] = [
                                 'id' => '1004',
                                 'name' => '伝票出力済',
+                                'department_id' => '8'
+                                ];
+                            $result[] = [
+                                'id' => '1005',
+                                'name' => '起票',
                                 'department_id' => '8'
                                 ];
                             $result_msg = "OK";
@@ -791,6 +822,14 @@ class ProcessController extends Controller
                                 'id' => '61',
                                 'name' => '打ち合わせ',
                                 'department_id' => '13'
+                                ];
+                            $result_msg = "OK";
+                        }
+                        if($department == 29) {
+                            $result[] = [
+                                'id' => '1029',
+                                'name' => 'コメント',
+                                'department_id' => '29'
                                 ];
                             $result_msg = "OK";
                         }
