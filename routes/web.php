@@ -50,6 +50,7 @@ Route::post('/process/get', [ProcessController::class,'getData']);
 Route::post('/process/workget', [ProcessController::class,'getWORK']);
 Route::post('/process/getone', [ProcessController::class,'getDataOne']);
 Route::post('/process/update', [ProcessController::class,'updateProcessDetails']);
+Route::post('/process/datacapture', [ProcessController::class,'updateDataCapture']);
 Route::post('/process/updates', [ProcessController::class,'fix']);
 Route::post('/process/insert', [ProcessController::class,'insertData']);
 Route::post('/process/search', [ProcessController::class,'postSearch']);

@@ -22,7 +22,7 @@ $select_html = !empty($select_html) ? $select_html : "Default";
 
 if(isset($result['result'])) {
 	$resultdata = $result['result'];
-		//var_dump($resultdata);
+		var_dump($resultdata);
 	
 	if(isset($resultdata)) {
 		foreach($resultdata as $key => $val) {
@@ -475,6 +475,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								<div>
 									<button class="transition1" type="button" onClick="clickEvent('updateform','','','process_details_update','登録','product_update','chkwrite')">登録</button>
 									<button class="transition1" type="button" onClick="javascript:history.back();">戻る</button>
+									<button class="transition1" type="button" onClick="clickEvent('updateform','{{ $product_code }}','','process_data_capture','最新データ取り込み','data_capture','chkwrite')">最新データ取り込み</button>
 								</div>
 								<button class="gc5 transition1 mgla" type="button" onClick="clickEvent('updateform','','','process_details_del','削除','delete','chkwrite')">削除</button>
 							</div>
@@ -556,6 +557,23 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 				fm.mode.value = md;
 				//fm.motion.value = 'reload';
 				fm.action = '/process/update';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
+		}
+		else if(cf == 'process_data_capture') {
+			var Jcustomer = fm.customer.value;
+			var Jproduct_name = fm.product_name.value;
+			var Jend_user = fm.end_user.value;
+			//var Js_product_code = fm.s_product_code.value;
+			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
+			var result = window.confirm('得意先 : ' + Jcustomer + '\n' + '品名 : ' + Jproduct_name + '\n' + 'エンドユーザー : ' + Jend_user + '\n\n' + com1 + '\n\n注意 : 現日報データで上書きされますので、現在の登録情報が失われます');
+			if( result ) {
+				fm.mode.value = md;
+				//fm.motion.value = 'reload';
+				fm.action = '/process/datacapture';
 				fm.submit();
 			}
 			else {

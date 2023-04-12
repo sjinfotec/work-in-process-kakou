@@ -135,6 +135,8 @@ class Calendar extends Model
             //echo $res[0]->product_code;
             $performance_wdkey = Array();
             $comment_wdkey = Array();
+            $performance_wdkey_idkey = Array();
+            $comment_wdkey_idkey = Array();
             $i = 0;
             $workdatechk = "";
             $worknamechk = "";
@@ -146,22 +148,22 @@ class Calendar extends Model
                 $work_name = $resdate[$key]->work_name;
                 $work_code = $resdate[$key]->work_code;
                 $id = $resdate[$key]->id;
-                $work_code_wdkey[$work_date][$work_name] = $resdate[$key]->work_code;
+                //$work_code_wdkey[$work_date][$work_name] = $resdate[$key]->work_code;
                 $work_code_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->work_code;
-                $work_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
+                //$work_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
                 $work_name_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->departments_name;
                 //$work_name2_wdkey[$work_date][$work_name2] = $resdate[$key]->departments_name;
-                $departments_code_wdkey[$work_date][$work_name] = $resdate[$key]->departments_code;
+                //$departments_code_wdkey[$work_date][$work_name] = $resdate[$key]->departments_code;
                 $departments_code_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->departments_code;
-                $departments_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
+                //$departments_name_wdkey[$work_date][$work_name] = $resdate[$key]->departments_name;
                 $departments_name_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->departments_name;
-                $performance_wdkey[$work_date][$work_name] = $resdate[$key]->performance;
+                //$performance_wdkey[$work_date][$work_name] = $resdate[$key]->performance;
                 $performance_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->performance;
-                $comment_wdkey[$work_date][$work_name] = $resdate[$key]->comment;
+                //$comment_wdkey[$work_date][$work_name] = $resdate[$key]->comment;
                 $comment_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->comment;
-                $wname_dcode_wdkey[$work_name] = $resdate[$key]->departments_code;
+                //$wname_dcode_wdkey[$work_name] = $resdate[$key]->departments_code;
                 $wname_dcode_wdkey_idkey[$work_name][$id] = $resdate[$key]->departments_code;
-                $status_wdkey[$work_date][$work_name] = $resdate[$key]->status;
+                //$status_wdkey[$work_date][$work_name] = $resdate[$key]->status;
                 $status_wdkey_idkey[$work_date][$work_name][$id] = $resdate[$key]->status;
                 $i = $i + 1;
                 $workdatechk = $work_date;
@@ -182,7 +184,7 @@ class Calendar extends Model
             // 実績の収集
             $result_pt = false;
             $performance_table = "<div id='tbl_com'>\n<h4>実績一覧</h4>\n<table>\n";
-            $performance_table .= "<thead>\n<tr><th>日時</th><th>作業</th><th>実績</th>\n</thead>\n<tbody>";
+            $performance_table .= "<thead>\n<tr><th>日時</th><th>部署</th><th>作業</th><th>実績</th>\n</thead>\n<tbody>";
             ksort($performance_wdkey_idkey);
             foreach($performance_wdkey_idkey AS $perwdkey => $perwdarr) {
                 //echo "perwdkey->".$perwdkey."<br>\n";
@@ -194,7 +196,8 @@ class Calendar extends Model
                             //echo "perwdkey->".$pdateStr."<br>\n";
                             //echo "perkey->".$perkey."<br>\n";
                             //echo "perval->".$perval."<br>\n";
-                            $performance_table .= "<tr><td>{$pdateStr}</td><td>{$perkey}</td><td>{$perval}</td></tr>\n";
+                            $departments_name = $departments_name_wdkey_idkey[$perwdkey][$perkey][$key];
+                            $performance_table .= "<tr><td>{$pdateStr}</td><td>{$departments_name}</td><td>{$perkey}</td><td>{$perval}</td></tr>\n";
                             $result_pt = true;
                         }
                     }
@@ -208,7 +211,7 @@ class Calendar extends Model
             // コメントの収集
             $result_ct = false;
             $comment_table = "<div id='tbl_com'>\n<h4>コメント一覧</h4>\n<table>\n";
-            $comment_table .= "<thead>\n<tr><th>日時</th><th>作業</th><th>コメント</th>\n</thead>\n<tbody>";
+            $comment_table .= "<thead>\n<tr><th>日時</th><th>部署</th><th>作業</th><th>コメント</th>\n</thead>\n<tbody>";
             ksort($comment_wdkey_idkey);
             foreach($comment_wdkey_idkey AS $comwdkey => $comwdarr) {
                 foreach($comwdarr AS $comkey => $comvalarr) {
@@ -219,7 +222,8 @@ class Calendar extends Model
                             //echo "comwdkey->".$dateStr."<br>\n";
                             //echo "comkey->".$comkey."<br>\n";
                             //echo "comval->".$comval."<br>\n";
-                            $comment_table .= "<tr><td>{$dateStr}</td><td>{$comkey}</td><td>{$comval}</td></tr>\n";
+                            $departments_name = $departments_name_wdkey_idkey[$comwdkey][$comkey][$key];
+                            $comment_table .= "<tr><td>{$dateStr}</td><td>{$departments_name}</td><td>{$comkey}</td><td>{$comval}</td></tr>\n";
                             $result_ct = true;
                         }
                     }

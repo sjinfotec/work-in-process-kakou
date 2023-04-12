@@ -113,7 +113,7 @@
 			var result = window.confirm( com1 +'\n伝票番号 : '+ Jproduct_code +'');
 			if( result ) {
 				fm.s_product_code.value = Jproduct_code;
-				fm.action = 'process';
+				fm.action = '/process/search';
 				fm.submit();
 			}
 		}

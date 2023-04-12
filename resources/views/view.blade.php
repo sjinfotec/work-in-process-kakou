@@ -150,6 +150,9 @@ else {
 						</div>
 						
 						<form id="updateform" name="updateform" method="POST">
+							<input type="hidden" name="mode" id="mode" value="">
+							<input type="hidden" name="submode" id="submode" value="">
+							<input type="hidden" name="select_html" id="select_html" value="">
 							<div id="tbl_1" class="mgt10">
 								<table>
 									<thead>
@@ -169,11 +172,11 @@ else {
 									<tbody>
 									@forelse ($resultdata as $val)
 										<tr>
-											<td class="">
-												<button type="button" onClick="clickEvent('searchform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
-												<button class="style5" type="button" onClick="clickEvent('searchform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
+											<td class="nbr">
+												<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
+												<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
 											</td>
-											<td class="">{{ $val->product_code }}</td>
+											<td class="">{{ $val->product_code }}<input type="hidden" name="s_product_code" id="s_product_code" value="{{ $val->product_code }}"></td>
 											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
 											<td class="">{{ $val->customer }}</td>
 											<td class="">{{ $val->product_name }}</td>
@@ -431,7 +434,8 @@ else {
 			var result = window.confirm( com1 +'\n伝票番号 : '+ val1 +'');
 			if( result ) {
 				fm.s_product_code.value = val1;
-				fm.action = '/process';
+				fm.select_html.value = val2;
+				fm.action = '/process/search';
 				fm.submit();
 			}
 		}

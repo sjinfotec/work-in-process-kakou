@@ -99,7 +99,7 @@ if(isset($result)) {
           </ul>
     </div>
 
-	<div id="version_cnt"><a onClick="viewBtn(2)">version 1.0</a></div>
+	<div id="version_cnt"><a onClick="viewBtn(2)">version 2.0</a></div>
 	<div id="view_switch">
 		<div id="tbl_2">
 			<table>
@@ -111,6 +111,7 @@ if(isset($result)) {
 				</tr>
 			</thead>
 			<tbody>
+				<tr><td>2.0</td><td>2023/04/15</td><td>機能追加版 ー 該当日作業に実績・コメント欄設置、他</td></tr>
 				<tr><td>1.0</td><td>2023/02/28</td><td>実運用版</td></tr>
 				<tr><td>0.1</td><td>2023/01/18</td><td>テスト版</td></tr>
 			</tbody>

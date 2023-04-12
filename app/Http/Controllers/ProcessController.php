@@ -356,6 +356,7 @@ class ProcessController extends Controller
         $viewmode = "editing";
         $e_message = "検索 ： ".$s_product_code."  ".$after_due_date."";
 
+        //echo "select_html -> ".$select_html."<br>\n";
 
         $result_details = $this->SearchProcessDetails($request);
         $result_date = $this->SearchProcessDate($request);
@@ -884,6 +885,175 @@ class ProcessController extends Controller
 
 
 
+
+
+
+
+
+
+
+
+    public function updateDataCapture(Request $request)
+    {
+
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $action_msg = "";
+        $e_message = "";
+        $result = "";
+        $result_details = "";
+        
+        $params = $request->only([
+            'product_code',
+            'serial_code',
+            'rep_code',
+            'after_due_date',
+            'customer',
+            'product_name',
+            'end_user',
+            'quantity',
+            'receive_date',
+            'platemake_date',
+            'status',
+            'comment',
+            //'created_user',
+            //'created_at',
+            //'updated_user',
+            //'updated_at',
+        ]);
+        
+
+        $ipaddr = $_SERVER["REMOTE_ADDR"];
+
+
+        try {
+
+            $re_data = [];
+            $systemdate = Carbon::now();
+
+            if(isset($s_product_code)) {
+                $data = DB::connection('nippou')->table('product_details')
+                ->select(
+                    'product_id',
+                    'serial_id',
+                    'rep_id',
+                    'customer',
+                    'product_name',
+                    'end_user',
+                    'quantity',
+                    'after_due_date',
+                    'comment'
+                );
+                $data->where('product_id', $s_product_code);
+                //$data->where('before_due_date', '2022/10/24');
+                $result = $data
+                ->get();
+                $count = $data->count();
+
+
+                echo "count -> ".$count."<br>\n";
+                //var_dump($result);
+                echo "after_due_date -> ".$result[0]->after_due_date."<br>\n";
+                $select_html = "Edit";
+                /*
+                $re_data = [
+                    'result' => $result,
+                    ];
+                */
+
+
+            }
+
+
+
+            $statusresult = false;
+
+            if($count > 0){
+                $statusresult = DB::table($this->table)
+                ->where('product_code', $s_product_code)
+                ->update(
+                    [
+                        'serial_code' => $result[0]->serial_id,
+                        'rep_code' => $result[0]->rep_id,
+                        'after_due_date' => $result[0]->after_due_date,
+                        'customer' => $result[0]->customer,
+                        'product_name' => $result[0]->product_name,
+                        'end_user' => $result[0]->end_user,
+                        'quantity' => $result[0]->quantity,
+                        'comment' => $result[0]->comment,
+                        'updated_user' => $ipaddr,
+                        'updated_at' => $systemdate,
+                    ]
+                );
+
+                echo "statusresult -> ".$statusresult."<br>\n";
+
+                        /*
+                        'product_code' => ,
+                        'serial_code' => $result[0]->serial_id,
+                        'rep_code' => $result[0]->rep_id,
+                        'after_due_date' => $result[0]->after_due_date,
+                        'customer' => $result[0]->customer,
+                        'product_name' => $result[0]->product_name,
+                        'end_user' => $result[0]->end_user,
+                        'quantity' => $result[0]->quantity,
+                        'receive_date' => ,
+                        'platemake_date' => ,
+                        'status' => ,
+                        'comment' => $result[0]->comment,
+                        'created_user' => ,
+                        'created_at' => ,
+                        'updated_user' => $ipaddr,
+                        'updated_at' => $systemdate,
+                        */
+            }
+
+            if($statusresult) {
+                $result_details = $this->SearchProcessDetails($request);
+                $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+                $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+        
+            }
+
+
+
+        } catch (PDOException $e){
+            //print('Error:'.$e->getMessage());
+            $action_msg .= $e->getMessage().PHP_EOL."<br>\n";
+            //die();
+        }
+        
+        return view('process', [
+            's_product_code' => $s_product_code,
+            'product_code' => $result[0]->product_id,
+            'serial_code' => $result[0]->serial_id,
+            'rep_code' => $result[0]->rep_id,
+            'after_due_date' => $result[0]->after_due_date,
+            'customer' => $result[0]->customer,
+            'product_name' => $result[0]->product_name,
+            'end_user' => $result[0]->end_user,
+            'quantity' => $result[0]->quantity,
+            'comment' => $result[0]->comment,
+            'status' => $params['status'],
+            'updated_user' => $ipaddr,
+            'mode' => $mode,
+            'action_msg' => $action_msg,
+            'e_message' => $e_message,
+            'result' => $result_details,
+            //'result_date' => $result_date,
+            'select_html' => $select_html,
+        ]);
+
+        
+
+
+
+
+
+
+
+
+    }
 
     public function updateProcessDetails(Request $request)
     {
