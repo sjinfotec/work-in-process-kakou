@@ -153,6 +153,7 @@ else {
 							<input type="hidden" name="mode" id="mode" value="">
 							<input type="hidden" name="submode" id="submode" value="">
 							<input type="hidden" name="select_html" id="select_html" value="">
+							<input type="hidden" name="s_product_code" id="s_product_code" value="">
 							<div id="tbl_1" class="mgt10">
 								<table>
 									<thead>
@@ -176,7 +177,7 @@ else {
 												<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
 												<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
 											</td>
-											<td class="">{{ $val->product_code }}<input type="hidden" name="s_product_code" id="s_product_code" value="{{ $val->product_code }}"></td>
+											<td class="">{{ $val->product_code }}</td>
 											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
 											<td class="">{{ $val->customer }}</td>
 											<td class="">{{ $val->product_name }}</td>
@@ -234,6 +235,7 @@ else {
 								<div id="top_cnt">
 									<div>
 										<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
+										<button class="style3 transition1" type="button" onClick="javascript:location.reload();">描画更新</button>
 									</div>
 
 									<div id="confirm_area" class="">

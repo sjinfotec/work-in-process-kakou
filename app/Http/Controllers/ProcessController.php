@@ -899,9 +899,16 @@ class ProcessController extends Controller
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
         $action_msg = "";
-        $e_message = "";
         $result = "";
         $result_details = "";
+        $result_date = "";
+        $result_logsearch = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $html_cal = "";
+        $viewmode = "editing";
+        $e_message = "取り込み ： ".$s_product_code."";
         
         $params = $request->only([
             'product_code',
@@ -951,10 +958,10 @@ class ProcessController extends Controller
                 $count = $data->count();
 
 
-                echo "count -> ".$count."<br>\n";
+                //echo "count -> ".$count."<br>\n";
                 //var_dump($result);
-                echo "after_due_date -> ".$result[0]->after_due_date."<br>\n";
-                $select_html = "Edit";
+                //echo "after_due_date -> ".$result[0]->after_due_date."<br>\n";
+                
                 /*
                 $re_data = [
                     'result' => $result,
@@ -986,33 +993,22 @@ class ProcessController extends Controller
                     ]
                 );
 
-                echo "statusresult -> ".$statusresult."<br>\n";
+                //echo "statusresult -> ".$statusresult."<br>\n";
 
-                        /*
-                        'product_code' => ,
-                        'serial_code' => $result[0]->serial_id,
-                        'rep_code' => $result[0]->rep_id,
-                        'after_due_date' => $result[0]->after_due_date,
-                        'customer' => $result[0]->customer,
-                        'product_name' => $result[0]->product_name,
-                        'end_user' => $result[0]->end_user,
-                        'quantity' => $result[0]->quantity,
-                        'receive_date' => ,
-                        'platemake_date' => ,
-                        'status' => ,
-                        'comment' => $result[0]->comment,
-                        'created_user' => ,
-                        'created_at' => ,
-                        'updated_user' => $ipaddr,
-                        'updated_at' => $systemdate,
-                        */
             }
 
             if($statusresult) {
+
                 $result_details = $this->SearchProcessDetails($request);
+                $result_date = $this->SearchProcessDate($request);
                 $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
                 $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
-        
+                $calendar_data = new Calendar();	// インスタンス作成
+                $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
+                $processlog_data = new ProcessLog();	// インスタンス作成
+                $result_logsearch = $processlog_data->LogSearch($request);
+                $select_html = 'Default';
+
             }
 
 
@@ -1040,8 +1036,11 @@ class ProcessController extends Controller
             'action_msg' => $action_msg,
             'e_message' => $e_message,
             'result' => $result_details,
-            //'result_date' => $result_date,
+            'result_date' => $result_date,
+            'result_log' => $result_logsearch,
+            'html_cal_main' => $html_cal,
             'select_html' => $select_html,
+
         ]);
 
         

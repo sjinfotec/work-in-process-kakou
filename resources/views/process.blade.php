@@ -22,7 +22,7 @@ $select_html = !empty($select_html) ? $select_html : "Default";
 
 if(isset($result['result'])) {
 	$resultdata = $result['result'];
-		var_dump($resultdata);
+		//var_dump($resultdata);
 	
 	if(isset($resultdata)) {
 		foreach($resultdata as $key => $val) {
