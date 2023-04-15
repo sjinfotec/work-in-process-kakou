@@ -86,7 +86,8 @@ class Calendar extends Model
         //$w = $start_day->format('w');
 
         //何日前から表示するか（カレンダー開始日）
-        $sd = 40;
+        $sd = isset($_GET['sd']) ? $_GET['sd'] : 40;
+        //$sd = 40;
     
         //表示月初日をカレンダーの開始日に変更する
         $start_day->modify('-' . $sd . ' day');
@@ -339,7 +340,9 @@ class Calendar extends Model
                 
                 //本日にはtodayクラスを付与してCSSで数字の見た目を変える due_date $html_due_date $today->format('Y-m-d')
                 $today_class = $day->format('Y-m-d') === $f_today ? 'today' : '';
-                $due_class = $day->format('Y-m-d') === $f_due_date ? 'background:red; color:#FFF; font-weight:bold;' : '';
+                $todayback_class = $day->format('Y-m-d') === $f_today ? 'todayback' : '';
+                $due_class = $day->format('Y-m-d') === $f_due_date ? 'background:#EBC; color:#FFF; font-weight:bold;' : '';
+                $todaydate_class = $day->format('Y-m-d') === $f_today ? 'todaydate' : '';
                 $receive_class = $day->format('Y-m-d') === $f_receive_date ? 'background:#088; color:#FFF; font-weight:bold;' : '';
                 $platemake_class = $day->format('Y-m-d') === $f_platemake_date ? 'background:#808; color:#FFF; font-weight:bold;' : '';
                 if($day->format('Y-m-d') === $f_platemake_date && $day->format('Y-m-d') === $f_receive_date)   {
@@ -435,29 +438,31 @@ class Calendar extends Model
     
     
                 $body .= sprintf('
-                    <div class="day_cnt" style="%s">
+                    <div class="day_cnt %s" style="%s">
                     <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
                     <div style="%s">%s</div><div class="datestyle %s %s">%s</div>
                     </a>
                     %s
                     '.$workspace.'
                     <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
-                    <div style="%s">%s</div><div class="datestyle %s ">%s</div>
+                    <div style="%s">%s</div><div class="datestyle %s %s">%s</div>
                     </a>
                     </div>
                     ',
+                    $todayback_class,
                     $due_class,
                     $day->format('Y-m-d'),
                     $style_bg,
                     $weekarr[$fdw],
                     $company_class,
-                    $today_class,
+                    $todaydate_class,
                     $day->format('j'),
                     $re_pl_html,
                     $day->format('Y-m-d'),
                     $style_bg,
                     $weekarr[$fdw],
                     $company_class,
+                    $todaydate_class,
                     $day->format('j'),
                 );
     

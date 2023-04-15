@@ -315,7 +315,7 @@ if(isset($result['result_details'])) {
 										</tr>
 
 									@empty
-										<tr><td colspan="10">no data</td></tr>
+										<tr><td colspan="9">no data</td></tr>
 									@endforelse
 									</tbody>
 								</table>
@@ -388,7 +388,7 @@ if(isset($result['result_details'])) {
 										</script>
 
 									@empty
-										<tr><td colspan="5">作業なし</td></tr>
+										<tr><td colspan="6">作業なし</td></tr>
 									@endforelse
 									</tbody>
 								</table>
@@ -428,7 +428,7 @@ if(isset($result['result_details'])) {
 										</tr>
 
 									@empty
-										<tr><td colspan="10">no data</td></tr>
+										<tr><td colspan="9">no data</td></tr>
 									@endforelse
 									</tbody>
 								</table>

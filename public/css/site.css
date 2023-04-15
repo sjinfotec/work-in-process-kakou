@@ -797,6 +797,13 @@ header button {width:auto;}
   transform: translateY(-50%);
 */
 }
+#calendar_dayzone .todayback {
+  background-color: #eeddbb;
+}
+#calendar_dayzone .todaydate {
+  background-color: #ffdd33;
+}
+
 #calendar_dayzone .receive {
   position: relative;
   background:#0BE;
@@ -926,6 +933,7 @@ header button {width:auto;}
   /*overflow: auto;*/
   width:  auto;
   height:  16px;
+  color:#000;
   background-color: #f4c836;
   border-left:3px solid #FFF;
   border-radius:  3px;
