@@ -85,6 +85,65 @@ class Calendar extends Model
         //表示月初日の曜日を数値で取得
         //$w = $start_day->format('w');
 
+
+        // POST を受け取る変数を初期化
+        $url_sd = '';
+        $selsdval = '40';
+        //$urlname = $_SERVER['REQUEST_URI'];
+        $pathdir = dirname($_SERVER['REQUEST_URI']);
+        //echo "url -> ".$pathdir."<br>\n";
+        if($pathdir == '/view') {
+            $sendform = "viewform";
+            $jmode = "view";
+        }
+        elseif($pathdir == '/process') {
+            $sendform = "updateform";
+            $jmode = "confirm";
+
+        }
+        // セレクトボックスの値を格納する配列
+        $selsdList = array(
+        "20",
+        "40",
+        "60"
+        );
+        // 戻ってきた場合
+        if(isset($_GET['sd'])){
+            $selsdval = $_GET['sd'];
+        }
+
+        $html_select_sd = "<select id='selsd' name='selsd' onChange='viewListChange()'>\n";
+        foreach($selsdList as $value){
+            if($value === $selsdval){
+                // ① POST データが存在する場合はこちらの分岐に入る
+                $html_select_sd .= "<option value='$value' selected>".$value." 日表示</option>\n";
+            }else{
+                // ② POST データが存在しない場合はこちらの分岐に入る
+                $html_select_sd .= "<option value='$value'>".$value." 日表示</option>\n";
+            }
+        }
+        $html_select_sd .= "</select>\n";
+        $html_select_sd .= <<<EOF
+        <script type="text/javascript">
+        function viewListChange() {
+            var Jpcode = document.getElementById('s_product_code').value;
+            var Jsdval = document.getElementById('selsd').value;
+            var urlpathname  = location.pathname;
+            //var urlsd = urlpathname + '?sd=' + Jsdval;
+            var urlsd = Jsdval;
+            history.pushState( '', 'title', urlsd);
+            this.clickEvent('{$sendform}',Jpcode,'oneView','{$jmode}','表示','some_search',urlsd);
+            //location.reload();
+        }
+        </script>
+        EOF;
+        //何日表示停止中
+        $html_select_sd = "";
+
+
+
+
+
         //何日前から表示するか（カレンダー開始日）
         $sd = isset($_GET['sd']) ? $_GET['sd'] : 40;
         //$sd = 40;
@@ -198,7 +257,8 @@ class Calendar extends Model
                             //echo "perkey->".$perkey."<br>\n";
                             //echo "perval->".$perval."<br>\n";
                             $departments_name = $departments_name_wdkey_idkey[$perwdkey][$perkey][$key];
-                            $performance_table .= "<tr><td>{$pdateStr}</td><td>{$departments_name}</td><td>{$perkey}</td><td>{$perval}</td></tr>\n";
+                            $html_perval = is_numeric($perval) ? number_format($perval) : $perval;
+                            $performance_table .= "<tr><td>{$pdateStr}</td><td>{$departments_name}</td><td>{$perkey}</td><td class='ta_r'>{$html_perval}</td></tr>\n";
                             $result_pt = true;
                         }
                     }
@@ -492,6 +552,7 @@ class Calendar extends Model
         {$comment_table}
         {$ym_html}
         {$body}
+        {$html_select_sd}
         <!--<div class="mgla"><button type="button" class="gc1" onClick="unChecked('.chkonff')">UNCHECK ALL</button></div>-->
         納期 ： {$f_due_date}
 

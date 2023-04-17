@@ -236,7 +236,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 								<div id="form1">
 									<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
-									<button class="transition1" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>
+									<button class="transition1" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','')">検索</button>
 									<div id="error">{{ $e_message }}</div>
 								</div>
 								@csrf 
@@ -531,8 +531,10 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			if( result ) {
 				//document.defineedit.edit_id.value = val;
 				//document.defineedit.submit();
+				var Jurlsd = '';
+				if(smd) Jurlsd = '?sd=' + smd;
 				fm.mode.value = md;
-				fm.action = '/process/search';
+				fm.action = '/process/search' + Jurlsd;
 				fm.submit();
 			}
 			else {
@@ -600,6 +602,9 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 		else if(cf == 'confirm_update') {
 			var Jwork_name = fm.work_name.value;
 			var Jdepartments_name = fm.departments_name.value;
+			var Jlocapath = location.pathname;
+			var Jsearch = location.search;
+			//console.log('location -> ' + Jsearch);
 			//var Js_product_code = fm.s_product_code.value;
 			//var result = window.confirm( com1 +'\\n\\n店舗名 : '+ Jname +'\\nコード : '+ Jname_code +'');
 			var result = window.confirm('部署名 : ' + Jdepartments_name + '\n工程 : ' + Jwork_name + '\n' + com1 + 'します');
