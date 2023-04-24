@@ -85,7 +85,7 @@ class Calendar extends Model
         //表示月初日の曜日を数値で取得
         //$w = $start_day->format('w');
 
-
+        // 何日前表示
         // POST を受け取る変数を初期化
         $url_sd = '';
         $selsdval = '40';
@@ -137,7 +137,7 @@ class Calendar extends Model
         }
         </script>
         EOF;
-        //何日表示停止中
+        //何日前表示停止中
         $html_select_sd = "";
 
 
@@ -350,7 +350,8 @@ class Calendar extends Model
 	                        if($d == 0) $d = 10;
 	                        //$departments_name = $rewcode !== $wcode ? "<span class=\"worktext\">".$departments_name."</span>" : "";
 	                        $departments_name = "<span class=\"worktext\">".$departments_name."</span>";
-	                        $comment_html = $rewcode !== $wcode ? "<span class=\"worktext wt2\">".$comment."</span>" : "";
+	                        //$comment_html = $rewcode !== $wcode ? "<span class=\"worktext wt2\">".$comment."</span>" : "";
+	                        $comment_html = "<span class=\"worktext wt2\">".$comment."</span>";
 	                        //echo "wcode = ".$wcode." : val = ".$val." : ymd = ".$ymd_day." :  d = ".$d."<br>\n";
 	                        //echo $ymd_day."は配列内に存在します , ".$key." , ".$val."<br>\n";
 	                        $class_w = $class_array1[$d];
