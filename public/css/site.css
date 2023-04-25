@@ -914,6 +914,10 @@ header button {width:auto;}
   /*overflow:hidden;*/
   border-top:1px solid transparent;
 }
+#workin .he2 {
+  /*41×5(枠)＋6*/
+  min-height: 211px;
+}
 #workin .workitem {
   margin-bottom: 20px;
   position: relative;

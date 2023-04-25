@@ -472,7 +472,7 @@ class Calendar extends Model
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
+                        <div class="line he2"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
                         <div class="line"><div class="%s">%s</div></div>
                         '.$workdate_html.'
