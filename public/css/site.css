@@ -715,7 +715,7 @@ header button {width:auto;}
 
 #calendar {
   display: flex;
-  margin-top: 20px;
+  
 }
 #calendar .f {
   position: relative;
@@ -754,6 +754,16 @@ header button {width:auto;}
   border:#AAA solid;
   border-width: 1px 1px 1px 1px;
   padding:4px;
+  text-align: center;
+  margin-left:-1px;
+
+}
+#calendar_dayzone .day_cnt_all {
+  /*flex-grow: 1;*/
+  min-width:2.2rem;
+  border:#AAA solid;
+  border-width: 0px 1px 0px 1px;
+  padding:0px;
   text-align: center;
   margin-left:-1px;
 

@@ -30,13 +30,14 @@ class ViewController extends Controller
     private $quantity;              // 数量
     private $status;                // ステータス
 
-    private $process_1;             // 工程１
-    private $departments_name_1;    // 部署１
-    private $departments_code_1;    // 部署コード１
-    private $work_name_1;           // 作業１
-    private $work_code_1;           // 作業コード１
-    private $start_process_date_1;  // 工程１開始日
-    private $end_process_date_1;    // 工程１終了日
+    private $work_date;           // 作業日
+    private $process;             // 工程
+    private $departments_name;    // 部署
+    private $departments_code;    // 部署コード
+    private $work_name;           // 作業
+    private $work_code;           // 作業コード
+    private $start_work_date;  // 工程開始日
+    private $end_work_date;    // 工程終了日
 
     private $comment;               // コメント
     private $created_user;          // 作成ユーザー

@@ -311,7 +311,7 @@ class Calendar extends Model
             $pc = isset($resdate[0]) ? $resdate[0]->product_code : '';
     
     
-            $body = '<div id="calendar">';
+            $body = '<div id="calendar" class="mgt20">';
     
             foreach ($period as $dkey => $day) {
                 $ymd_day =  $day->format('Y-m-d');

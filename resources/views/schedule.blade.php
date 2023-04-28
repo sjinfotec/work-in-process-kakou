@@ -12,7 +12,7 @@ $action_msg .= "mode：".$mode."<br>\n";
 $select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
 
 //echo "select_html = ".$select_html."<br>\n";
-
+//var_dump($html_cal_main);
 
 if(isset($result['result'])) {
 	$resultdata = $result['result'];
@@ -93,9 +93,9 @@ else {
 @section('content')
 				<div id="contents_area">
 					<div id="title_cnt">
-						<h1 class="tstyle">作業工程／検索・閲覧</h1>
+						<h1 class="tstyle">スケジュール／</h1>
 					</div>
-					<!-- main contentns row -->
+					<!-- main maincontents row -->
 					<div id="maincontents">
 					@if($select_html === 'Default')
 						<div id="search_fcnt">
@@ -215,7 +215,7 @@ else {
 							
 
 						@php
-							//echo $html_cal_main;
+							echo $html_cal_main;
 						@endphp
 						
 
@@ -231,103 +231,11 @@ else {
 
 
 					@elseif($select_html === 'oneView')
-							<div id="tbl_1" class="">
-								<div id="top_cnt">
-									<div>
-										<button class="style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
-										<button class="style3 transition1" type="button" onClick="javascript:location.reload();">描画更新</button>
-									</div>
-
-									<div id="confirm_area" class="">
-									<input type="hidden" name="status" id="status" value="">
-									<!--{!! isset($status) ? $status:""; !!}-->
-										@if(isset($resultlog[0]->work_date))
-										<div class="btn_result b1">再確定待ち</div>
-										<div class="result_log">
-											<table>
-												<tr>
-													<th>内容</th><th>作業日</th><th>部署</th><th>作業</th><th>更新日</th>
-												</tr>
-												@forelse ($resultlog as $val)
-												<tr>
-													<td class="{{ $val->motion == '削除' ? 'color2' : 'color1'}}">{{ $val->motion }}</td>
-													<td class="">{!! date('Y年m月d日', strtotime($val->work_date)) !!}</td>
-													<td class="">{{ $val->departments_name }}</td>
-													<td class="">{{ $val->work_name }}</td>
-													<td class="">@php echo isset($val->created_at) ? date('Y年m月d日', strtotime($val->created_at)) : ""; @endphp</td>
-												</tr>
-												@empty
-												<tr><td colspan="5">変更はありません</td></tr>
-												@endforelse
-											</table>
-										</div>
-										@else
-											@if(isset($status))
-												@if($status == "REC")
-													<div class="btn_result">工程確定済み</div>
-												@else
-													<div class="btn_result">未確定</div>
-												@endif
-											@else
-
-											@endif
-										@endif
-									</div>
-
-									<div>
-										<button class="mgla style3 transition1" type="button" onClick="javascript:history.back();">戻る</button>
-									</div>
-								</div>
-								<form id="viewform" name="viewform" method="POST">
-								<input type="hidden" name="mode" id="mode" value="">
-								<input type="hidden" name="select_html" id="select_html" value="">
-								<table>
-									<thead>
-										<tr>
-											<th>伝票番号</th>
-											<th>納期</th>
-											<th>得意先</th>
-											<th>品名</th>
-											<th>エンドユーザー</th>
-											<th>数量</th>
-											<th>入稿日</th>
-											<th>下版日</th>
-											<th>コメント</th>
-										</tr>
-									</thead>
-									<tbody>
-									@forelse ($resultdata as $val)
-										<tr>
-											<td class="">{{ $val->product_code }}<input type="hidden" name="s_product_code" id="s_product_code" value="{{ $val->product_code }}"></td>
-											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
-											<td class="">{{ $val->customer }}</td>
-											<td class="">{{ $val->product_name }}</td>
-											<td class="">{{ $val->end_user }}</td>
-											<td class="">{{ $val->quantity }}</td>
-											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
-											<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>
-											<td class="">{{ $val->comment }}</td>
-										</tr>
-
-									@empty
-										<tr><td colspan="10">no data</td></tr>
-									@endforelse
-									</tbody>
-								</table>
-								@csrf
-								</form>
-							</div>
-
-						<div id="resultupdate"></div>
-						<div id="resultstr"></div>
-
-
-					{!! $html_cal_main !!}
 
 					@endif
 
 					</div>
-					<!-- /main contentns row -->
+					<!-- /main maincontents row -->
 
 
 
