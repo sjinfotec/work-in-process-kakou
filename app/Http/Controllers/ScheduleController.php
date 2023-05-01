@@ -67,8 +67,8 @@ class ScheduleController extends Controller
         $result_details = $this->SearchProcessDetails($request);
         foreach($result_details['result'] AS $key => $val) { 
             //var_dump($val);
-            echo "key->".$key."<br>\n";
-            echo "key->".$val->product_code."<br>\n";
+            //echo "key->".$key."<br>\n";
+            //echo "key->".$val->product_code."<br>\n";
             $product_code = $val->product_code;
 
             $result_date = $this->SearchProcessDate($request,$product_code);
@@ -325,7 +325,7 @@ class ScheduleController extends Controller
         $html_f_work_date = "";
         $e_message = "工程 ： ".$s_product_code."";
 
-        echo "s_product_code >> ".$s_product_code."<br>\n";
+        //echo "s_product_code >> ".$s_product_code."<br>\n";
 
         try {
 

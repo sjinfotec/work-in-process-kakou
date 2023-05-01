@@ -32,8 +32,14 @@ class CalendarAll extends Model
         $work_date_arr = Array();
         $result_details_key = $key;
 
-        echo "after_due_date >>> ".$result['result'][$key]->after_due_date."<br>\n";
+        echo "after_due_date >> ".$result['result'][$key]->after_due_date."<br>\n";
         $after_due_date = $result['result'][$key]->after_due_date;
+        echo "customer >> ".$result['result'][$key]->customer."<br>\n";
+        $customer = $result['result'][$key]->customer;
+        echo "product_name >> ".$result['result'][$key]->product_name."<br>\n";
+        $product_name = $result['result'][$key]->product_name;
+        echo "end_user >> ".$result['result'][$key]->end_user."<br>\n";
+        $end_user = $result['result'][$key]->end_user;
 
         
         $today = new DateTime();
@@ -102,7 +108,7 @@ class CalendarAll extends Model
         $sendform = "";
         $jmode = "";
         $pathdir = dirname($_SERVER['REQUEST_URI']);
-        echo "url -> ".$pathdir."<br>\n";
+        echo "url >> ".$pathdir."<br>\n";
         if($pathdir == '/schedule') {
             $sendform = "viewform";
             $jmode = "view";
@@ -249,9 +255,9 @@ class CalendarAll extends Model
             $allwdate_arr = array_filter($allwdate_arr);
             $wdmax = max($allwdate_arr);
             $wdmin = min($allwdate_arr);
-            echo "wdmax >>> ".$wdmax."<br>\n";
-            echo "wdmin >>> ".$wdmin."<br>\n";
-            var_dump($allwdate_arr);
+            echo "wdmax >> ".$wdmax."<br>\n";
+            echo "wdmin >> ".$wdmin."<br>\n";
+            //var_dump($allwdate_arr);
 
 
 
@@ -330,12 +336,12 @@ class CalendarAll extends Model
             $body .= '<div id="calendar">';
     
             foreach ($period as $dkey => $day) {
+                //$due_str = $day->format('Y-m-d') === $f_due_date ? '納' : '';
                 $ymd_day =  $day->format('Y-m-d');
                 //当月以外の日付はgreyクラスを付与してCSSで色をグレーにする
                 $grey_class = $day->format('Y-m') === $year_month ? '' : 'grey';
                 //echo "ymd_day = ".$ymd_day." : dkey = ".$dkey."<br>\n";
-                $wdterm = "";
-                if($wdmin <= $ymd_day && $ymd_day <= $wdmax) $wdterm = "<span class=''>T</span>";
+                $wdterm = ($wdmin <= $ymd_day && $ymd_day <= $wdmax) ? "<span class='block1 color1'>&ensp;</span>" : "<span class='block1'>&ensp;</span>";
     
                 if(in_array($ymd_day, $work_date_arr)) {
                     //echo $ymd_day."は配列内に存在します , ".$departments_name_wdkey[$ymd_day]." , ".$work_name_wdkey[$ymd_day]."<br>\n";
@@ -409,7 +415,7 @@ class CalendarAll extends Model
      
                 $ym_date = $day->format('Y年n月') ;
                 if($ym_date !== $ym_judge)  {
-                    if($tag_on > 0) $body .= '</div></div><!--end class f-->';
+                    if($tag_on > 0) $body .= '</div><!--end id calendar_dayzone--></div><!--end class f-->';
                     //$flex_jc = $tag_on > 0 ? 'flex_jc_s' : 'flex_jc_e';
                     $flex_jc = $tag_on > 0 ? 'justify-content: start;' : 'justify-content: end;';
                     $body .= '<div class="f">';
@@ -422,7 +428,8 @@ class CalendarAll extends Model
                 //本日にはtodayクラスを付与してCSSで数字の見た目を変える due_date $html_due_date $today->format('Y-m-d')
                 $today_class = $day->format('Y-m-d') === $f_today ? 'today' : '';
                 $todayback_class = $day->format('Y-m-d') === $f_today ? 'todayback' : '';
-                $due_class = $day->format('Y-m-d') === $f_due_date ? 'background:#EBC; color:#FFF; font-weight:bold;' : '';
+                //$due_class = $day->format('Y-m-d') === $f_due_date ? 'background:#EBC; color:#FFF; font-weight:bold;' : '';
+                $due_class = $day->format('Y-m-d') === $f_due_date ? 'background:#EBC; color:#FFF;' : '';
                 $todaydate_class = $day->format('Y-m-d') === $f_today ? 'todaydate' : '';
                 $receive_class = $day->format('Y-m-d') === $f_receive_date ? 'background:#088; color:#FFF; font-weight:bold;' : '';
                 $platemake_class = $day->format('Y-m-d') === $f_platemake_date ? 'background:#808; color:#FFF; font-weight:bold;' : '';
@@ -561,7 +568,7 @@ class CalendarAll extends Model
 
                 
                 if($result_details_key == 0) $body .= sprintf('
-                <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
+                <a onClick="return false;" href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
                 <div style="%s">%s</div><div class="datestyle %s %s">%s</div>
                 </a>
                 ',
@@ -593,8 +600,12 @@ class CalendarAll extends Model
                 $tag_on += 1;
     
             }
+
+            $btn_view = "<button type=\"button\" class=\"calbtn\" onClick=\"clickEvent('updateform','{$resdate[0]->product_code}','oneView','view','表示','some_search','')\">表示</button>";
     
-            $body .= "</div></div><!--end class f-->\n";
+            $body .= "</div><!--end id calendar_dayzone-->\n";
+            $body .= "</div><!--end class f-->\n";
+            $body .= "\t<div class='cpuzone'>{$btn_view}&emsp;{$customer}&emsp;{$product_name}&emsp;{$end_user}</div>\n";
             $body .= "</div><!--end id calendar-->\n";
     
         }

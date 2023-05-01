@@ -715,6 +715,7 @@ header button {width:auto;}
 
 #calendar {
   display: flex;
+  position: relative;
   
 }
 #calendar .f {
@@ -740,6 +741,23 @@ header button {width:auto;}
   white-space: nowrap;
   color: #FFF;
 }
+#calendar .cpuzone  {
+  position: absolute;
+  left: 0;
+  bottom: 16px;
+  background:rgba(255, 255, 255, 0.8);
+  font-size: 1.4rem;
+  line-height: 1.6rem;
+}
+#calendar .calbtn {
+  width: auto;
+  padding: 0px 4px;
+  font-size: 1.2rem;
+  color:#333;
+  background:#eecc33;
+}
+
+
 
 #calendar_dayzone  {
   display: flex;
@@ -763,7 +781,7 @@ header button {width:auto;}
   min-width:2.2rem;
   border:#AAA solid;
   border-width: 0px 1px 0px 1px;
-  padding:0px;
+  padding: 0;
   text-align: center;
   margin-left:-1px;
 
@@ -840,11 +858,21 @@ header button {width:auto;}
 
   white-space: nowrap;
 }
-#calendar_dayzone a{
+#calendar_dayzone a {
   text-decoration: none;
   background: #eee;
   display: block;
   width:100%;
+}
+
+#calendar_dayzone .block1  {
+  display: inline-block;
+  width: 100%;
+  margin: 24px 0 4px 0;
+}
+#calendar_dayzone .color1 {
+  background: orange;
+
 }
 
 
