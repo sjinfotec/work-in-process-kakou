@@ -407,13 +407,13 @@ class Calendar extends Model
                 $receive_class = $day->format('Y-m-d') === $f_receive_date ? 'background:#088; color:#FFF; font-weight:bold;' : '';
                 $platemake_class = $day->format('Y-m-d') === $f_platemake_date ? 'background:#808; color:#FFF; font-weight:bold;' : '';
                 if($day->format('Y-m-d') === $f_platemake_date && $day->format('Y-m-d') === $f_receive_date)   {
-                    $re_pl_html = '<div class="platemake" title="入稿・下版日">&emsp;<span class="str1">入稿・下版日</span></div>';
+                    $re_pl_html = '<div class="platemake" title="印刷開始日・下版日">&emsp;<span class="str1">印刷開始日・下版日</span></div>';
                 }
                 elseif($day->format('Y-m-d') === $f_platemake_date)   {
                     $re_pl_html = '<div class="platemake" title="下版日">&emsp;<span class="str1">下版日</span></div>';
                 }
                 elseif($day->format('Y-m-d') === $f_receive_date)   {
-                    $re_pl_html = '<div class="receive" title="入稿日">&emsp;<span class="str1">入稿日</span></div>';
+                    $re_pl_html = '<div class="receive" title="印刷開始日">&emsp;<span class="str1">印刷開始日</span></div>';
                 }
                 else    {
                     $re_pl_html = '<div class="">&emsp;</div>';

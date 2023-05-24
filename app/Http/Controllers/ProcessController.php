@@ -29,6 +29,7 @@ class ProcessController extends Controller
     private $product_name;          // 品名
     private $end_user;              // エンドユーザー
     private $quantity;              // 数量
+    private $work_need_days;        // 作業必要日数（加工）
     private $status;                // ステータス
 
     private $process_1;             // 工程１
@@ -60,6 +61,7 @@ class ProcessController extends Controller
         $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
         $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $work_need_days = !empty($_POST["work_need_days"]) ? $_POST['work_need_days'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $action_msg = "";
@@ -78,6 +80,7 @@ class ProcessController extends Controller
             'product_name' => $product_name,
             'end_user' => $end_user,
             'quantity' => $quantity,
+            'work_need_days' => $work_need_days,
             'comment' => $comment,
             'mode' => $mode,
             'action_msg' => $action_msg,
@@ -344,6 +347,7 @@ class ProcessController extends Controller
         $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
         $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
         $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $work_need_days = !empty($_POST["work_need_days"]) ? $_POST['work_need_days'] : "";
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
@@ -444,6 +448,7 @@ class ProcessController extends Controller
                     'quantity',
                     'receive_date',
                     'platemake_date',
+                    'work_need_days',
                     'status',
                     'comment',
                     'created_user',
@@ -921,6 +926,7 @@ class ProcessController extends Controller
             'quantity',
             'receive_date',
             'platemake_date',
+            'work_need_days',
             'status',
             'comment',
             //'created_user',
@@ -1088,6 +1094,7 @@ class ProcessController extends Controller
             'quantity',
             'receive_date',
             'platemake_date',
+            'work_need_days',
             'status',
             'comment',
             'created_user',
@@ -1208,7 +1215,7 @@ class ProcessController extends Controller
                         'end_user' => $params['end_user'], 
                         'quantity' => $params['quantity'], 
                         'receive_date' => $params['receive_date'], 
-                        'platemake_date' => $params['platemake_date'], 
+                        'work_need_days' => $params['work_need_days'],
                         'status' => $params['status'], 
                         'comment' => $params['comment'], 
                         'updated_user' => $params['updated_user'], 

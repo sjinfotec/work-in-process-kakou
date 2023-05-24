@@ -38,6 +38,7 @@ if(isset($result['result'])) {
 			$quantity = $val->quantity;
 			$receive_date = $val->receive_date;
 			$platemake_date = $val->platemake_date;
+			$work_need_days = $val->work_need_days;
 			$status = $val->status;
 			$comment = $val->comment;
 			$created_user = $val->created_user;
@@ -270,7 +271,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}" readonly>
 								</div>
 								<div class="form_style">
-									<label for="receive_date" class="">入稿日</label>
+									<label for="receive_date" class="">印刷開始日</label>
 									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_receive_date }}" readonly>
 									@if ($editzone === true)
 									<div id="form1" class="mgt10">
@@ -285,8 +286,8 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 								</div>
 								<div class="form_style">
-									<label for="platemake_date" class="">下版日</label>
-									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_platemake_date }}" readonly>
+									<label for="platemake_date" class="">加工作業必要日数</label>
+									<input type="text" class="input_style" name="work_need_days" id="work_need_days" value="{{ $work_need_days }}" readonly>
 								</div>
 								<div class="form_style">
 									<label for="comment" class="">コメント</label>
@@ -451,12 +452,12 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<input type="text" class="input_style" name="quantity" id="quantity" value="{{ $quantity }}">
 								</div>
 								<div class="form_style">
-									<label for="receive_date" class="">入稿日</label>
+									<label for="receive_date" class="">印刷開始日</label>
 									<input type="date" class="input_style" name="receive_date" id="receive_date" value="{{ $ymd_receive_date }}">
 								</div>
 								<div class="form_style">
-									<label for="platemake_date" class="">下版日</label>
-									<input type="date" class="input_style" name="platemake_date" id="platemake_date" value="{{ $ymd_platemake_date }}">
+									<label for="platemake_date" class="">加工作業必要日数</label>
+									<input type="text" class="input_style" name="work_need_days" id="work_need_days" value="{{ $work_need_days }}">
 								</div>
 								<div class="form_style">
 									<label for="comment" class="">コメント</label>

@@ -51,6 +51,7 @@ if(isset($result['result_details'])) {
 			$quantity = $val->quantity;
 			$receive_date = $val->receive_date;
 			$platemake_date = $val->platemake_date;
+			$work_need_days = $val->work_need_days;
 			$status = $val->status;
 			$comment = $val->comment;
 			$created_user = $val->created_user;
@@ -175,8 +176,8 @@ if(isset($result['result_details'])) {
 											<th>品名</th>
 											<th>エンドユーザー</th>
 											<th>数量</th>
-											<th>入稿日</th>
-											<th>下版日</th>
+											<th>印刷開始日</th>
+											<th>加工作業必要日数</th>
 											<th>コメント</th>
 										</tr>
 									</thead>
@@ -193,7 +194,8 @@ if(isset($result['result_details'])) {
 											<td class="">{{ $val->end_user }}</td>
 											<td class="">{{ $val->quantity }}</td>
 											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
-											<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>
+											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
+											<td class="">{{ $val->work_need_days }}</td>
 											<td class="">{{ $val->comment }}</td>
 										</tr>
 
@@ -295,8 +297,8 @@ if(isset($result['result_details'])) {
 											<th>品名</th>
 											<th>エンドユーザー</th>
 											<th>数量</th>
-											<th>入稿日</th>
-											<th>下版日</th>
+											<th>印刷開始日</th>
+											<th>加工作業必要日数</th>
 											<th>コメント</th>
 										</tr>
 									</thead>
@@ -310,7 +312,8 @@ if(isset($result['result_details'])) {
 											<td class="">{{ $val->end_user }}</td>
 											<td class="">{{ $val->quantity }}</td>
 											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
-											<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>
+											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
+											<td class="">{{ $val->work_need_days }}</td>
 											<td class="">{{ $val->comment }}</td>
 										</tr>
 
@@ -408,8 +411,8 @@ if(isset($result['result_details'])) {
 											<th>品名</th>
 											<th>エンドユーザー</th>
 											<th>数量</th>
-											<th>入稿日</th>
-											<th>下版日</th>
+											<th>印刷開始日</th>
+											<th>加工作業必要日数</th>
 											<th>コメント</th>
 										</tr>
 									</thead>
@@ -423,7 +426,8 @@ if(isset($result['result_details'])) {
 											<td class="">{{ $val->end_user }}</td>
 											<td class="">{{ $val->quantity }}</td>
 											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
-											<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>
+											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
+											<td class="">{{ $val->work_need_days }}</td>
 											<td class="">{{ $val->comment }}</td>
 										</tr>
 

@@ -27,8 +27,8 @@ class AddCommentToProcessDateTable extends Migration
     public function down()
     {
         Schema::table('process_date', function (Blueprint $table) {
-            $table->dropColumn('charge');
-            $table->dropColumn('order_no');
+            $table->dropColumn('comment');
+            $table->dropColumn('performance');
         });
     }
 }

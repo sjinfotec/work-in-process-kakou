@@ -26,7 +26,7 @@ class CreateProcessDetailsTable extends Migration
             $table->string('end_user', 255)->nullable()->comment('エンドユーザー');
             $table->string('quantity', 50)->nullable()->comment('数量');
 
-            $table->dateTime('receive_date')->nullable()->comment('入稿日');
+            $table->dateTime('receive_date')->nullable()->comment('印刷開始日');
             $table->dateTime('platemake_date')->nullable()->comment('下版日');
 
             $table->string('status', 10)->nullable()->comment('ステータス');

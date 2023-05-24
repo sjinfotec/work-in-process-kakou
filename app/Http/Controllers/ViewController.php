@@ -28,6 +28,7 @@ class ViewController extends Controller
     private $product_name;          // 品名
     private $end_user;              // エンドユーザー
     private $quantity;              // 数量
+    private $work_need_days;        // 作業必要日数（加工）
     private $status;                // ステータス
 
     private $work_date;           // 作業日
@@ -311,6 +312,7 @@ class ViewController extends Controller
                     'quantity',
                     'receive_date',
                     'platemake_date',
+                    'work_need_days',
                     'status',
                     'comment',
                     'created_user',
