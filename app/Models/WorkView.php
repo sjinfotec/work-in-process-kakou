@@ -29,6 +29,7 @@ class WorkView extends Model
     private $quantity;              // 数量
     private $receive_date;          // 入稿日
     private $platemake_date;        // 下版日
+    private $work_need_days;        // 作業日数
     private $status;                // ステータス
     private $comment;               // コメント
     private $created_user;          // 作成ユーザー
@@ -157,6 +158,7 @@ class WorkView extends Model
                     'quantity',
                     'receive_date',
                     'platemake_date',
+                    'work_need_days',
                     'status',
                     'comment',
                     'created_user',

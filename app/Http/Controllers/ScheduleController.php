@@ -174,6 +174,7 @@ class ScheduleController extends Controller
                     'quantity',
                     'receive_date',
                     'platemake_date',
+                    'work_need_days',
                     'status',
                     'comment',
                     'created_user',
