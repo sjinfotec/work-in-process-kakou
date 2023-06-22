@@ -463,6 +463,27 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<label for="comment" class="">コメント</label>
 									<textarea class="input_style2" id="comment" name="comment" rows="3" >{{ $comment }}</textarea>
 								</div>
+								<div class="form_style">
+									<label class="">ファイル1</label>
+									<input type="file" class="input_style" name="upload_file[1]" id="btn_f1">
+									<label class="">ファイル2</label>
+									<input type="file" class="input_style" name="upload_file[2]" id="btn_f2">
+									<label class="">ファイル3</label>
+									<input type="file" class="input_style" name="upload_file[3]" id="btn_f3">
+									<label class="">ファイル4</label>
+									<input type="file" class="input_style" name="upload_file[4]" accept='image/*' onchange="previewImage(this,4);">
+									Preview:<br><canvas id="preview4" style="max-width:200px;"></canvas>
+								</div>
+								<div class="form_style">
+									<label class="">ファイル5</label>
+									<input type="file" class="input_style" name="upload_file[5]" onchange="previewImage(this,5);">
+									Preview: Only the picture file<br><canvas id="preview5" style="max-width:200px;"></canvas>
+								</div>
+								<div class="form_style">
+									<label class="">ファイル6</label>
+									<input type="file" class="input_style" name="upload_file[6]" onchange="previewImage(this,6);">
+									Preview: Only the picture file<br><canvas id="preview6" style="max-width:200px;"></canvas>
+								</div>
 
 							</div>
 							<div id="form1" class="mgt20">
@@ -700,6 +721,71 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			fm.submit();
 		}
 	}
+
+
+
+	function previewImage(obj,num)
+	{
+		//var ctx = null;
+
+
+		var fileReader = new FileReader();
+		fileReader.onload = (function() {
+			console.log('fileReader in 1');
+			var canvas = document.getElementById('preview'+num);
+			var ctx = canvas.getContext('2d');
+			var image = new Image();
+			image.src = fileReader.result;
+			image.onload = (function () {
+				canvas.width = image.width;
+				canvas.height = image.height;
+				ctx.drawImage(image, 0, 0);
+				console.log('width->'+ canvas.width + ': height->' + canvas.height);
+			});
+
+			
+
+			
+		});
+		console.log('fileReader->'+obj.files[0]);
+
+		if(obj.files[0]) {
+					//var target = ev.target;
+			//var file = target.files[0];
+			var file = obj.files[0]
+			var type = file.type; // MIMEタイプ
+			var size = file.size; // ファイル容量（byte）
+			var limit = 10000; // byte, 10KB
+			var matchresult = false;
+
+			// MIMEタイプの判定
+			if ( !type.match('image')) {
+				alert('ファイルタイプ -> ' + type);
+				var canvas = document.getElementById('preview'+num);
+				var ctx = canvas.getContext('2d');
+				console.log('clearするサイズ width->'+ canvas.width + ': height->' + canvas.height);
+				this.clearImage(canvas,ctx);
+				matchresult = true;
+				return;
+			}
+
+			fileReader.readAsDataURL(obj.files[0]);
+		}
+		else {
+			// ファイル選択ダイアログのキャンセルをクリックしたとき
+			var canvas = document.getElementById('preview'+num);
+			var ctx = canvas.getContext('2d');
+			console.log('clearするサイズ width->'+ canvas.width + ': height->' + canvas.height);
+			//ctx.clearRect(0, 0, canvas.width, canvas.height);
+			this.clearImage(canvas,ctx);
+		}
+	}
+
+	function clearImage(canvas,ctx)
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	}
+
 
 
 
