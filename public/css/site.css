@@ -626,6 +626,12 @@ header button {width:auto;}
   padding:0 4px;
   border:2px solid #EC3;
 }
+#form2 .input_style3 {
+  font-size:1.2rem;
+  /*height:3rem;*/
+  /*padding:0 4px;*/
+  /*border:2px solid #EC3;*/
+}
 
 #confirm_area {
   display: flex;

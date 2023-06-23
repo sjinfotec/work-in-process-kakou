@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Calendar;
 use App\Models\ProcessLog;
+use App\Models\FileUpload;
 
 class ProcessController extends Controller
 {
@@ -1082,6 +1083,8 @@ class ProcessController extends Controller
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $motion = !empty($_POST["motion"]) ? $_POST['motion'] : "";
 
+
+
         $this->serial_code = $request->serial_code;
         $params = $request->only([
             'product_code',
@@ -1131,6 +1134,14 @@ class ProcessController extends Controller
             'work_name', 
             'departments_name'
         ]);
+
+
+
+        //$upload_file4 = $request->upload_file[4];
+        $file_upload = new FileUpload();	// インスタンス作成
+        $result_filesup = $file_upload->files_upload($_FILES, './tmp/', '', '');	//
+
+        var_dump($result_filesup);
 
 
         try {

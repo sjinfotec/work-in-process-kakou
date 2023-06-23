@@ -463,6 +463,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<label for="comment" class="">コメント</label>
 									<textarea class="input_style2" id="comment" name="comment" rows="3" >{{ $comment }}</textarea>
 								</div>
+								<!--
 								<div class="form_style">
 									<label class="">ファイル1</label>
 									<input type="file" class="input_style" name="upload_file[1]" id="btn_f1">
@@ -470,19 +471,25 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<input type="file" class="input_style" name="upload_file[2]" id="btn_f2">
 									<label class="">ファイル3</label>
 									<input type="file" class="input_style" name="upload_file[3]" id="btn_f3">
+								</div>
+								-->
+								<div class="form_style">
 									<label class="">ファイル4</label>
-									<input type="file" class="input_style" name="upload_file[4]" accept='image/*' onchange="previewImage(this,4);">
-									Preview:<br><canvas id="preview4" style="max-width:200px;"></canvas>
+									<input type="file" class="input_style3" name="upload_file[4]" accept='image/*' onchange="previewImage(this,4);">
+									<div id="fileinfo_result4"></div>
+									Preview: Only the picture file<br><canvas id="preview4" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
 								<div class="form_style">
 									<label class="">ファイル5</label>
-									<input type="file" class="input_style" name="upload_file[5]" onchange="previewImage(this,5);">
-									Preview: Only the picture file<br><canvas id="preview5" style="max-width:200px;"></canvas>
+									<input type="file" class="input_style3" name="upload_file[5]" onchange="previewImage(this,5);">
+									<div id="fileinfo_result5"></div>
+									Preview: Only the picture file<br><canvas id="preview5" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
 								<div class="form_style">
 									<label class="">ファイル6</label>
-									<input type="file" class="input_style" name="upload_file[6]" onchange="previewImage(this,6);">
-									Preview: Only the picture file<br><canvas id="preview6" style="max-width:200px;"></canvas>
+									<input type="file" class="input_style3" name="upload_file[6]" onchange="previewImage(this,6);">
+									<div id="fileinfo_result6"></div>
+									Preview: Only the picture file<br><canvas id="preview6" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
 
 							</div>
@@ -726,14 +733,14 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 	function previewImage(obj,num)
 	{
-		//var ctx = null;
-
+		var canvas = document.getElementById('preview'+num);
+		var ctx = canvas.getContext('2d');
 
 		var fileReader = new FileReader();
 		fileReader.onload = (function() {
-			console.log('fileReader in 1');
-			var canvas = document.getElementById('preview'+num);
-			var ctx = canvas.getContext('2d');
+			//console.log('fileReader in 1');
+			//var canvas = document.getElementById('preview'+num);
+			//var ctx = canvas.getContext('2d');
 			var image = new Image();
 			image.src = fileReader.result;
 			image.onload = (function () {
@@ -742,30 +749,25 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 				ctx.drawImage(image, 0, 0);
 				console.log('width->'+ canvas.width + ': height->' + canvas.height);
 			});
-
-			
-
-			
 		});
-		console.log('fileReader->'+obj.files[0]);
-
+		//console.log('fileReader->'+obj.files[0]);
 		if(obj.files[0]) {
-					//var target = ev.target;
+			//var target = ev.target;
 			//var file = target.files[0];
 			var file = obj.files[0]
 			var type = file.type; // MIMEタイプ
 			var size = file.size; // ファイル容量（byte）
 			var limit = 10000; // byte, 10KB
-			var matchresult = false;
+			var size_k = (size/1024).toFixed(1);	// 小数点の桁数を四捨五入でそろえる。
+			document.getElementById('fileinfo_result'+num).innerHTML = "ファイル容量（KB） : " + size_k + " KB";
 
 			// MIMEタイプの判定
 			if ( !type.match('image')) {
-				alert('ファイルタイプ -> ' + type);
-				var canvas = document.getElementById('preview'+num);
-				var ctx = canvas.getContext('2d');
-				console.log('clearするサイズ width->'+ canvas.width + ': height->' + canvas.height);
+				//alert('ファイルタイプ -> ' + type + '\n\nファイル容量(byte) -> ' + size);
+				//var canvas = document.getElementById('preview'+num);
+				//var ctx = canvas.getContext('2d');
+				console.log('ファイルタイプ変更によるclearするサイズ width->'+ canvas.width + ': height->' + canvas.height);
 				this.clearImage(canvas,ctx);
-				matchresult = true;
 				return;
 			}
 
@@ -773,11 +775,12 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 		}
 		else {
 			// ファイル選択ダイアログのキャンセルをクリックしたとき
-			var canvas = document.getElementById('preview'+num);
-			var ctx = canvas.getContext('2d');
+			//var canvas = document.getElementById('preview'+num);
+			//var ctx = canvas.getContext('2d');
 			console.log('clearするサイズ width->'+ canvas.width + ': height->' + canvas.height);
 			//ctx.clearRect(0, 0, canvas.width, canvas.height);
 			this.clearImage(canvas,ctx);
+			document.getElementById('fileinfo_result'+num).innerHTML = "";
 		}
 	}
 
