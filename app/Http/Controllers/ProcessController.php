@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Calendar;
@@ -1137,12 +1138,24 @@ class ProcessController extends Controller
 
 
 
-        //$upload_file4 = $request->upload_file[4];
-        $file_upload = new FileUpload();	// インスタンス作成
-        $result_filesup = $file_upload->files_upload($_FILES, './tmp/', '', '');	//
+        //$upload_file = $request->upload_file;
+        //var_dump($upload_file);
+        //$file_upload = new FileUpload();	// インスタンス作成
+        //$result_filesup = $file_upload->files_upload($upload_file, './tmp/', '', '');	//
 
-        var_dump($result_filesup);
+        //var_dump($result_filesup);
 
+        // file upload
+        $files = $request->file('upload_file') ?: Array();
+        $product_code = $params['product_code'];
+        foreach($files as $file){
+            $file_name = $file->getClientOriginalName();
+            $file->storeAS('public',$product_code."_".$file_name);
+        }
+
+        //Storage::delete('file.jpg');
+        //Storage::delete(['file.jpg', 'file2.jpg']);   //  配列
+        //var_dump($dirfiles);
 
         try {
             $systemdate = Carbon::now();
@@ -1159,6 +1172,25 @@ class ProcessController extends Controller
                 $count3 = DB::table($this->table_process_log)
                 ->where('product_code', $s_product_code)
                 ->delete();
+
+                // file削除
+                $filedel_msg = "";
+                $directory = "public";
+                $dirfiles = Storage::files($directory);
+                foreach($dirfiles as $filename) {
+                    if($result = mb_strpos($filename, $product_code)) {
+                        $filedel_msg .= $result." ";
+                        $result_del = Storage::delete($filename);
+                        if($result_del == 1) {
+                            $filedel_msg .= "result_del -> ".$result_del." : ".$filename." 削除<br>\n";
+                        }
+                        else {
+                            $filedel_msg .= "result_del -> ".$result_del." : <span>エラー</span> ".$filename." 削除できませんでした<br>\n";
+                        }
+
+                    } 
+                }
+                
 
 
                 $result_details = "";

@@ -217,6 +217,14 @@ function create_calendar( $num = 1, $set = false, $after_due_date) {
 $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月～何か月分
 
 
+
+
+
+
+
+
+
+
 ?>
 @extends('layouts.main')
 @section('content')
@@ -293,7 +301,36 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<label for="comment" class="">コメント</label>
 									<textarea class="input_style2" id="comment" name="comment" rows="3" readonly>{{ $comment }}</textarea>
 								</div>
+								@php
+								// fileリンク
+								$file_msg = "";
+								$filelink_html = "";
+								$html_flink = "";
+								$result_view = false;
+								$directory = "public";
+								$dirfiles = Storage::files($directory);
+								foreach($dirfiles as $key => $filename) {
+									//$result = mb_strpos($filename, $product_code);
+									if($result = mb_strpos($filename, $product_code)) {
+										$url = Storage::url($filename);
+										$file_msg .= $result."<a href='".$url."' target='_blank'>".$filename."</a> ";
+										$file_msg .= "url -> ".$url." ++++ filename -> ".$filename." <br>\n";
+										$filelink_html .= $key.". <a href='".$url."' target='_blank'>".basename($filename)."</a>&emsp;";
+										//$filelink_html .= "<input type='checkbox' value='".$url."' name='delchk[]' id='delchk".$key."'>";
+										$result_view = true;
+									} 
+								}
 
+								if($result_view) {
+									$html_flink .= "<div class=''>\n";
+									$html_flink .= "<label for='platemake_date' class=''>ファイル</label>\n";
+									$html_flink .= $filelink_html;
+									$html_flink .= "</div>\n";
+
+								}
+
+								@endphp
+								{!! $html_flink !!}
 							</div>
 
 							<div id="confirm_area" class="mgt20">
@@ -425,7 +462,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 
 
 					@elseif($select_html === 'Edit')
-						<form id="updateform" name="updateform" method="POST">
+						<form id="updateform" name="updateform" method="POST" enctype="multipart/form-data">
 							<div id="form2" class="mgt20">
 								<div class="form_style">
 									<label for="product_code" class="">伝票番号</label>
@@ -470,27 +507,59 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<label class="">ファイル2</label>
 									<input type="file" class="input_style" name="upload_file[2]" id="btn_f2">
 									<label class="">ファイル3</label>
-									<input type="file" class="input_style" name="upload_file[3]" id="btn_f3">
+									<input type="file" class="input_style" name="upload_file[3]" accept='image/*' id="btn_f3">
 								</div>
 								-->
 								<div class="form_style">
-									<label class="">ファイル4</label>
-									<input type="file" class="input_style3" name="upload_file[4]" accept='image/*' onchange="previewImage(this,4);">
+									<label class="">ファイル</label>
+									<input type="file" class="input_style3" name="upload_file[4]" onchange="previewImage(this,4);">
 									<div id="fileinfo_result4"></div>
 									Preview: Only the picture file<br><canvas id="preview4" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
 								<div class="form_style">
-									<label class="">ファイル5</label>
+									<label class="">ファイル</label>
 									<input type="file" class="input_style3" name="upload_file[5]" onchange="previewImage(this,5);">
 									<div id="fileinfo_result5"></div>
 									Preview: Only the picture file<br><canvas id="preview5" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
 								<div class="form_style">
-									<label class="">ファイル6</label>
+									<label class="">ファイル</label>
 									<input type="file" class="input_style3" name="upload_file[6]" onchange="previewImage(this,6);">
 									<div id="fileinfo_result6"></div>
 									Preview: Only the picture file<br><canvas id="preview6" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
+
+								@php
+								// fileリンク
+								$file_msg = "";
+								$filelink_html = "";
+								$html_flink = "";
+								$result_view = false;
+								$directory = "public";
+								$dirfiles = Storage::files($directory);
+								foreach($dirfiles as $key => $filename) {
+									//$result = mb_strpos($filename, $product_code);
+									if($result = mb_strpos($filename, $product_code)) {
+										$url = Storage::url($filename);
+										//$file_msg .= $result."<a href='".$url."' target='_blank'>".$filename."</a> ";
+										//$file_msg .= "url -> ".$url." ++++ filename -> ".$filename." <br>\n";
+										$filelink_html .= "<input type='checkbox' class='input_style4' value='".$url."' name='delchk[]' id='delchk".$key."'> ".$key;
+										$filelink_html .= ". <a href='".$url."' target='_blank'>".basename($filename)."</a>&emsp;";
+										$result_view = true;
+									} 
+								}
+
+								if($result_view) {
+									$html_flink .= "<div class=''>\n";
+									$html_flink .= "<label for='platemake_date' class=''>ファイル</label>\n";
+									$html_flink .= $filelink_html;
+									$html_flink .= "</div>\n";
+
+								}
+
+								@endphp
+								{!! $html_flink !!}
+
 
 							</div>
 							<div id="form1" class="mgt20">
