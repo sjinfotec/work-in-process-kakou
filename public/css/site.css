@@ -644,6 +644,21 @@ header button {width:auto;}
 	margin: 0 6px 0 0;
 }
 
+#form3 {
+  display: flex;
+  /*width:calc(100% - 8px);*/
+  /*align-items: stretch;*/
+  align-items: center;
+  /*justify-content: space-between;*/
+  flex-wrap: wrap;
+  gap:10px 20px;
+  box-sizing: border-box;
+}
+#form3 label {
+  background:#eecc33;
+}
+
+
 #confirm_area {
   display: flex;
   align-items: start;
@@ -1327,7 +1342,9 @@ button.style5  {
   background:#FFF;
   color: green;
 }
-
+.w_auto {
+  width: auto;
+}
 
 /*--印刷ボタン--*/
 #btn_cnt4 {

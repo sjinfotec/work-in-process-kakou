@@ -528,39 +528,6 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<div id="fileinfo_result6"></div>
 									Preview: Only the picture file<br><canvas id="preview6" width="100" height="10" style="max-width:200px;"></canvas>
 								</div>
-
-								@php
-								// fileリンク
-								$file_msg = "";
-								$filelink_html = "";
-								$html_flink = "";
-								$result_view = false;
-								$directory = "public";
-								$dirfiles = Storage::files($directory);
-								foreach($dirfiles as $key => $filename) {
-									//$result = mb_strpos($filename, $product_code);
-									if($result = mb_strpos($filename, $product_code)) {
-										$url = Storage::url($filename);
-										//$file_msg .= $result."<a href='".$url."' target='_blank'>".$filename."</a> ";
-										//$file_msg .= "url -> ".$url." ++++ filename -> ".$filename." <br>\n";
-										$filelink_html .= "<input type='checkbox' class='input_style4' value='".$url."' name='delchk[]' id='delchk".$key."'> ".$key;
-										$filelink_html .= ". <a href='".$url."' target='_blank'>".basename($filename)."</a>&emsp;";
-										$result_view = true;
-									} 
-								}
-
-								if($result_view) {
-									$html_flink .= "<div class=''>\n";
-									$html_flink .= "<label for='platemake_date' class=''>ファイル</label>\n";
-									$html_flink .= $filelink_html;
-									$html_flink .= "</div>\n";
-
-								}
-
-								@endphp
-								{!! $html_flink !!}
-
-
 							</div>
 							<div id="form1" class="mgt20">
 								<input type="hidden" name="mode" id="mode" value="">
@@ -576,6 +543,43 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 									<button class="transition1" type="button" onClick="clickEvent('updateform','{{ $product_code }}','','process_data_capture','最新データ取り込み','data_capture','chkwrite')">最新データ取り込み</button>
 								</div>
 								<button class="gc5 transition1 mgla" type="button" onClick="clickEvent('updateform','','','process_details_del','削除','delete','chkwrite')">削除</button>
+							</div>
+							@csrf
+						</form>
+
+						<form id="delfileform" name="delfileform" method="POST" enctype="multipart/form-data">
+							<div id="form3" class="mgt20">
+								@php
+								// fileリンク
+								$file_msg = "";
+								$filelink_html = "";
+								$html_flink = "";
+								$result_view = false;
+								$directory = "public";
+								$dirfiles = Storage::files($directory);
+								foreach($dirfiles as $key => $filename) {
+									//$result = mb_strpos($filename, $product_code);
+									if($result = mb_strpos($filename, $product_code)) {
+										$url = Storage::url($filename);
+										//$file_msg .= $result."<a href='".$url."' target='_blank'>".$filename."</a> ";
+										//$file_msg .= "url -> ".$url." ++++ filename -> ".$filename." <br>\n";
+										$filelink_html .= "<div>\n";
+										$filelink_html .= "<button type='button' class='style4 w_auto' onClick=\"clickEvent('delfileform','".$filename."','','process_file_del','削除','delete','chkwrite')\">削除</button>";
+										//$filelink_html .= "<input type='checkbox' class='input_style4' value='".$url."' name='delchk[]' id='delchk".$key."'> ".$key;
+										$filelink_html .= $key.". <a href='".$url."' target='_blank'>".basename($filename)."</a>&emsp;";
+										$filelink_html .= "</div>\n";
+										$result_view = true;
+									} 
+								}
+
+								if($result_view) {
+									$html_flink .= "<label for='platemake_date' class=''>登録ファイル</label>\n";
+									$html_flink .= $filelink_html;
+
+								}
+
+								@endphp
+								{!! $html_flink !!}
 							</div>
 							@csrf
 						</form>
