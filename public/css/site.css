@@ -713,9 +713,40 @@ header button {width:auto;}
 
 }
 
+#posi_1 {
+  position: fixed;
+  bottom: 0;
+  z-index: 500;
+  background: rgba(218, 180, 58, 0.8);
+
+}
+#posi_1::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  top: -60px;
+  /*bottom: 0;*/
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  background: #EDD;
+  z-index: -300;
+
+}
+#posi_2 {
+  /*position: fixed;*/
+  bottom: 222px;
+  position: sticky;
+  z-index: 1000;
+
+
+}
 #form_cnt {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap:0 20px;
   font-size:1.6rem;
 }
@@ -988,6 +1019,10 @@ header button {width:auto;}
   /*41×5(枠)＋6*/
   min-height: 211px;
 }
+#workin .he3 {
+  /*41×1(枠)＋6*/
+  min-height: 58px;
+}
 #workin .workitem {
   margin-bottom: 20px;
   position: relative;
@@ -1104,7 +1139,9 @@ header button {width:auto;}
   border: 2px solid #e0b36f;/* ボックスの境界線を実線で指定する */
   border-radius: 5px; /* 角丸を指定する */
 }
-
+#workin .bg1  {
+  background: rgba(255, 255, 255, 0.8);
+} 
 
 input[type=radio] {
   display: none; /* ラジオボタンを非表示にする */
@@ -1131,6 +1168,7 @@ input[type="radio"]:checked + label {
   border: 2px solid #578a3d;/* ボックスの境界線を実線で指定する */
   border-radius: 5px; /* 角丸を指定する */
   white-space: nowrap;
+  background: #FFF;
 
 }
 
@@ -1155,6 +1193,7 @@ input[type="radio"]:checked + label {
   cursor: pointer; /* マウスカーソルの形（リンクカーソル）を指定する */
   border: 2px solid #3d558a;/* ボックスの境界線を実線で指定する */
   border-radius: 5px; /* 角丸を指定する */
+  background: #FFF;
 }
 
 #workname input[type="radio"]:checked + label.del {

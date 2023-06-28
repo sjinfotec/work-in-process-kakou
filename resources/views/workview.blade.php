@@ -324,6 +324,7 @@ if(isset($result['result_details'])) {
 								</table>
 							</div>
 
+
 						{!! $html_cal_main !!}
 
 

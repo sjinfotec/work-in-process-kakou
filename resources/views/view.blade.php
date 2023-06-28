@@ -320,6 +320,40 @@ else {
 								@csrf
 								</form>
 							</div>
+							@php
+								// fileリンク
+								$file_msg = "";
+								$filelink_html = "";
+								$html_flink = "";
+								$result_view = false;
+								$directory = "public";
+								$dirfiles = Storage::files($directory);
+								foreach($dirfiles as $key => $filename) {
+									//$result = mb_strpos($filename, $product_code);
+									if($result = mb_strpos($filename, $product_code)) {
+										$url = Storage::url($filename);
+										$file_msg .= $result."<a href='".$url."' target='_blank'>".$filename."</a> ";
+										$file_msg .= "url -> ".$url." ++++ filename -> ".$filename." <br>\n";
+										$filelink_html .= "<div>\n";
+										$filelink_html .= $key.". <a href='".$url."' target='_blank'>".basename($filename)."</a>&emsp;";
+										//$filelink_html .= "<input type='checkbox' value='".$url."' name='delchk[]' id='delchk".$key."'>";
+										$filelink_html .= "</div>\n";
+										$result_view = true;
+									} 
+								}
+
+								if($result_view) {
+									$html_flink .= "<div id='form3' class=''>\n";
+									$html_flink .= "<label for='platemake_date' class=''>ファイル</label>\n";
+									$html_flink .= $filelink_html;
+									$html_flink .= "</div>\n";
+
+								}
+
+								@endphp
+								{!! $html_flink !!}
+
+
 
 						<div id="resultupdate"></div>
 						<div id="resultstr"></div>

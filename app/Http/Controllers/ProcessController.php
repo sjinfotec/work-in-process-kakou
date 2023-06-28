@@ -1145,22 +1145,12 @@ class ProcessController extends Controller
 
         //var_dump($result_filesup);
 
-        // file upload
-        $files = $request->file('upload_file') ?: Array();
-        $product_code = $params['product_code'];
-        foreach($files as $file){
-            $file_name = $file->getClientOriginalName();
-            $file->storeAS('public',$product_code."_".$file_name);
-        }
-
-        //Storage::delete('file.jpg');
-        //Storage::delete(['file.jpg', 'file2.jpg']);   //  配列
-        //var_dump($dirfiles);
 
         try {
             $systemdate = Carbon::now();
             $re_data = [];
             $make_instance_true = false;
+            $make_instance_true2 = false;
 
             if($mode == 'delete') {
                 $count1 = DB::table($this->table_process_date)
@@ -1204,6 +1194,31 @@ class ProcessController extends Controller
 
     
             }
+            else if($mode == 'filedelete') {
+                $filedel_msg = "";
+                $filename = $request->filename;
+                if(isset($filename)) {
+                    $result_del = Storage::delete($filename);
+                    if($result_del == 1) {
+                        $filedel_msg .= "result_del -> ".$result_del." : ".$filename." 削除<br>\n";
+                        $e_message = "削除しました -> ファイル名 : ".$filename."";
+                        $result_msg = "DEL";
+                    }
+                    else {
+                        $filedel_msg .= "result_del -> ".$result_del." : <span>エラー</span> ".$filename." 削除できませんでした<br>\n";
+                    }
+
+                }
+                $make_instance_true2 = true; 
+                $result_details = "";
+                $result_date = "";
+                $after_due_date = "";
+                $html_cal = "";
+                $select_html = 'Edit';
+                //Storage::delete('file.jpg');
+                //Storage::delete(['file.jpg', 'file2.jpg']);   //  配列
+
+            }
             else if($mode == 'process_status_rec') {
                 $update = [
                     'status'    => 'REC',
@@ -1241,6 +1256,16 @@ class ProcessController extends Controller
 
             }
             else {
+
+                // file upload
+                $files = $request->file('upload_file') ?: Array();
+                $product_code = $params['product_code'];
+                foreach($files as $file){
+                    $file_name = $file->getClientOriginalName();
+                    $file->storeAS('public',$product_code."_".$file_name);
+                }
+
+                //var_dump($dirfiles);
 
                 $updateresult = DB::table($this->table)
                 ->updateOrInsert(
@@ -1290,6 +1315,13 @@ class ProcessController extends Controller
         
             }
             
+            if($make_instance_true2) {
+                $result_details = $this->SearchProcessDetails($request);
+                //$result_date = $this->SearchProcessDate($request);
+                $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+                $test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
+        
+            }
             
     
             //$wd_result = $this->workdateSearch($request);

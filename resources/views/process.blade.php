@@ -398,6 +398,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 						
 
 							@if ($editzone === true)
+							<div id="posi_1">
 								<div id="form_cnt">
 									<div>
 										<input type="radio" name="departments_code" value="1" id="departments_code1">
@@ -448,6 +449,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								<div id="resultwp"></div>
 								<div id="resultbtn"></div>
 								<div id="motionbtn"></div>
+							</div>
 								
 							@endif
 
@@ -457,7 +459,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 							//echo $html_cal;
 						@endphp
 						@isset($result['e_message'])<div>message</div><div id="error"> {!! $result['e_message'] !!} </div>@endisset
-						<div>{!! $action_msg !!}</div>
+						<div style="padding-bottom: 200px;">{!! $action_msg !!}</div>
 
 
 
@@ -548,7 +550,13 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 						</form>
 
 						<form id="delfileform" name="delfileform" method="POST" enctype="multipart/form-data">
-							<div id="form3" class="mgt20">
+							<input type="hidden" name="mode" id="mode" value="">
+							<input type="hidden" name="filename" id="filename" value="">
+							<input type="hidden" name="select_html" id="select_html" value="">
+							<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $product_code }}">
+							<input type="hidden" name="status" id="status" value="{{ $status }}">
+							<input type="hidden" name="updated_user" id="updated_user" value="{{ $updated_user }}">
+
 								@php
 								// fileリンク
 								$file_msg = "";
@@ -564,7 +572,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										//$file_msg .= $result."<a href='".$url."' target='_blank'>".$filename."</a> ";
 										//$file_msg .= "url -> ".$url." ++++ filename -> ".$filename." <br>\n";
 										$filelink_html .= "<div>\n";
-										$filelink_html .= "<button type='button' class='style4 w_auto' onClick=\"clickEvent('delfileform','".$filename."','','process_file_del','削除','delete','chkwrite')\">削除</button>";
+										$filelink_html .= "<button type='button' class='style4 w_auto' onClick=\"clickEvent('delfileform','".$filename."','".basename($filename)."','process_file_del','削除','filedelete','chkwrite')\">削除</button>";
 										//$filelink_html .= "<input type='checkbox' class='input_style4' value='".$url."' name='delchk[]' id='delchk".$key."'> ".$key;
 										$filelink_html .= $key.". <a href='".$url."' target='_blank'>".basename($filename)."</a>&emsp;";
 										$filelink_html .= "</div>\n";
@@ -573,14 +581,25 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 								}
 
 								if($result_view) {
+									$html_flink .= "<div id='form3' class='mgt20'>";
 									$html_flink .= "<label for='platemake_date' class=''>登録ファイル</label>\n";
 									$html_flink .= $filelink_html;
+									$html_flink .= "</div>";
+									$html_flink .= <<<EOF
+									<div id="tips_cnt" class="mgt10">
+										<ul class="lst2">
+											<li>登録ファイルを削除するときは該当ファイル名の左にある『削除』ボタンをクリックしてください。</li>
+											<li>連続して登録ファイルを削除することができます。</li>
+											<li>最後に『登録』ボタンをクリックしてください。</li>
+										</ul>
+									</div>
+
+									EOF;
 
 								}
 
 								@endphp
 								{!! $html_flink !!}
-							</div>
 							@csrf
 						</form>
 
@@ -614,6 +633,22 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 @section('jscript')
 
 <script type="text/javascript">
+
+//position: fixedやabsoluteをスクロールで動かすには。
+// const element = document.querySelector('.js-scroll-x')
+// window.addEventListener('scroll', () => {
+//   element.style.left = -window.pageXOffset + 'px'
+// });
+
+//複数に対応する場合
+//const elements = document.querySelectorAll('.js-scroll-x')
+//elements.forEach(element => {
+//	window.addEventListener('scroll', () => {
+//		element.style.left = -window.pageXOffset + 'px'
+//	})
+//});
+
+
 	function clickEvent(fname,val1,val2,cf,com1,md,smd) {
 	var fm = document.getElementById(fname);
 	//var tname = document.getElementsByName(val1);
@@ -694,6 +729,18 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 			if( result ) {
 				fm.mode.value = md;
 				//fm.motion.value = 'reload';
+				fm.action = '/process/update';
+				fm.submit();
+			}
+			else {
+				console.log('キャンセルがクリックされました');
+			}
+		}
+		else if(cf == 'process_file_del') {
+			var result = window.confirm('ファイル名 : ' + val2 + '\n\n' + com1 + ' します');
+			if( result ) {
+				fm.mode.value = md;
+				fm.filename.value = val1;
 				fm.action = '/process/update';
 				fm.submit();
 			}
