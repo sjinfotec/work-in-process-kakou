@@ -458,10 +458,10 @@ class Calendar extends Model
 
                 $workdate_html = "";
                 if($viewmode === 'editing')    { 
-                    $workdate_html .= '<div id="posi_2" class="">'."\n";
-                    $workdate_html .= '<div class="line he3"><div class="btn_shade transition2 bg1">'."\n";
+                    $workdate_html .= '<div id="" class="posi_class2">'."\n";
+                    $workdate_html .= '<div class="line he3"><div class="btn_shade transition2">'."\n";
                     $workdate_html .= '							<input type="checkbox" name="work_date['.$ymd_day.']" value="'.$ymd_day.'" id="work'.$ymd_day.'" class="chkonff" '.$checked.'>'."\n";
-                    $workdate_html .= '							<label for="work'.$ymd_day.'" class="wclabel transition2"></label>'."\n";
+                    $workdate_html .= '							<label for="work'.$ymd_day.'" class="wclabel transition2 bg1"></label>'."\n";
                     $workdate_html .= '						</div></div>'."\n";
                     $workdate_html .= '						</div><!--end posi_2-->'."\n";
                 }

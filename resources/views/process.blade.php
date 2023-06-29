@@ -398,6 +398,7 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 						
 
 							@if ($editzone === true)
+							<div id="posi_3" class="btn_shade transition2">&emsp;</div>
 							<div id="posi_1">
 								<div id="form_cnt">
 									<div>
@@ -1083,6 +1084,14 @@ function appendWORKDATE(dataarr) {
 			for(i=0; i<elements.length; i++){
 				elements[i].style.opacity = 1;
 				elements[i].style.visibility = 'visible';
+			}
+		// チェックBOXの位置と背景用obj
+		let offset_h = document.getElementById('posi_1').offsetHeight;
+		//let client_h = document.getElementById('posi_1').clientHeight;
+		document.getElementById('posi_3').style.height = offset_h + 70 + 'px';
+		var posi_elements = document.getElementsByClassName('posi_class2');
+			for(i=0; i<posi_elements.length; i++){
+				posi_elements[i].style.bottom = offset_h + 5 + 'px';
 			}
 
 

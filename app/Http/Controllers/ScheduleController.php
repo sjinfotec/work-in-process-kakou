@@ -82,14 +82,14 @@ class ScheduleController extends Controller
         }
         */
 
-        if($result_details['datacount'] > 0) {
-            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
+            if($result_details['datacount'] > 0) {
+                $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
 
-            $calendar_data = new CalendarAll();	// インスタンス作成
-            $html_cal .= $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode,$key);	//開始年月～何か月分
+                $calendar_data = new CalendarAll();	// インスタンス作成
+                $html_cal .= $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode,$key);	//開始年月～何か月分
 
 
-        }
+            }
 
 
         }
