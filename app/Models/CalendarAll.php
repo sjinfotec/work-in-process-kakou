@@ -602,7 +602,8 @@ class CalendarAll extends Model
             }
 
             //{$resdate[0]->product_code}
-            $btn_view = "<button type=\"button\" class=\"calbtn\" onClick=\"clickEvent('updateform','','oneView','view','表示','some_search','')\">表示</button>";
+            $pc = $resdate[0]->product_code;
+            $btn_view = "<button type=\"button\" class=\"calbtn\" onClick=\"clickEvent('updateform','{$pc}','oneView','view','表示','some_search','')\">表示</button>";
     
             $body .= "</div><!--end id calendar_dayzone-->\n";
             $body .= "</div><!--end class f-->\n";

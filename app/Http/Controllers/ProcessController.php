@@ -1165,7 +1165,8 @@ class ProcessController extends Controller
 
                 // file削除
                 $filedel_msg = "";
-                $directory = "public";
+                $directory = "public/".$product_code;
+                /*
                 $dirfiles = Storage::files($directory);
                 foreach($dirfiles as $filename) {
                     if($result = mb_strpos($filename, $product_code)) {
@@ -1180,7 +1181,15 @@ class ProcessController extends Controller
 
                     } 
                 }
-                
+                */
+                $result_del = Storage::deleteDirectory($directory);
+                if($result_del == 1) {
+                    $filedel_msg .= "result_del -> ".$result_del." : ".$directory." ディレクトリ削除<br>\n";
+                }
+                else {
+                    $filedel_msg .= "result_del -> ".$result_del." : <span>エラー</span> ".$directory." ディレクトリ削除できませんでした<br>\n";
+                }
+        
 
 
                 $result_details = "";
@@ -1189,7 +1198,8 @@ class ProcessController extends Controller
                 $html_cal = "";
                 $select_html = 'Resultview';
 
-                $e_message = "削除しました -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']."";
+                $e_message = "削除しました -> 伝票番号 : ".$params['product_code']." ／ 品名 : ".$params['product_name']."<br>\n";
+                $e_message .= $filedel_msg;
                 $result_msg = "DEL";
 
     
@@ -1262,7 +1272,7 @@ class ProcessController extends Controller
                 $product_code = $params['product_code'];
                 foreach($files as $file){
                     $file_name = $file->getClientOriginalName();
-                    $file->storeAS('public',$product_code."_".$file_name);
+                    $file->storeAS('public/'.$product_code, $product_code."_".$file_name);
                 }
 
                 //var_dump($dirfiles);
