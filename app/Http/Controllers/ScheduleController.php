@@ -70,18 +70,8 @@ class ScheduleController extends Controller
             //echo "key->".$key."<br>\n";
             //echo "key->".$val->product_code."<br>\n";
             $product_code = $val->product_code;
-
             $result_date = $this->SearchProcessDate($request,$product_code);
-        /*
-        if($result_details['datacount'] > 0) {
-            $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
             //$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
-            $calendar_data = new CalendarAll();	// インスタンス作成
-            $html_cal = $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode);	//開始年月～何か月分
-
-        }
-        */
-
             if($result_details['datacount'] > 0) {
                 $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
 

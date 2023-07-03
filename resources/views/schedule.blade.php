@@ -205,11 +205,12 @@ else {
 						<div id="resultupdate"></div>
 						<div id="resultstr"></div>
 
-						<form id="addprocessform" name="addprocessform" method="POST">
-							<input type="hidden" name="mode" id="mode" value="wp_search">
+						<form id="viewprocess" name="viewprocess" method="POST">
+							<input type="hidden" name="mode" id="mode" value="">
 							<input type="hidden" name="submode" id="submode" value="">
 							<input type="hidden" name="motion" id="motion" value="">
-							<input type="hidden" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
+							<input type="hidden" name="select_html" id="select_html" value="">
+							<input type="hidden" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}">
 							<input type="hidden" name="work_name" id="work_name" value=""> 
 							<input type="hidden" name="departments_name" id="departments_name" value=""> 
 							@csrf
@@ -224,11 +225,11 @@ else {
 
 						</form>
 
-						@if($result['datacount'] === 1)
-						<div class="mgt20">
-							{!! $html_calsqu !!}
+						<div id='hanrei1' class='mgt10'>
+							<div><span>納期 : </span><span class='hitem gc7'></span></div>
+							<div><span>本日 : </span><span class='hitem gc8'>&nbsp;</span></div>
+							<div><span>作業 : </span><span class='hitem gc_orange'></span></div>
 						</div>
-						@endif
 						<div>{!! $action_msg !!}</div>
 
 
