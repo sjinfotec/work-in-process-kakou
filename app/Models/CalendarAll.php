@@ -615,7 +615,7 @@ class CalendarAll extends Model
     
             $body .= "</div><!--end id calendar_dayzone-->\n";
             $body .= "</div><!--end class f-->\n";
-            $body .= "\t<div class='cpuzone'>{$btn_view}&emsp;{$customer}&emsp;{$product_name}&emsp;{$end_user}</div>\n";
+            $body .= "\t<div class='cpuzone'>{$btn_view}&emsp;{$pc}&emsp;{$customer}&emsp;{$product_name}&emsp;{$end_user}</div>\n";
             $body .= "</div><!--end id calendar-->\n";
     
         }

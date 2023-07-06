@@ -94,112 +94,12 @@ else {
 @section('content')
 				<div id="contents_area">
 					<div id="title_cnt">
-						<h1 class="tstyle">スケジュール／</h1>
+						<h1 class="tstyle">スケジュール</h1>
 					</div>
 					<!-- main maincontents row -->
 					<div id="maincontents">
 					@if($select_html === 'Default')
-						<div id="search_fcnt">
-							<!--<h4>検索</h4>-->
-
-							<form id="searchform" name="searchform" method="POST">
-								<input type="hidden" name="mode" id="mode" value="">
-								<input type="hidden" name="submode" id="submode" value="">
-								<input type="hidden" name="select_html" id="select_html" value="">
-
-								<div id="form1">
-									<div>
-										<label for="s_product_code" class="w4e">伝票番号</label>
-										<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code" value="{{ $s_product_code }}" step="1" min="0">
-									</div>
-									<div>
-										<button class="gc5 transition1 mgla" type="button" onClick="formReset('s_product_code')">伝票番号クリア</button>
-									</div>
-									<div class="mgl40">
-										<label for="duedate" class="w4e">納期</label>
-										<input type="date" class="form_style1 w10e" name="duedate_start" id="duedate" value="{{ $duedate_start }}">
-										～
-										<input type="date" class="form_style1 w10e" name="duedate_end" id="duedate" value="{{ $duedate_end }}">
-									</div>
-									<div>
-										<!--<button class="gc5 transition1 mgla" type="button" onClick="this.form.reset()">リセット</button>-->
-										<button class="gc5 transition1 mgla" type="button" onClick="formReset_3( Array('s_customer','s_product_name','s_end_user') )">クリア</button>
-									</div>
-								</div>
-								<div id="form1" class="mgt10">
-									<div class="form_zone">
-										<label for="s_customer" class="">得意先</label>
-										<input type="text" class="form_style1" name="s_customer" id="s_customer" value="{{ $s_customer }}"> 
-									</div>
-									<div class="form_zone">
-										<label for="s_product_name" class="">品名</label>
-										<input type="text" class="form_style1" name="s_product_name" id="s_product_name" value="{{ $s_product_name }}">
-									</div>
-									<div class="form_zone">
-										<label for="s_end_user" class="">エンドユーザー</label>
-										<input type="text" class="form_style1" name="s_end_user" id="s_end_user" value="{{ $s_end_user }}">
-									</div>
-								</div>
-								<div id="form1" class="mgt10">
-									<button class="transition1" type="button" onClick="clickEvent('searchform','1','Default','confirm','検索','some_search','chkwrite')">検索</button>
-									<div id="error">{!! $result['e_message'] !!}</div>
-								</div>
-									<!--<div id="error">{{ $e_message }}</div>-->
-
-								@csrf 
-							</form>
-						</div>
 						
-						<form id="updateform" name="updateform" method="POST">
-							<input type="hidden" name="mode" id="mode" value="">
-							<input type="hidden" name="submode" id="submode" value="">
-							<input type="hidden" name="select_html" id="select_html" value="">
-							<input type="hidden" name="s_product_code" id="s_product_code" value="">
-							<div id="tbl_1" class="mgt10">
-								<table>
-									<thead>
-										<tr>
-											<th></th>
-											<th>伝票番号</th>
-											<th>納期</th>
-											<th>得意先</th>
-											<th>品名</th>
-											<th>エンドユーザー</th>
-											<th>数量</th>
-											<th>印刷開始日</th>
-											<th>加工作業必要日数</th>
-											<th>コメント</th>
-										</tr>
-									</thead>
-									<tbody>
-									@forelse ($resultdata as $val)
-										<tr>
-											<td class="nbr">
-												<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
-												<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
-											</td>
-											<td class="">{{ $val->product_code }}</td>
-											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
-											<td class="">{{ $val->customer }}</td>
-											<td class="">{{ $val->product_name }}</td>
-											<td class="">{{ $val->end_user }}</td>
-											<td class="">{{ $val->quantity }}</td>
-											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
-											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
-											<td class="">{{ $val->work_need_days }}</td>
-											<td class="">{{ $val->comment }}</td>
-										</tr>
-
-									@empty
-										<tr><td colspan="10">no data</td></tr>
-									@endforelse
-									</tbody>
-								</table>
-							</div>
-
-
-							@csrf
-						</form>
 
 
 						<div id="resultupdate"></div>
@@ -230,7 +130,71 @@ else {
 							<div><span>本日 : </span><span class='hitem gc8'>&nbsp;</span></div>
 							<div><span>作業 : </span><span class='hitem gc_orange'></span></div>
 						</div>
+
+
+						<div id="error" class="mgt20">{!! $result['e_message'] !!}</div>
+
+						<!--
+						<div id="search_fcnt">
+
+							<form id="searchform" name="searchform" method="POST">
+								<input type="hidden" name="mode" id="mode" value="">
+								<input type="hidden" name="submode" id="submode" value="">
+								<input type="hidden" name="select_html" id="select_html" value="">
+
+								<div id="form1">
+									<div>
+										<label for="s_product_code" class="w4e">伝票番号</label>
+										<input type="number" class="form_style1 w10e" name="s_product_code" id="s_product_code_schedule" value="{{ $s_product_code }}" step="1" min="0">
+									</div>
+									<div>
+										<button class="gc5 transition1 mgla" type="button" onClick="formReset('s_product_code_schedule')">伝票番号クリア</button>
+									</div>
+									<div class="mgl40">
+										<label for="duedate" class="w4e">納期</label>
+										<input type="date" class="form_style1 w10e" name="duedate_start" id="duedate" value="{{ $duedate_start }}">
+										～
+										<input type="date" class="form_style1 w10e" name="duedate_end" id="duedate" value="{{ $duedate_end }}">
+									</div>
+								</div>
+								<div id="form1" class="mgt10">
+									<div class="form_zone">
+										<label for="s_customer" class="">得意先</label>
+										<input type="text" class="form_style1" name="s_customer" id="s_customer" value="{{ $s_customer }}"> 
+									</div>
+									<div class="form_zone">
+										<label for="s_product_name" class="">品名</label>
+										<input type="text" class="form_style1" name="s_product_name" id="s_product_name" value="{{ $s_product_name }}">
+									</div>
+									<div class="form_zone">
+										<label for="s_end_user" class="">エンドユーザー</label>
+										<input type="text" class="form_style1" name="s_end_user" id="s_end_user" value="{{ $s_end_user }}">
+									</div>
+								</div>
+								<div>
+										<button class="gc5 transition1 mgla" type="button" onClick="formReset_3( Array('s_customer','s_product_name','s_end_user') )">クリア</button>
+								</div>
+								<div id="form1" class="mgt10">
+									<button class="transition1" type="button" onClick="clickEvent('searchform','1','Default','confirm','検索','some_search','chkwrite')">検索</button>
+									<div id="error">{!! $result['e_message'] !!}</div>
+								</div>
+
+								@csrf 
+							</form>
+						</div>
+						-->
+
+
+
+
 						<div>{!! $action_msg !!}</div>
+
+
+
+
+
+
+
 
 
 					@elseif($select_html === 'oneView')

@@ -30,10 +30,6 @@ class ScheduleController extends Controller
             'duedate_end',
         ]);
 
-
-
-
-
         $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
         $duedate_start = !empty($_POST["duedate_start"]) ? $_POST['duedate_start'] : "";
         $duedate_end = !empty($_POST["duedate_end"]) ? $_POST['duedate_end'] : "";
@@ -41,16 +37,6 @@ class ScheduleController extends Controller
         $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
         $s_end_user = !empty($_POST["s_end_user"]) ? $_POST['s_end_user'] : "";
 
-
-        /*
-        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
-        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
-        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
-        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
-        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
-        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
-        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
-        */
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
         $action_msg = "";
@@ -130,6 +116,8 @@ class ScheduleController extends Controller
         $html_after_due_date = "";
         $e_message = "";
         $systemdate = Carbon::now();
+        $three_days_ago = Carbon::today()->subDay(3);
+        $one_days_ago = Carbon::today()->subDay(1);
         $lnum = 5000;  // limitの件数
         $default = true;
         $viewmode = Array();
@@ -208,7 +196,7 @@ class ScheduleController extends Controller
                 }
 
                 if($default) {                    
-                    $data->whereDate('after_due_date', '>=', $systemdate);
+                    $data->whereDate('after_due_date', '>=', $one_days_ago);
                     $data
                     //->orderBy('after_due_date', 'desc')
                     ->orderBy('after_due_date', 'asc')
@@ -226,7 +214,7 @@ class ScheduleController extends Controller
                     $r_after_due_date = $result[0]->after_due_date;
                     $html_after_due_date = !empty($r_after_due_date) ? date('n月j日', strtotime($r_after_due_date)) : "";
                     $result_msg = "OK";
-                    $e_message .= "検索結果 ： ".$datacount." 件<br>\n";
+                    //$e_message .= "検索結果 ： ".$datacount." 件<br>\n";
                     if(isset($viewmode['pcode'])) {
                         $e_message .= "伝票番号 『 ".$result[0]->product_code." 』 検索しました<br>\n";
                     }
@@ -244,7 +232,8 @@ class ScheduleController extends Controller
                     }
                     if(isset($viewmode['default'])) {
                         $limitcount = $datacount < $lnum ? $datacount : $lnum ;
-                        $e_message .= "納期　本日以降  ".$limitcount." 件の表示<br>\n";
+                        //$e_message .= "納期　本日以降  ".$limitcount." 件の表示<br>\n";
+                        $e_message .= "".$limitcount." 件の表示<br>\n";
                     }
                     if(isset($limiton)) {
                         $e_message .= "結果表示は 300件までです。<br>\n";
