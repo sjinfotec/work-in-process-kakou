@@ -32,13 +32,13 @@ class CalendarAll extends Model
         $work_date_arr = Array();
         $result_details_key = $key;
 
-        echo "after_due_date >> ".$result['result'][$key]->after_due_date."<br>\n";
+        //echo "after_due_date >> ".$result['result'][$key]->after_due_date."<br>\n";
         $after_due_date = $result['result'][$key]->after_due_date;
-        echo "customer >> ".$result['result'][$key]->customer."<br>\n";
+        //echo "customer >> ".$result['result'][$key]->customer."<br>\n";
         $customer = $result['result'][$key]->customer;
-        echo "product_name >> ".$result['result'][$key]->product_name."<br>\n";
+        //echo "product_name >> ".$result['result'][$key]->product_name."<br>\n";
         $product_name = $result['result'][$key]->product_name;
-        echo "end_user >> ".$result['result'][$key]->end_user."<br>\n";
+        //echo "end_user >> ".$result['result'][$key]->end_user."<br>\n";
         $end_user = $result['result'][$key]->end_user;
         //$pc = isset($resdate[$key]) ? $resdate[$key]->product_code : "";
         $pc = isset($result['result'][$key]) ? $result['result'][$key]->product_code : "";
@@ -111,7 +111,7 @@ class CalendarAll extends Model
         $sendform = "";
         $jmode = "";
         $pathdir = dirname($_SERVER['REQUEST_URI']);
-        echo "url >> ".$pathdir."<br>\n";
+        //echo "url >> ".$pathdir."<br>\n";
         if($pathdir == '/schedule') {
             $sendform = "viewform";
             $jmode = "view";
@@ -216,7 +216,7 @@ class CalendarAll extends Model
             $res = $result['result'];
             $resdate = $result_date['result'];
             //var_dump($res);
-            echo "product code -> ".$res[$key]->product_code."<br>\n";
+            //echo "product code -> ".$res[$key]->product_code."<br>\n";
             $performance_wdkey = Array();
             $comment_wdkey = Array();
             $performance_wdkey_idkey = Array();
@@ -265,12 +265,9 @@ class CalendarAll extends Model
                 $wdmax = "";
                 $wdmin = "";
             }
-            echo "wdmax >> ".$wdmax."<br>\n";
-            echo "wdmin >> ".$wdmin."<br>\n";
+            //echo "wdmax >> ".$wdmax."<br>\n";
+            //echo "wdmin >> ".$wdmin."<br>\n";
             //var_dump($allwdate_arr);
-
-
-
             //echo count($performance_wdkey, COUNT_RECURSIVE) . "<br>\n";
             
             // 実績の収集

@@ -1480,6 +1480,7 @@ class ProcessController extends Controller
             $count = "";
             $updateresult = "";
             if(is_array($work_date_arr)) {
+                $processdetail_updatetrue = false;
                 foreach($work_date_arr AS $key => $wdarr) {
                     foreach($wdarr AS $wdkey => $val) {
                         $str .= "wdkey=".$wdkey.":val=".$val;
@@ -1577,6 +1578,12 @@ class ProcessController extends Controller
                                     'created_at' => $systemdate
                                 );
                                 */
+                                if($params['departments_code'] == "4" || $params['departments_code'] == "5" || $params['work_code'] == "43" ) {
+                                    echo "if departments_code -> ".$params['departments_code']."<br>\n";
+                                    echo "if work_code -> ".$params['work_code']."<br>\n";
+                                    $processdetail_updatetrue = true;
+                                } 
+                                
 
                             }     
 
@@ -1616,6 +1623,34 @@ class ProcessController extends Controller
             else {
                 //$updateresult = 'no';
             }
+
+            if($processdetail_updatetrue == true) {
+
+
+                $tpd_data = DB::table($this->table_process_date)
+                //->where('product_code', $s_product_code)
+                ->where([['product_code', $s_product_code], ['departments_code', '4']])
+                ->orWhere('departments_code', '5')
+                ->pluck('work_date');
+                $work_dateArray = $tpd_data->toArray();
+                //var_dump($work_dateArray);
+
+                $allwdate_arr = $wdarr;
+                //$allwdate_arr[] = $f_receive_date;
+                //$allwdate_arr[] = $f_platemake_date;
+                $allwdate_arr += $work_dateArray;
+                $allwdate_arr = array_filter($allwdate_arr);
+                if(count($allwdate_arr) > 0) {
+                    $wdmax = max($allwdate_arr);
+                    $wdmin = min($allwdate_arr);
+                    echo "wdmax >> ".$wdmax."<br>\n";
+                    echo "wdmin >> ".$wdmin."<br>\n";
+                    var_dump($allwdate_arr);
+
+        
+                }
+            }
+
 
 
 
