@@ -1493,7 +1493,11 @@ class ProcessController extends Controller
                             ->where('departments_code', $params['departments_code'])
                             ->where('work_code', $params['work_code'])
                             ->delete();
-                            $loginserttrue = true;
+                            //echo "mode == 'delete' updateresult -> ".$updateresult."<br>\n";
+                            if($updateresult == 1) {
+                                $loginserttrue = true;
+                                $processdetail_updatetrue = true;
+                            }
                 
                         }
                         
@@ -1564,23 +1568,9 @@ class ProcessController extends Controller
                                 );
                                 $loginserttrue = true;
                                 //echo "updateresult ->> ".$updateresult."<br>\n";
-                                /*
-                                $insertdata[] = array(
-                                    'work_date' => $val,
-                                    'product_code' => $s_product_code,
-                                    'motion' => $motion,
-                                    'departments_name' => $params['departments_name'], 
-                                    'departments_code' => $params['departments_code'],
-                                    'work_name' => $params['work_name'], 
-                                    'work_code' => $params['work_code'],
-                                    'process_name' => '', 
-                                    'created_user' => $ipaddr,
-                                    'created_at' => $systemdate
-                                );
-                                */
                                 if($params['departments_code'] == "4" || $params['departments_code'] == "5" || $params['work_code'] == "43" ) {
-                                    echo "if departments_code -> ".$params['departments_code']."<br>\n";
-                                    echo "if work_code -> ".$params['work_code']."<br>\n";
+                                    //echo "if departments_code -> ".$params['departments_code']."<br>\n";
+                                    //echo "if work_code -> ".$params['work_code']."<br>\n";
                                     $processdetail_updatetrue = true;
                                 } 
                                 
@@ -1625,27 +1615,45 @@ class ProcessController extends Controller
             }
 
             if($processdetail_updatetrue == true) {
+                $b = '4'; // departments_code
+                $c = '5'; // departments_code
+                $d = '43'; // work_code
 
 
                 $tpd_data = DB::table($this->table_process_date)
-                //->where('product_code', $s_product_code)
-                ->where([['product_code', $s_product_code], ['departments_code', '4']])
-                ->orWhere('departments_code', '5')
+                ->where('product_code', $s_product_code)
+                //->where([['product_code', $s_product_code], ['departments_code', '4']])
+                //->Where('departments_code', '4')
+                //->orWhere('departments_code', '5')
+                ->where(function ($query) use ($b, $c, $d) {
+                    $query->where('departments_code', $b)->orWhere('departments_code', $c)->orWhere('work_code', $d);
+                })
                 ->pluck('work_date');
                 $work_dateArray = $tpd_data->toArray();
                 //var_dump($work_dateArray);
 
-                $allwdate_arr = $wdarr;
+                //$allwdate_arr = $wdarr;
                 //$allwdate_arr[] = $f_receive_date;
                 //$allwdate_arr[] = $f_platemake_date;
-                $allwdate_arr += $work_dateArray;
+                //$allwdate_arr += $work_dateArray;
+                $allwdate_arr = $work_dateArray;
                 $allwdate_arr = array_filter($allwdate_arr);
                 if(count($allwdate_arr) > 0) {
                     $wdmax = max($allwdate_arr);
                     $wdmin = min($allwdate_arr);
-                    echo "wdmax >> ".$wdmax."<br>\n";
-                    echo "wdmin >> ".$wdmin."<br>\n";
-                    var_dump($allwdate_arr);
+                    //echo "wdmax >> ".$wdmax."<br>\n";
+                    //echo "wdmin >> ".$wdmin."<br>\n";
+                    //var_dump($allwdate_arr);
+                    $receivedateresult = DB::table($this->table)
+                    ->where('product_code', $s_product_code)
+                    ->update(
+                        [
+                            'receive_date' => $wdmin,
+                            'updated_user' => $ipaddr,
+                            'updated_at' => $systemdate
+                        ]
+                    );
+
 
         
                 }
