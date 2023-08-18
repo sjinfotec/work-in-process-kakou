@@ -282,6 +282,8 @@ class ViewController extends Controller
         $default = true;
         $viewmode = Array();
 
+        //echo "mode:".$mode."<br>\n";
+
 
         $this->motion = $request->motion;
         $params = $request->only([
@@ -294,6 +296,11 @@ class ViewController extends Controller
             'mode',
             'submode',
         ]);
+
+        if( $mode == 'process_status_change') {
+            $params['s_product_code'] = "";
+            //echo "params s_product_code ".$params['s_product_code']."<br>\n";
+        }
 
 
 
@@ -537,6 +544,155 @@ class ViewController extends Controller
 
     }
 
+
+    public function updateProcessDetails(Request $request)
+    {
+
+
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+        /*
+        foreach($details AS $key => $val) {
+            $name = $val;
+        }
+        */
+
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $duedate_start = !empty($_POST["duedate_start"]) ? $_POST['duedate_start'] : "";
+        $duedate_end = !empty($_POST["duedate_end"]) ? $_POST['duedate_end'] : "";
+        $s_customer = !empty($_POST["s_customer"]) ? $_POST['s_customer'] : "";
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+        $s_end_user = !empty($_POST["s_end_user"]) ? $_POST['s_end_user'] : "";
+
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $motion = !empty($_POST["motion"]) ? $_POST['motion'] : "";
+
+
+
+        $this->serial_code = $request->serial_code;
+        $params = $request->only([
+            'product_code',
+            'serial_code',
+            'rep_code',
+            'after_due_date',
+            'customer',
+            'product_name',
+            'end_user',
+            'quantity',
+            'receive_date',
+            'platemake_date',
+            'work_need_days',
+            'status',
+            'comment',
+            'created_user',
+            'created_at',
+            'updated_user',
+            'updated_at',
+        ]);
+
+
+
+
+        $action_msg = "";
+        $result = "";
+        $result_date = "";
+        $result_logsearch = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $html_cal = "";
+        $viewmode = "editing";
+        $e_message = "検索 ： ".$s_product_code."";
+
+
+        $listcount = isset($_POST['listcount']) ? $_POST['listcount'] : "";
+        $status = isset($_POST['status']) ? $_POST['status'] : "";
+
+        //$mode = isset($_POST['mode']) ? $_POST['mode'] : "";
+        $upkind = isset($_POST['upkind']) ? $_POST['upkind'] : "";
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+
+        //echo "processController mode = ".$mode."<br>\n";
+
+        $reqarr = $request->only([
+            'work_name', 
+            'departments_name'
+        ]);
+
+
+
+        //$upload_file = $request->upload_file;
+        //var_dump($upload_file);
+        //$file_upload = new FileUpload();	// インスタンス作成
+        //$result_filesup = $file_upload->files_upload($upload_file, './tmp/', '', '');	//
+
+        //var_dump($result_filesup);
+
+
+        try {
+            $systemdate = Carbon::now();
+            $re_data = [];
+
+            if($mode == 'process_status_change') {
+                $update = [
+                    'status'    => $params['status'],
+                    'updated_at'    => now(),
+                ];
+                $updateresult = DB::table($this->table)
+                ->where('product_code', $s_product_code)
+                ->update($update);
+
+                $select_html = 'Default';
+                $e_message = "ステータス変更 -> 伝票番号 : ".$s_product_code."";
+                $result_msg = "OK";
+
+
+            }
+
+        }catch(\PDOException $pe){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$pe');
+            Log::error($pe->getMessage());
+            throw $pe;
+        }catch(\Exception $e){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$e');
+            Log::error($e->getMessage());
+            throw $e;
+        }
+
+        $result_details = $this->SearchProcessDetails($request);
+
+        
+        
+
+
+        return view('view', [
+            's_product_code' => $s_product_code,
+            'product_code' => $product_code,
+            'after_due_date' => $after_due_date,
+            'customer' => $customer,
+            'product_name' => $product_name,
+            'end_user' => $end_user,
+            'quantity' => $quantity,
+            'comment' => $comment,
+            'mode' => $mode,
+            'action_msg' => $action_msg,
+            'e_message' => $e_message,
+            'result' => $result_details,
+            'select_html' => $select_html,
+            'duedate_start' => $duedate_start,
+            'duedate_end' => $duedate_end,
+            's_customer' => $s_customer,
+            's_product_name' => $s_product_name,
+            's_end_user' => $s_end_user,
+    ]);
+
+    }
 
 
 

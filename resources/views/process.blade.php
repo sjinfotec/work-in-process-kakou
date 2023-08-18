@@ -362,6 +362,8 @@ $html_cal = create_calendar( 3, $cal_start_ym, $after_due_date);	//開始年月�
 										@if($status == "REC")
 									<!--<div><button class="gc3 transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','','upprocessdetails','『 工程確定済 』','process_status_rec','')">工程確定済</button></div>-->
 											<div class="btn_result">工程確定済み</div>
+										@elseif($status == "1")
+											<div class="btn_result">終了</div><button class="btn_button transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','0','upprocessdetails','『 終了を取り消し 』','process_status_change','')">終了取消</button>
 										@else
 
 											<div><button class="btn_button transition1 " type="button" onClick="clickEvent('updateform','{{ $product_code }}','REC','upprocessdetails','『 確定登録 』','process_status_change','')">確定登録</button></div>

@@ -155,6 +155,7 @@ else {
 							<input type="hidden" name="submode" id="submode" value="">
 							<input type="hidden" name="select_html" id="select_html" value="">
 							<input type="hidden" name="s_product_code" id="s_product_code" value="">
+							<input type="hidden" name="status" id="status" value="">
 							<div id="tbl_1" class="mgt10">
 								<table>
 									<thead>
@@ -168,25 +169,37 @@ else {
 											<th>数量</th>
 											<th>印刷開始日</th>
 											<th>加工作業必要日数</th>
+											<th>進捗</th>
 											<th>コメント</th>
 										</tr>
 									</thead>
 									<tbody>
 									@forelse ($resultdata as $val)
-										<tr>
+										@php 
+											if($val->status !== "1") {
+												$status_str = "<span class='nbr'>進行中</span><button class=\"style5\" type=\"button\" onClick=\"clickEvent('updateform','$val->product_code','1','update_status','下記の工程の作業を終了します','process_status_change','')\">完了</button>";
+												$css1 = "";
+											}
+											else {
+												$status_str = "<span class='nbr'>作業終了</span>";
+												$css1 = "gc9";
+											}
+										@endphp
+										<tr class="{!! $css1 !!}">
 											<td class="nbr">
 												<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
 												<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
 											</td>
 											<td class="">{{ $val->product_code }}</td>
-											<td class="">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
+											<td class="nbr">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
 											<td class="">{{ $val->customer }}</td>
 											<td class="">{{ $val->product_name }}</td>
 											<td class="">{{ $val->end_user }}</td>
 											<td class="">{{ $val->quantity }}</td>
-											<td class="">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
+											<td class="nbr">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
 											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
 											<td class="">{{ $val->work_need_days }}</td>
+											<td class="nbr">@php echo $status_str; @endphp</td>
 											<td class="">{{ $val->comment }}</td>
 										</tr>
 
@@ -267,6 +280,8 @@ else {
 											@if(isset($status))
 												@if($status == "REC")
 													<div class="btn_result">工程確定済み</div>
+												@elseif($status == "1")
+													<div class="btn_result">終了</div>
 												@else
 													<div class="btn_result">未確定</div>
 												@endif
@@ -409,6 +424,19 @@ else {
 				fm.s_product_code.value = val1;
 				fm.select_html.value = val2;
 				fm.action = '/process/search';
+				fm.submit();
+			}
+		}
+		else if(cf == 'update_status') {
+			//var Jproduct_code = document.getElementById('product_code' + val1).value;
+			//var Jstatus = fm.status.value;
+			//var result = window.confirm( com1 +'\n伝票番号 : '+ Jproduct_code +'');
+			var result = window.confirm( com1 +'\n伝票番号 : '+ val1 +'');
+			if( result ) {
+				fm.mode.value = md;
+				fm.status.value = val2;
+				fm.s_product_code.value = val1;
+				fm.action = '/view/update';
 				fm.submit();
 			}
 		}
