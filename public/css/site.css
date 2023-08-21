@@ -276,6 +276,7 @@ header button {width:auto;}
 .gc8  { background: #EDB;}
 .gc_orange  { background: orange;}
 .gc9  { background: #f6bfbc; }
+.gc10  {  background:#CD6;}
 
 .color_green  {color: green;}
 .color_red  {color: red;}
@@ -344,7 +345,7 @@ header button {width:auto;}
   color: #668ad8;
 }
 #tips_cnt .lst1 li  {
-  margin-top:8px;
+  margin-top:16px;
 }
 #tips_cnt .lst2  {
   counter-reset:number;
@@ -354,7 +355,7 @@ header button {width:auto;}
 }
 #tips_cnt .lst2 li {
   position:relative;
-  margin-top:2px;
+  margin-top:8px;
 }
 #tips_cnt .lst2 li:before {
   counter-increment: number;
@@ -374,6 +375,10 @@ header button {width:auto;}
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 */
+}
+
+.manualimg  {
+  max-width: 80%;
 }
 
 #version_cnt  {

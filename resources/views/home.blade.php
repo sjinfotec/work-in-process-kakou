@@ -96,6 +96,16 @@ if(isset($result)) {
             <li>カレンダーの日付を押すと該当日の作業一覧が表示されます</li>
             </ol>
           </li>
+          <li>作業の完了（終了）マーク（色）をつける
+            <ol class="lst2">
+            <li>メニュー欄より『作業工程閲覧』をクリック</li>
+            <li>一覧（検索可）が表示され、進捗の欄には「進行中」や「作業終了」が表示されています</li>
+            <li>「進行中」には『完了』ボタンが併記されています。<div class="manualimg"><img src="{{ asset('images/manual/5_1.png') }}"></div></li>
+            <li>作業を終えた案件は『完了』ボタンをクリックし、「作業終了」とすることができます<div class="manualimg"><img src="{{ asset('images/manual/5_2.png') }}"></div></li>
+            <li>進捗が「作業終了」になると該当案件の背景の色が変わります。<div class="manualimg"><img src="{{ asset('images/manual/5_3.png') }}"></div></li>
+            <li>※「進行中」に戻すには左端の『編集』をクリックし、『終了取消』をクリックします<div class="manualimg"><img src="{{ asset('images/manual/5_4.png') }}"></div><div class="manualimg"><img src="{{ asset('images/manual/5_5.png') }}"></div></li>
+            </ol>
+          </li>
           </ul>
     </div>
 

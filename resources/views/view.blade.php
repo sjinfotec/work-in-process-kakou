@@ -281,7 +281,7 @@ else {
 												@if($status == "REC")
 													<div class="btn_result">工程確定済み</div>
 												@elseif($status == "1")
-													<div class="btn_result">終了</div>
+													<div class="btn_result gc10">終了</div>
 												@else
 													<div class="btn_result">未確定</div>
 												@endif
