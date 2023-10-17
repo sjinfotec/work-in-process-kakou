@@ -300,6 +300,8 @@ header button {width:auto;}
 .w4e  {width: 4em;}
 .w10e {width: 10em;}
 .w14e {width: 14em;}
+.mw20e  {min-width: 20em;}
+.w1920  {min-width: 1920px;}
 
 .ta_r {text-align: right;}
 

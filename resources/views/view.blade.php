@@ -16,7 +16,19 @@ $select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default"
 
 if(isset($result['result'])) {
 	$resultdata = $result['result'];
-		//var_dump($resultdata);
+	$resultgetworkdata = $result['result_getwork'];
+	$arrdata = json_decode($resultgetworkdata[0]['result'], true);
+	//var_dump($arrdata);
+	//echo "<br>\n";
+	/*
+	foreach($arrdata AS $wkey => $wval){
+		echo "key=".$wkey." val=".$wval['name']."<br>\n";
+	}
+	*/
+
+	//var_dump($resultdata);
+	//echo "<br>\n";
+	//var_dump($resultgetworkdata);
 	
 	if(isset($resultdata)) {
 		foreach($resultdata as $key => $val) {
@@ -89,6 +101,26 @@ else {
 	//$test = $result_details['result'][0]->after_due_date;    // return result[]から取得する場合　[0]のキーが必要。
 
 
+function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
+	// 作業（加工）のセレクトボックスHTML
+
+	$html_select_work = "";
+	$html_select_work .= "<select class='' name='".$pcode."_wkcode".$num."' id='".$pcode."_wkcode".$num."'>\n";
+	$html_select_work .= "	<option></option>\n";
+		foreach ($arrdata as $arrgval)	{
+			if ($arrgval['id'] == $valwkcode) {
+				$html_select_work .= "<option value='".$arrgval['id']."' selected>".$arrgval['name']."</option>\n";
+			} else {
+				$html_select_work .= "<option value='".$arrgval['id']."'>".$arrgval['name']."</option>\n";
+			}
+		}
+	$html_select_work .= "\n</select>\n";
+	return $html_select_work;
+
+}
+
+
+
 ?>
 @extends('layouts.main')
 @section('content')
@@ -156,7 +188,18 @@ else {
 							<input type="hidden" name="select_html" id="select_html" value="">
 							<input type="hidden" name="s_product_code" id="s_product_code" value="">
 							<input type="hidden" name="status" id="status" value="">
-							<div id="tbl_1" class="mgt10">
+							<input type="hidden" name="wkcom01" id="wkcom01" value="">
+							<input type="hidden" name="wkcom02" id="wkcom02" value="">
+							<input type="hidden" name="wkcom03" id="wkcom03" value="">
+							<input type="hidden" name="wkcom04" id="wkcom04" value="">
+							<input type="hidden" name="wkcom05" id="wkcom05" value="">
+							<input type="hidden" name="wkcode01" id="wkcode01" value="">
+							<input type="hidden" name="wkcode02" id="wkcode02" value="">
+							<input type="hidden" name="wkcode03" id="wkcode03" value="">
+							<input type="hidden" name="wkcode04" id="wkcode04" value="">
+							<input type="hidden" name="wkcode05" id="wkcode05" value="">
+							<input type="hidden" name="oldlog" id="oldlog" value="">
+							<div id="tbl_1" class="mgt10 w1920">
 								<table>
 									<thead>
 										<tr>
@@ -168,7 +211,18 @@ else {
 											<th>エンドユーザー</th>
 											<th>数量</th>
 											<th>印刷開始日</th>
-											<th>加工作業必要日数</th>
+											<!--<th>加工作業必要日数</th>-->
+											<th>加工作業1</th>
+											<th>作業メモ1</th>
+											<th>加工作業2</th>
+											<th>作業メモ2</th>
+											<th>加工作業3</th>
+											<th>作業メモ3</th>
+											<th>加工作業4</th>
+											<th>作業メモ4</th>
+											<th>加工作業5</th>
+											<th>作業メモ5</th>
+											<th></th>
 											<th>進捗</th>
 											<th>コメント</th>
 										</tr>
@@ -184,6 +238,53 @@ else {
 												$status_str = "<span class='nbr'>作業終了</span>";
 												$css1 = "gc9";
 											}
+
+											$wkakou_btn = "<button class=\"style5\" type=\"button\" onClick=\"clickEvent('updateform','$val->product_code','1','update_wkakou','加工作業を更新します','kwupdate','')\">作業更新</button>";
+
+											$js_html = <<<EOF
+											<script type="text/javascript">
+												const inputcode1{$val->product_code} = document.getElementById('{$val->product_code}_wkcode01');
+												const inputcom1{$val->product_code} = document.getElementById('{$val->product_code}_wkcom01');
+												const inputcode2{$val->product_code} = document.getElementById('{$val->product_code}_wkcode02');
+												const inputcom2{$val->product_code} = document.getElementById('{$val->product_code}_wkcom02');
+												const inputcode3{$val->product_code} = document.getElementById('{$val->product_code}_wkcode03');
+												const inputcom3{$val->product_code} = document.getElementById('{$val->product_code}_wkcom03');
+												const inputcode4{$val->product_code} = document.getElementById('{$val->product_code}_wkcode04');
+												const inputcom4{$val->product_code} = document.getElementById('{$val->product_code}_wkcom04');
+												const inputcode5{$val->product_code} = document.getElementById('{$val->product_code}_wkcode05');
+												const inputcom5{$val->product_code} = document.getElementById('{$val->product_code}_wkcom05');
+												const log{$val->product_code} = document.getElementById('log_{$val->product_code}');
+												//const btn{$val->product_code} = document.getElementById('btn_{$val->product_code}');
+												inputcode1{$val->product_code}.addEventListener('input', updateValue);
+												inputcom1{$val->product_code}.addEventListener('input', updateValue);
+												inputcode2{$val->product_code}.addEventListener('input', updateValue);
+												inputcom2{$val->product_code}.addEventListener('input', updateValue);
+												inputcode3{$val->product_code}.addEventListener('input', updateValue);
+												inputcom3{$val->product_code}.addEventListener('input', updateValue);
+												inputcode4{$val->product_code}.addEventListener('input', updateValue);
+												inputcom4{$val->product_code}.addEventListener('input', updateValue);
+												inputcode5{$val->product_code}.addEventListener('input', updateValue);
+												inputcom5{$val->product_code}.addEventListener('input', updateValue);
+												// addEventListener('change', updateValue)
+												function updateValue(e) {
+													const oldpcode = document.getElementById('oldlog').value;
+													const oldpcid = document.getElementById('log_' + oldpcode);
+													console.log('oldpcode=' + oldpcode + ' oldpcid=' + oldpcid);
+													if(oldpcid)	{
+														oldpcid.innerHTML = '';
+													}
+													//log{$val->id}.textContent = e.target.value;
+													log{$val->product_code}.innerHTML = '<span class="color_red">※変更中</span>';
+													//log{$val->id}.innerHTML += e.target.value;
+													//btn{$val->product_code}.classList.remove("display_none");
+													document.getElementById('oldlog').value = {$val->product_code};
+													//var oldlog = "log{$val->product_code}";
+													//console.log('oldlogend=' + oldlog);
+												}
+											</script>
+											EOF;
+
+
 										@endphp
 										<tr class="{!! $css1 !!}">
 											<td class="nbr">
@@ -192,17 +293,29 @@ else {
 											</td>
 											<td class="">{{ $val->product_code }}</td>
 											<td class="nbr">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
-											<td class="">{{ $val->customer }}</td>
-											<td class="">{{ $val->product_name }}</td>
-											<td class="">{{ $val->end_user }}</td>
-											<td class="">{{ $val->quantity }}</td>
+											<td class="nbr">{{ $val->customer }}</td>
+											<td class="nbr">{{ $val->product_name }}</td>
+											<td class="nbr">{{ $val->end_user }}</td>
+											<td class="nbr">{{ $val->quantity }}</td>
 											<td class="nbr">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
 											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
-											<td class="">{{ $val->work_need_days }}</td>
+											<!--<td class="">{{ $val->work_need_days }}</td>-->
+											
+											<td class="">@php echo WorkItem($arrdata,$val->wkcode01,'01',$val->product_code) @endphp<span id="log_{{ $val->product_code }}"></span></td>
+											<td class=""><input type="text" name="{{$val->product_code}}_wkcom01" id="{{$val->product_code}}_wkcom01" value="{{$val->wkcom01}}"></td>
+											<td class="">@php echo WorkItem($arrdata,$val->wkcode02,'02',$val->product_code) @endphp</td>
+											<td class=""><input type="text" name="{{$val->product_code}}_wkcom02" id="{{$val->product_code}}_wkcom02" value="{{$val->wkcom02}}"></td>
+											<td class="">@php echo WorkItem($arrdata,$val->wkcode03,'03',$val->product_code) @endphp</td>
+											<td class=""><input type="text" name="{{$val->product_code}}_wkcom03" id="{{$val->product_code}}_wkcom03" value="{{$val->wkcom03}}"></td>
+											<td class="">@php echo WorkItem($arrdata,$val->wkcode04,'04',$val->product_code) @endphp</td>
+											<td class=""><input type="text" name="{{$val->product_code}}_wkcom04" id="{{$val->product_code}}_wkcom04" value="{{$val->wkcom04}}"></td>
+											<td class="">@php echo WorkItem($arrdata,$val->wkcode05,'05',$val->product_code) @endphp</td>
+											<td class=""><input type="text" name="{{$val->product_code}}_wkcom05" id="{{$val->product_code}}_wkcom05" value="{{$val->wkcom05}}"></td>
+											<td class="">@php echo $wkakou_btn; @endphp</td>
 											<td class="nbr">@php echo $status_str; @endphp</td>
-											<td class="">{{ $val->comment }}</td>
+											<td class="mw20e">{{ $val->comment }}</td>
 										</tr>
-
+										@php echo $js_html; @endphp
 									@empty
 										<tr><td colspan="10">no data</td></tr>
 									@endforelse
@@ -437,6 +550,43 @@ else {
 				fm.status.value = val2;
 				fm.s_product_code.value = val1;
 				fm.action = '/view/update';
+				fm.submit();
+			}
+		}
+		else if(cf == 'update_wkakou') {
+			//var Jproduct_code = document.getElementById('product_code' + val1).value;
+			//var Jstatus = fm.status.value; kwupdate
+			//var result = window.confirm( com1 +'\n伝票番号 : '+ Jproduct_code +'');
+			var result = window.confirm( com1 +'\n伝票番号 : '+ val1 +'');
+			if( result ) {
+				fm.mode.value = md;
+				fm.status.value = val2;
+				fm.s_product_code.value = val1;
+				var wkcom_01 = val1 + '_wkcom01';
+				console.log('update_wkakou in wkcom_01 -> ' + wkcom_01);
+				//fm.wkcom01.value = fm.wkcom_01.value;
+				fm.wkcom01.value = document.getElementById(wkcom_01).value;
+				var wkcom_02 = val1 + '_wkcom02';
+				fm.wkcom02.value = document.getElementById(wkcom_02).value;
+				var wkcom_03 = val1 + '_wkcom03';
+				fm.wkcom03.value = document.getElementById(wkcom_03).value;
+				var wkcom_04 = val1 + '_wkcom04';
+				fm.wkcom04.value = document.getElementById(wkcom_04).value;
+				var wkcom_05 = val1 + '_wkcom05';
+				fm.wkcom05.value = document.getElementById(wkcom_05).value;
+
+				var wkcode_01 = val1 + '_wkcode01';
+				fm.wkcode01.value = document.getElementById(wkcode_01).value;
+				var wkcode_02 = val1 + '_wkcode02';
+				fm.wkcode02.value = document.getElementById(wkcode_02).value;
+				var wkcode_03 = val1 + '_wkcode03';
+				fm.wkcode03.value = document.getElementById(wkcode_03).value;
+				var wkcode_04 = val1 + '_wkcode04';
+				fm.wkcode04.value = document.getElementById(wkcode_04).value;
+				var wkcode_05 = val1 + '_wkcode05';
+				fm.wkcode05.value = document.getElementById(wkcode_05).value;
+
+				fm.action = '/view/updatekakou';
 				fm.submit();
 			}
 		}
