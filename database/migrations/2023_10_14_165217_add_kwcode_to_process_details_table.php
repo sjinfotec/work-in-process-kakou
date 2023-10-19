@@ -24,6 +24,7 @@ class AddKwcodeToProcessDetailsTable extends Migration
             $table->string('wkcom02', 50)->nullable()->comment('加工作業コメント2')->after('work_need_days');
             $table->smallInteger('wkcode01')->nullable()->comment('加工作業コード1')->after('work_need_days');
             $table->string('wkcom01', 50)->nullable()->comment('加工作業コメント1')->after('work_need_days');
+            $table->char('category', 4)->nullable()->comment('カテゴリー')->after('work_need_days');
             //
         });
     }
@@ -46,6 +47,7 @@ class AddKwcodeToProcessDetailsTable extends Migration
             $table->dropColumn('wkcom02');
             $table->dropColumn('wkcode01');
             $table->dropColumn('wkcom01');
+            $table->dropColumn('category');
             //
         });
     }

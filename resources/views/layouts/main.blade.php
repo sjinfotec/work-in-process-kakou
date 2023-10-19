@@ -26,9 +26,9 @@
 <body>
     <div id="app" class="wrapper">
         <!-- header -->
-        <header>
+        <header class="wlong">
             <!-- header nav -->
-            <nav class="navbar">
+            <nav class="navbar ">
                 <!-- offcanvas-left toggle button -->
                 <button type="button" class="menu_btn" type="button" data-toggle="offcanvas-left">
                     <span class="menu_btn_style" ><img class="" src="{{ asset('images/round-menu-w.svg') }}" alt=""></span>
@@ -38,6 +38,7 @@
                 <a class="" href="{{ url('/') }}">
                     <span><img class="logo_h" src="{{ asset('images/home-white.svg') }}"  alt="作業工程管理システム"></span>
                     <span>作業工程管理システム</span>
+                    <span>&emsp;&emsp;-- 加工課 --</span>
                 </a>
                 <div>
             </nav>

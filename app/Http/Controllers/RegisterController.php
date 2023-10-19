@@ -352,11 +352,6 @@ class RegisterController extends Controller
 
         }
 
-
-
-
-
-
         try {
             $re_data = [];
             $systemdate = Carbon::now();
@@ -417,20 +412,9 @@ class RegisterController extends Controller
             Log::error($e->getMessage());
             throw $e;
         }
-
-
-        
-
-
-
-
-
-
-
         
         $e_message = "登録 ： ".$this->product_code." ＆ ".$this->product_name."　納期 ： ".$this->after_due_date;
         $result_msg = "OK";
-
 
         $redata = array();
         $redata[] = [
@@ -455,6 +439,156 @@ class RegisterController extends Controller
         //'chk_status' => $chk_status, 'acmsg' => $action_msg            
 
     }
+
+
+
+
+    public function AddAllData(Request $request)
+    {
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        $mode = isset($data['mode']) ? $data['mode'] : "";
+
+        $e_message = "";
+        $result_msg = "";
+
+        try {
+            $systemdate = Carbon::now();
+
+            $input_data = DB::connection('workinprocess')->table('process_details')
+            ->select(
+                'product_code',
+                'serial_code',
+                'rep_code',
+                'after_due_date',
+                'customer',
+                'product_name',
+                'end_user',
+                'quantity',
+                'receive_date',
+                'platemake_date',
+                'work_need_days',
+                'status',
+                'comment',
+                'created_at',
+            );
+            //$input_data->where('product_code', $s_product_id);
+            $input_data->where('after_due_date','>',$systemdate);
+            $result = $input_data
+            ->get();
+            $count1 = $input_data->count();
+
+            if(isset($result[0]->product_code)) $e_message .= "result product_code = ".$result[0]->product_code."<br>\n";
+
+            // オブジェクトの配列化
+            $uparr = [];
+            foreach ($result as $rekey => $reval) {
+                $up = [];
+                foreach ($reval as $key => $val) {
+                    $up[$key]  = $val;
+                }
+                $up['category'] = 'c1';
+                $up['updated_at'] = $systemdate;
+                $uparr[] = $up;
+
+                $searchStr[] = [
+                    'product_code' => $up['product_code']
+                ];
+            }
+
+
+
+            $input_data2 = DB::connection('workinprocess2')->table('process_details')
+            ->select(
+                'product_code',
+                'serial_code',
+                'rep_code',
+                'after_due_date',
+                'customer',
+                'product_name',
+                'end_user',
+                'quantity',
+                'receive_date',
+                'platemake_date',
+                'work_need_days',
+                'status',
+                'comment',
+                'created_at',
+            );
+            //$input_data->where('product_code', $s_product_id);
+            $input_data2->where('after_due_date','>',$systemdate);
+            $result2 = $input_data2
+            ->get();
+            $count2 = $input_data2->count();
+
+
+            if(isset($result2[0]->product_code)) $e_message .= "result2 product_code = ".$result2[0]->product_code."<br>\n";
+
+            // オブジェクトの配列化
+            //$uparr = [];
+            foreach ($result2 as $rekey => $reval) {
+                $up = [];
+                foreach ($reval as $key => $val) {
+                    $up[$key]  = $val;
+                }
+                $up['category'] = 'c2';
+                $up['updated_at'] = $systemdate;
+                $uparr[] = $up;
+
+                $searchStr[] = [
+                    'product_code' => $up['product_code']
+                ];
+            }
+            //$result = array_merge($result, $result2);
+
+            // updateOrInsert は複数レコードに未対応
+            // laravel8よりupsertにて複数レコード対応
+            //$result = DB::table($this->table)->updateOrInsert($searchStr, $uparr);
+            $upsert_result = DB::table($this->table)->upsert($uparr, ['product_code']);
+            
+            $e_message .= "workinprocess record count1 -> ".$count1." ,count2 -> ".$count2."<br>\n";
+            $e_message .= "upsert_result -> ".$upsert_result."<br>\n";
+            $result_msg .= "OK";
+
+            //DB::commit();
+
+
+
+        }catch(\PDOException $pe){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$pe');
+            Log::error($pe->getMessage());
+            throw $pe;
+        }catch(\Exception $e){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$e');
+            Log::error($e->getMessage());
+            throw $e;
+        }
+
+
+
+
+        $redata = array();
+        $redata[] = [
+            'mode' => $mode, 
+            'count' => $count1 + $count2,
+            'e_message' => $e_message, 
+            'result_msg' => $result_msg,
+            'searchStr' => $searchStr,
+            'uparr' => $uparr,
+        ];
+        if(!empty($redata)) {
+            echo json_encode($redata, JSON_UNESCAPED_UNICODE);
+        }
+        //'chk_status' => $chk_status, 'acmsg' => $action_msg            
+
+    }
+
+
+
+
+
 
 
 

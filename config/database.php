@@ -63,6 +63,46 @@ return [
             ]) : [],
         ],
 
+        'workinprocess' => [
+            'driver' => 'mysql',
+            'host' => '192.168.0.93',
+            'port' => env('DB_PORT', '3306'),
+            'database' => 'workprocess',
+            'username' => 'sjinfotec',
+            'password' => 'Sanjyo_1965',
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'workinprocess2' => [
+            'driver' => 'mysql',
+            'host' => '192.168.0.94',
+            'port' => env('DB_PORT', '3306'),
+            'database' => 'workprocess',
+            'username' => 'sjinfotec',
+            'password' => 'Sanjyo_1965',
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+
+
         'nippou' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

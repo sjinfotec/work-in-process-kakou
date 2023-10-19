@@ -239,7 +239,7 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 												$css1 = "gc9";
 											}
 
-											$wkakou_btn = "<button class=\"style5\" type=\"button\" onClick=\"clickEvent('updateform','$val->product_code','1','update_wkakou','加工作業を更新します','kwupdate','')\">作業更新</button>";
+											$wkakou_btn = "<button class=\"style5\" type=\"button\" onClick=\"clickEvent('updateform','$val->product_code','1','update_wkakou','加工作業を更新します','kwupdate','')\">更新</button>";
 
 											$js_html = <<<EOF
 											<script type="text/javascript">
@@ -254,6 +254,7 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 												const inputcode5{$val->product_code} = document.getElementById('{$val->product_code}_wkcode05');
 												const inputcom5{$val->product_code} = document.getElementById('{$val->product_code}_wkcom05');
 												const log{$val->product_code} = document.getElementById('log_{$val->product_code}');
+												const bgtag{$val->product_code} = document.getElementById('logbg_{$val->product_code}');
 												//const btn{$val->product_code} = document.getElementById('btn_{$val->product_code}');
 												inputcode1{$val->product_code}.addEventListener('input', updateValue);
 												inputcom1{$val->product_code}.addEventListener('input', updateValue);
@@ -269,12 +270,15 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 												function updateValue(e) {
 													const oldpcode = document.getElementById('oldlog').value;
 													const oldpcid = document.getElementById('log_' + oldpcode);
+													const oldbgtag = document.getElementById('logbg_' + oldpcode);
 													console.log('oldpcode=' + oldpcode + ' oldpcid=' + oldpcid);
 													if(oldpcid)	{
 														oldpcid.innerHTML = '';
+														oldbgtag.innerHTML = '';
 													}
 													//log{$val->id}.textContent = e.target.value;
-													log{$val->product_code}.innerHTML = '<span class="color_red">※変更中</span>';
+													log{$val->product_code}.innerHTML = '<span class="color_red">※変更中</span> 『更新』で保存できます';
+													bgtag{$val->product_code}.innerHTML = '<span class="">&emsp;</span>';
 													//log{$val->id}.innerHTML += e.target.value;
 													//btn{$val->product_code}.classList.remove("display_none");
 													document.getElementById('oldlog').value = {$val->product_code};
@@ -288,8 +292,9 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 										@endphp
 										<tr class="{!! $css1 !!}">
 											<td class="nbr">
+											<span class="bgtag" id="logbg_{{ $val->product_code }}"></span>
 												<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
-												<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>
+												<!--<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>-->
 											</td>
 											<td class="">{{ $val->product_code }}</td>
 											<td class="nbr">{!! date('Y-m-d', strtotime($val->after_due_date)) !!}</td>
@@ -300,17 +305,16 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 											<td class="nbr">@php echo isset($val->receive_date) ? date('Y-m-d', strtotime($val->receive_date)) : ""; @endphp</td>
 											<!--<td class="">@php echo isset($val->platemake_date) ? date('Y-m-d', strtotime($val->platemake_date)) : ""; @endphp</td>-->
 											<!--<td class="">{{ $val->work_need_days }}</td>-->
-											
-											<td class="">@php echo WorkItem($arrdata,$val->wkcode01,'01',$val->product_code) @endphp<span id="log_{{ $val->product_code }}"></span></td>
-											<td class=""><input type="text" name="{{$val->product_code}}_wkcom01" id="{{$val->product_code}}_wkcom01" value="{{$val->wkcom01}}"></td>
+											<td class="position_relative">@php echo WorkItem($arrdata,$val->wkcode01,'01',$val->product_code) @endphp<span class="comtext" id="log_{{ $val->product_code }}"></span></td>
+											<td class=""><input type="text" class="w14e" name="{{$val->product_code}}_wkcom01" id="{{$val->product_code}}_wkcom01" value="{{$val->wkcom01}}"></td>
 											<td class="">@php echo WorkItem($arrdata,$val->wkcode02,'02',$val->product_code) @endphp</td>
-											<td class=""><input type="text" name="{{$val->product_code}}_wkcom02" id="{{$val->product_code}}_wkcom02" value="{{$val->wkcom02}}"></td>
+											<td class=""><input type="text" class="w14e" name="{{$val->product_code}}_wkcom02" id="{{$val->product_code}}_wkcom02" value="{{$val->wkcom02}}"></td>
 											<td class="">@php echo WorkItem($arrdata,$val->wkcode03,'03',$val->product_code) @endphp</td>
-											<td class=""><input type="text" name="{{$val->product_code}}_wkcom03" id="{{$val->product_code}}_wkcom03" value="{{$val->wkcom03}}"></td>
+											<td class=""><input type="text" class="w14e" name="{{$val->product_code}}_wkcom03" id="{{$val->product_code}}_wkcom03" value="{{$val->wkcom03}}"></td>
 											<td class="">@php echo WorkItem($arrdata,$val->wkcode04,'04',$val->product_code) @endphp</td>
-											<td class=""><input type="text" name="{{$val->product_code}}_wkcom04" id="{{$val->product_code}}_wkcom04" value="{{$val->wkcom04}}"></td>
+											<td class=""><input type="text" class="w14e" name="{{$val->product_code}}_wkcom04" id="{{$val->product_code}}_wkcom04" value="{{$val->wkcom04}}"></td>
 											<td class="">@php echo WorkItem($arrdata,$val->wkcode05,'05',$val->product_code) @endphp</td>
-											<td class=""><input type="text" name="{{$val->product_code}}_wkcom05" id="{{$val->product_code}}_wkcom05" value="{{$val->wkcom05}}"></td>
+											<td class=""><input type="text" class="w14e" name="{{$val->product_code}}_wkcom05" id="{{$val->product_code}}_wkcom05" value="{{$val->wkcom05}}"></td>
 											<td class="">@php echo $wkakou_btn; @endphp</td>
 											<td class="nbr">@php echo $status_str; @endphp</td>
 											<td class="mw20e">{{ $val->comment }}</td>
