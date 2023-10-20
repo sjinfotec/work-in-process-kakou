@@ -5,48 +5,6 @@
 					<div id="title_cnt">
 						<h1 class="tstyle">伝票番号登録</h1>
 					</div>
-					<!-- main contentns row -->
-					<div id="maincontents">
-						<div id="search_fcnt">
-
-							<h4>伝票番号検索</h4>
-
-							<div id="form1">
-								<form id="searchform" name="searchform" method="POST">
-									<input type="hidden" name="mode" id="mode" value="product_search">
-									<input type="hidden" name="submode" id="submode" value="chkwrite">
-									<input type="hidden" name="motion" id="motion" value="">
-									<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
-									<button class="" type="button" onClick="SEARCHcollect()">検索</button>
-									<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
-									
-									@csrf 
-								</form>
-							</div>
-						</div>
-					</div>
-					<!-- /main contentns row -->
-					<div id="tbl_1">
-					<form id="newform" name="newform" method="POST">
-						<table>
-							<thead>
-							<tr>
-								<th>&emsp;</th>
-								<th>伝票番号</th>
-								<th>納期</th>
-								<th>得意先</th>
-								<th>品名</th>
-								<th>エンドユーザー</th>
-								<th>数量</th>
-
-							</tr>
-							</thead>
-							<tbody id="result_search_view">
-							@php //echo $html_result;
-							@endphp
-							</tbody>
-						</table>
-					</form>
 					<form id="setprocess" name="setprocess" method="POST">
 						<input type="hidden" name="s_product_code" value="" id="s_product_code">
 						@csrf
@@ -353,14 +311,12 @@ function appendAll(dataarr) {
 
 
 function Allcollect() {
-	var Ps_product_id = document.getElementById('s_product_id').value;
 	var Pmotion = document.getElementById('motion').value;
 	var Psubmode = document.getElementById('submode').value;
 	var Mode = document.getElementById('mode').value;
 	//var Wpdate = document.getElementById('today').value;
 	console.log("Mode :" + Mode);
 	const res = axios.post("/regi/all", {
-		s_product_id: Ps_product_id,
 		motion: Pmotion,
 		submode: Psubmode,
 		mode: Mode,

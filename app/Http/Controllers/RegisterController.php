@@ -470,7 +470,7 @@ class RegisterController extends Controller
                 'receive_date',
                 'platemake_date',
                 'work_need_days',
-                'status',
+                //'status',
                 'comment',
                 'created_at',
             );
@@ -513,7 +513,7 @@ class RegisterController extends Controller
                 'receive_date',
                 'platemake_date',
                 'work_need_days',
-                'status',
+                //'status',
                 'comment',
                 'created_at',
             );

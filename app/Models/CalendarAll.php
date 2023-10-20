@@ -41,6 +41,7 @@ class CalendarAll extends Model
         //echo "end_user >> ".$result['result'][$key]->end_user."<br>\n";
         $end_user = $result['result'][$key]->end_user;
         //$pc = isset($resdate[$key]) ? $resdate[$key]->product_code : "";
+        $category = $result['result'][$key]->category;
         $pc = isset($result['result'][$key]) ? $result['result'][$key]->product_code : "";
 
 
@@ -608,7 +609,7 @@ class CalendarAll extends Model
     
             }
 
-            $btn_view = "<button type=\"button\" class=\"calbtn\" onClick=\"clickEvent('viewprocess','{$pc}','oneView','view','表示','some_search','')\">表示</button>";
+            $btn_view = "<button type=\"button\" class=\"calbtn\" onClick=\"clickEvent('viewprocess','{$pc}','oneView','view','表示','some_search','{$category}')\">{$category}表示</button>";
     
             $body .= "</div><!--end id calendar_dayzone-->\n";
             $body .= "</div><!--end class f-->\n";

@@ -208,7 +208,8 @@ class ViewController extends Controller
         $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
         $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
-        $select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        //$select_html = !empty($_POST["select_html"]) ? $_POST['select_html'] : "";
+        $select_html = !empty($request->select_html) ? $request->select_html : "";
         $action_msg = "";
         $result = "";
         $wd_result = "";
@@ -332,6 +333,7 @@ class ViewController extends Controller
                     'receive_date',
                     'platemake_date',
                     'work_need_days',
+                    'category',
                     'wkcom01',
                     'wkcode01',
                     'wkcom02',
@@ -491,7 +493,8 @@ class ViewController extends Controller
 
 
     public function SearchProcessDate($request) {
-        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        //$s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $s_product_code = !empty($request->s_product_code) ? $request->s_product_code : "";
         $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
         $action_msg = "";
         $result = "";
