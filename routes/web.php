@@ -32,7 +32,7 @@ Route::get('/', function () {
 //Route::get('/', [HomeController::class,'index'])->middleware('auth');
 
 //Route::get('/', [HomeController::class,'index']);
-Route::get('/', [ProcessController::class,'index']);
+Route::get('/', [ViewController::class,'index']);
 //Route::post('/home', [HomeController::class,'index'])->name('login');
 // マニュアル
 Route::get('/home', [HomeController::class,'index']);
