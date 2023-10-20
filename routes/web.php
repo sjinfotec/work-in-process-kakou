@@ -42,6 +42,7 @@ Route::get('/regi', [RegisterController::class,'getRequestFunc']);
 Route::post('/regi', [RegisterController::class,'postRequestFunc']);
 Route::post('/regi/search', [RegisterController::class,'searchData']);
 Route::post('/regi/new', [RegisterController::class,'newData']);
+Route::post('/regi/all', [RegisterController::class,'AddAllData']);
 
 // 工程編集
 Route::get('/process', [ProcessController::class,'index']);
@@ -68,6 +69,7 @@ Route::post('/view/get', [ViewController::class,'getData']);
 Route::post('/view/search', [ViewController::class,'postSearch']);
 Route::get('/view/search', [ViewController::class,'index']);
 Route::post('/view/update', [ViewController::class,'updateProcessDetails']);
+Route::post('/view/updatekakou', [ViewController::class,'updateProcessDetailsKakou']);
 
 // ログ
 Route::post('/log/search', [LogController::class,'postSearch']);

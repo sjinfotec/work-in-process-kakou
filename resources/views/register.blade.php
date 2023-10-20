@@ -8,20 +8,21 @@
 					<!-- main contentns row -->
 					<div id="maincontents">
 						<div id="search_fcnt">
+
 							<h4>伝票番号検索</h4>
 
-							<form id="searchform" name="searchform" method="POST">
-								<input type="hidden" name="mode" id="mode" value="product_search">
-								<input type="hidden" name="submode" id="submode" value="chkwrite">
-								<input type="hidden" name="motion" id="motion" value="">
-
-								<div id="form1">
-								<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
-								<button class="" type="button" onClick="SEARCHcollect()">検索</button>
-								<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
-								</div>
-								@csrf 
-							</form>
+							<div id="form1">
+								<form id="searchform" name="searchform" method="POST">
+									<input type="hidden" name="mode" id="mode" value="product_search">
+									<input type="hidden" name="submode" id="submode" value="chkwrite">
+									<input type="hidden" name="motion" id="motion" value="">
+									<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
+									<button class="" type="button" onClick="SEARCHcollect()">検索</button>
+									<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
+									
+									@csrf 
+								</form>
+							</div>
 						</div>
 					</div>
 					<!-- /main contentns row -->
@@ -71,6 +72,18 @@
 					</form>
 					</div>
 
+					<div id="form1" class="mgt20">
+						<form id="searchform2" name="searchform2" method="POST">
+									<input type="hidden" name="mode" id="mode" value="all_search">
+									<input type="hidden" name="submode" id="submode" value="chkwrite">
+									<input type="hidden" name="motion" id="motion" value="">
+
+										<button class="" type="button" onClick="Allcollect()">まとめて取得</button>
+										&emsp;&emsp;<span>作業工程管理システム&emsp;<a href="http://192.168.0.93" target="_blank">http://192.168.0.93</a>&emsp;<a href="http://192.168.0.94" target="_blank">http://192.168.0.94</a> に登録されている納期が明日以降のデータを『まとめて取得』できます</span>
+									
+									@csrf 
+						</form>
+					</div>
 
 					<div id="resultupdate" class="mgt40"></div>
 					<div id="resultlist"><ul class="list-group"></ul></div>
@@ -309,6 +322,58 @@ function NEWcollect(n) {
 	});
 }
 
+
+
+
+
+function appendAll(dataarr) {
+	$.each(dataarr, function(index, data) {
+		//console.log('appendList in 配列index = ' + index);
+		//console.log('appendList addcount ' + addcount);
+		//$('#list ul').append("No. : " + data.t_number + "<br>名前 : " + data.name + "<br>name_code : " + data.name_code + '');
+		//$('#resultupdate').html = ( "message--" + data.e_message );
+
+		document.getElementById('resultupdate').innerHTML = '<div class="txt1">' + data.e_message + '</div>\n';
+		var statusv = '<span style="color:green;">OK</span>';
+		if(data.result_msg === 'OK') {
+			
+			$('#result_new_view').prepend('<tr><td>' + data.count + ' 件</td><td class="txtcolor1">&#10004;</td><td>No.&ensp;<span class="dtnum">' + '</span></td><td>' + statusv + '</td></tr>\n');
+
+		}
+		else {
+			statusv = '<span style="color:red;">NG</span>';
+			$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor3">&#10006;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
+		}
+		addcount = addcount + 1;
+	});
+}
+
+
+
+
+
+function Allcollect() {
+	var Ps_product_id = document.getElementById('s_product_id').value;
+	var Pmotion = document.getElementById('motion').value;
+	var Psubmode = document.getElementById('submode').value;
+	var Mode = document.getElementById('mode').value;
+	//var Wpdate = document.getElementById('today').value;
+	console.log("Mode :" + Mode);
+	const res = axios.post("/regi/all", {
+		s_product_id: Ps_product_id,
+		motion: Pmotion,
+		submode: Psubmode,
+		mode: Mode,
+	})
+	.then(response => {
+		appendAll(response.data);
+		
+	})
+	.catch(error => {
+		console.log('error message = ' + error.message );
+		//window.error(error.response);
+	});
+}
 
 
 

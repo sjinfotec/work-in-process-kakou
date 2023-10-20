@@ -69,7 +69,7 @@ button:active  {
 
 /*--------------------## ヘッダー ##--------------------*/
 #logo {
-  width:200px;
+  width:auto;
 }
 #logo a {
   color:#FFF;
@@ -144,7 +144,7 @@ header button {width:auto;}
 
 }
 #menu_li ul li {
-    width: 100%;
+    width: 10%;
     box-sizing: border-box;
     text-align: center;
     padding: 2px;
@@ -300,12 +300,18 @@ header button {width:auto;}
 .w4e  {width: 4em;}
 .w10e {width: 10em;}
 .w14e {width: 14em;}
+.mw10e  {min-width: 10em;}
+.mw20e  {min-width: 20em;}
+.w1920  {min-width: 1920px;}
+.w3840  {min-width: 3840px;}
+.wlong  {min-width: 5000px;}
 
 .ta_r {text-align: right;}
 
 .stock_active {  background:linear-gradient(to bottom, #ffeecc 0%, #ffeecc 80%, #eecc55 80%,  #eecc55 100%);}
 .bold { font-weight: bold;}
 
+.position_relative  {position:relative;}
 
 /*--------------------## タイトル系 /  ##--------------------*/
 #subtitle {
@@ -489,6 +495,9 @@ header button {width:auto;}
   border-right:1px solid #888888;
   padding:5px 5px;
 }
+#tbl_1 tr{
+position:relative;
+}
 #tbl_1 td{
   padding:0.75rem;
   border-right:1px solid #888888;
@@ -559,6 +568,34 @@ header button {width:auto;}
   color:#333;
   font-size: 1.6rem;
 }
+#tbl_1 input,select {
+  color:#333;
+  font-size: 1.6rem;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  border-bottom: 1px dashed #CCC;
+  background: rgba(255, 255, 255, 0);
+}
+#tbl_1 .comtext {
+  position:absolute;
+  top:28px;
+  left:-10px;
+  background:#FFF;
+}
+#tbl_1 .bgtag {
+  position:absolute;
+  width:100%;
+  font-size:8px;
+  
+  top:0px;
+  left:0px;
+  background:#ffcc88;
+  z-index:-1;
+}
+
+
+
 
 #tbl_2 {
   position: relative;

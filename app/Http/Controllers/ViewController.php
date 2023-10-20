@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Calendar;
 use App\Models\ProcessLog;
+use App\Models\GetWork;
 
 class ViewController extends Controller
 {
@@ -39,6 +40,17 @@ class ViewController extends Controller
     private $work_code;           // 作業コード
     private $start_work_date;  // 工程開始日
     private $end_work_date;    // 工程終了日
+
+    private $wkcode01;           // 加工作業
+    private $wkcom01;           // メモ
+    private $wkcode02;           // 加工作業
+    private $wkcom02;           // メモ
+    private $wkcode03;           // 加工作業
+    private $wkcom03;           // メモ
+    private $wkcode04;           // 加工作業
+    private $wkcom04;           // メモ
+    private $wkcode05;           // 加工作業
+    private $wkcom05;           // メモ
 
     private $comment;               // コメント
     private $created_user;          // 作成ユーザー
@@ -320,6 +332,16 @@ class ViewController extends Controller
                     'receive_date',
                     'platemake_date',
                     'work_need_days',
+                    'wkcom01',
+                    'wkcode01',
+                    'wkcom02',
+                    'wkcode02',
+                    'wkcom03',
+                    'wkcode03',
+                    'wkcom04',
+                    'wkcode04',
+                    'wkcom05',
+                    'wkcode05',
                     'status',
                     'comment',
                     'created_user',
@@ -439,6 +461,12 @@ class ViewController extends Controller
 			'comment' => $comment,
         */
 
+        $s_department_code = 6;
+
+        $getwork_data = new GetWork();	// インスタンス作成
+        $result_getwork = $getwork_data->getWORK($s_department_code);
+
+
         $redata = array();
         $redata = [
             'datacount' => $datacount, 
@@ -449,6 +477,7 @@ class ViewController extends Controller
 			's_product_name' => $s_product_name,
 			's_end_user' => $s_end_user,
             'result' => $result,
+            'result_getwork' => $result_getwork,
             'mode' => $mode, 
             'e_message' => $e_message, 
             'result_msg' => $result_msg,
@@ -693,6 +722,181 @@ class ViewController extends Controller
     ]);
 
     }
+
+
+
+    public function updateProcessDetailsKakou(Request $request)
+    {
+        /*
+        foreach($details AS $key => $val) {
+            $name = $val;
+        }
+        */
+        //echo "var_dump details <br>\n";
+        //var_dump($details);
+        //echo "\n<br>var_dump details end <br>\n";
+
+        $s_product_code = !empty($_POST["s_product_code"]) ? $_POST['s_product_code'] : "";
+        $duedate_start = !empty($_POST["duedate_start"]) ? $_POST['duedate_start'] : "";
+        $duedate_end = !empty($_POST["duedate_end"]) ? $_POST['duedate_end'] : "";
+        $s_customer = !empty($_POST["s_customer"]) ? $_POST['s_customer'] : "";
+        $s_product_name = !empty($_POST["s_product_name"]) ? $_POST['s_product_name'] : "";
+        $s_end_user = !empty($_POST["s_end_user"]) ? $_POST['s_end_user'] : "";
+
+        $product_code = !empty($_POST["product_code"]) ? $_POST['product_code'] : "";
+        $after_due_date = !empty($_POST["after_due_date"]) ? $_POST['after_due_date'] : "";
+        $customer = !empty($_POST["customer"]) ? $_POST['customer'] : "";
+        $product_name = !empty($_POST["product_name"]) ? $_POST['product_name'] : "";
+        $end_user = !empty($_POST["end_user"]) ? $_POST['end_user'] : "";
+        $quantity = !empty($_POST["quantity"]) ? $_POST['quantity'] : "";
+        $comment = !empty($_POST["comment"]) ? $_POST['comment'] : "";
+        $mode = !empty($_POST["mode"]) ? $_POST['mode'] : "";
+        $motion = !empty($_POST["motion"]) ? $_POST['motion'] : "";
+
+
+
+        $this->serial_code = $request->serial_code;
+        $params = $request->only([
+            'product_code',
+            'serial_code',
+            'rep_code',
+            'after_due_date',
+            'customer',
+            'product_name',
+            'end_user',
+            'quantity',
+            'receive_date',
+            'platemake_date',
+            'work_need_days',
+            'wkcom01',
+            'wkcode01',
+            'wkcom02',
+            'wkcode02',
+            'wkcom03',
+            'wkcode03',
+            'wkcom04',
+            'wkcode04',
+            'wkcom05',
+            'wkcode05',
+            'status',
+            'comment',
+            'created_user',
+            'created_at',
+            'updated_user',
+            'updated_at',
+        ]);
+
+
+
+
+        $action_msg = "";
+        $result = "";
+        $result_date = "";
+        $result_logsearch = "";
+        $wd_result = "";
+        $result_msg = "";
+        $html_after_due_date = "";
+        $html_cal = "";
+        $viewmode = "editing";
+        $e_message = "検索 ： ".$s_product_code."";
+
+
+        $listcount = isset($_POST['listcount']) ? $_POST['listcount'] : "";
+        $status = isset($_POST['status']) ? $_POST['status'] : "";
+
+        //$mode = isset($_POST['mode']) ? $_POST['mode'] : "";
+        $upkind = isset($_POST['upkind']) ? $_POST['upkind'] : "";
+        $details = isset($_POST['details']) ? $_POST['details'] : [];
+
+        //echo "processController mode = ".$mode."<br>\n";
+
+        $reqarr = $request->only([
+            'work_name', 
+            'departments_name'
+        ]);
+
+
+
+        //$upload_file = $request->upload_file;
+        //var_dump($upload_file);
+        //$file_upload = new FileUpload();	// インスタンス作成
+        //$result_filesup = $file_upload->files_upload($upload_file, './tmp/', '', '');	//
+
+        //var_dump($result_filesup);
+
+
+        try {
+            $systemdate = Carbon::now();
+            $re_data = [];
+
+            if($mode == 'kwupdate') {
+                $update = [
+                    'wkcom01'    => $params['wkcom01'],
+                    'wkcode01'    => $params['wkcode01'],
+                    'wkcom02'    => $params['wkcom02'],
+                    'wkcode02'    => $params['wkcode02'],
+                    'wkcom03'    => $params['wkcom03'],
+                    'wkcode03'    => $params['wkcode03'],
+                    'wkcom04'    => $params['wkcom04'],
+                    'wkcode04'    => $params['wkcode04'],
+                    'wkcom05'    => $params['wkcom05'],
+                    'wkcode05'    => $params['wkcode05'],
+                    'updated_at'    => now(),
+                ];
+                $updateresult = DB::table($this->table)
+                ->where('product_code', $s_product_code)
+                ->update($update);
+
+                $select_html = 'Default';
+                $e_message = "ステータス変更 -> 伝票番号 : ".$s_product_code."";
+                $result_msg = "OK";
+
+
+            }
+            else {
+                $select_html = 'Default';
+            }
+
+        }catch(\PDOException $pe){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$pe');
+            Log::error($pe->getMessage());
+            throw $pe;
+        }catch(\Exception $e){
+            Log::error('class = '.__CLASS__.' method = '.__FUNCTION__.' '.str_replace('{0}', $this->table, Config::get('const.LOG_MSG.data_insert_error')).'$e');
+            Log::error($e->getMessage());
+            throw $e;
+        }
+
+        $result_details = $this->SearchProcessDetails($request);
+
+        
+        
+
+
+        return view('view', [
+            's_product_code' => $s_product_code,
+            'product_code' => $product_code,
+            'after_due_date' => $after_due_date,
+            'customer' => $customer,
+            'product_name' => $product_name,
+            'end_user' => $end_user,
+            //'quantity' => $quantity,
+            //'comment' => $comment,
+            'mode' => $mode,
+            'action_msg' => $action_msg,
+            'e_message' => $e_message,
+            'result' => $result_details,
+            'select_html' => $select_html,
+            'duedate_start' => $duedate_start,
+            'duedate_end' => $duedate_end,
+            's_customer' => $s_customer,
+            's_product_name' => $s_product_name,
+            's_end_user' => $s_end_user,
+        ]);
+
+    }
+
+
 
 
 
