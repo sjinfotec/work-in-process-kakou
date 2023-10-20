@@ -229,7 +229,7 @@ else {
 				console.log('キャンセルがクリックされました');
 			}
 		}
-		else if(cf == 'view') {
+		else if(cf == 'viewxxx') {
 				var Jurlsd = '';
 				if(smd) Jurlsd = '?sd=' + smd;
 				fm.mode.value = md;
@@ -237,6 +237,20 @@ else {
 				fm.select_html.value = val2;
 				fm.action = '/view/search' + Jurlsd;
 				fm.submit();
+		}
+		else if(cf == 'view') {
+				var Jurlsd = '';
+				var Jaction = '';
+				if(val1) Jurlsd = '?s_product_code=' + val1;
+				if(smd == 'c1') Jaction = 'http://192.168.0.93';
+				if(smd == 'c2') Jaction = 'http://192.168.0.94';
+				fm.mode.value = md;
+				//fm.s_product_code.value = val1;
+				fm.select_html.value = val2;
+				//fm.action = 'http://192.168.0.42/view/search' + Jurlsd;
+				//fm.method = 'get';
+				//fm.submit();
+				window.open(Jaction + '/view/getsearch' + Jurlsd + '&select_html=' + val2 + '&mode=' + md);
 		}
 		else if(cf == 'confirm_process') {
 			//var Jproduct_code = document.getElementById('product_code' + val1).value;

@@ -68,6 +68,7 @@ Route::post('/view', [ViewController::class,'index']);
 Route::post('/view/get', [ViewController::class,'getData']);
 Route::post('/view/search', [ViewController::class,'postSearch']);
 Route::get('/view/search', [ViewController::class,'index']);
+Route::get('/view/getsearch', [ViewController::class,'postSearch']);
 Route::post('/view/update', [ViewController::class,'updateProcessDetails']);
 Route::post('/view/updatekakou', [ViewController::class,'updateProcessDetailsKakou']);
 

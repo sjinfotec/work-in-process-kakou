@@ -9,10 +9,9 @@ $ymd_after_due_date = "";
 $ymd_receive_date = "";
 $ymd_platemake_date = "";
 $action_msg .= "mode：".$mode."<br>\n";
-$select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
-
+//$select_html = !empty($_POST['select_html']) ? $_POST['select_html'] : "Default";
+$select_html = !empty($select_html) ? $select_html : "Default";
 //echo "select_html = ".$select_html."<br>\n";
-
 
 if(isset($result['result'])) {
 	$resultdata = $result['result'];
@@ -293,7 +292,13 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 										<tr class="{!! $css1 !!}">
 											<td class="nbr">
 											<span class="bgtag" id="logbg_{{ $val->product_code }}"></span>
-												<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>
+										@if($val->category === 'c1')
+											<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','otherserverview','c1表示','some_search','c1')">{!! $val->category !!}表示</button>
+										@elseif($val->category === 'c2')
+											<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','otherserverview','c2表示','some_search','c2')">{!! $val->category !!}表示</button>
+										@endif
+
+												<!--<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>-->
 												<!--<button class="style5" type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','','confirm_process','下記の工程を編集します','','')">編集</button>-->
 											</td>
 											<td class="">{{ $val->product_code }}</td>
@@ -531,6 +536,20 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 				fm.select_html.value = val2;
 				fm.action = '/view/search' + Jurlsd;
 				fm.submit();
+		}
+		else if(cf == 'otherserverview') {
+				var Jurlsd = '';
+				var Jaction = '';
+				if(val1) Jurlsd = '?s_product_code=' + val1;
+				if(smd == 'c1') Jaction = 'http://192.168.0.93';
+				if(smd == 'c2') Jaction = 'http://192.168.0.94';
+				fm.mode.value = md;
+				//fm.s_product_code.value = val1;
+				fm.select_html.value = val2;
+				//fm.action = 'http://192.168.0.42/view/search' + Jurlsd;
+				//fm.method = 'get';
+				//fm.submit();
+				window.open(Jaction + '/view/getsearch' + Jurlsd + '&select_html=' + val2 + '&mode=' + md);
 		}
 		else if(cf == 'confirm_process') {
 			//var Jproduct_code = document.getElementById('product_code' + val1).value;
