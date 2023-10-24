@@ -296,6 +296,8 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 											<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','otherserverview','c1表示','some_search','c1')">{!! $val->category !!}表示</button>
 										@elseif($val->category === 'c2')
 											<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','otherserverview','c2表示','some_search','c2')">{!! $val->category !!}表示</button>
+										@else
+											<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')" class="style3">表示</button>
 										@endif
 
 												<!--<button type="button" onClick="clickEvent('updateform','{{ $val->product_code }}','oneView','view','表示','some_search','')">表示</button>-->

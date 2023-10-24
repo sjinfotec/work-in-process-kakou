@@ -5,12 +5,55 @@
 					<div id="title_cnt">
 						<h1 class="tstyle">伝票番号登録</h1>
 					</div>
+
+					
+					<!-- main contentns row -->
+					<div id="maincontents">
+						<div id="search_fcnt">
+							<h4>伝票番号検索</h4>
+
+							<form id="searchform" name="searchform" method="POST">
+								<input type="hidden" name="mode" id="mode" value="product_search">
+								<input type="hidden" name="submode" id="submode" value="chkwrite">
+								<input type="hidden" name="motion" id="motion" value="">
+
+								<div id="form1">
+								<input type="number" class="form_style1 w10e" name="s_product_id" id="s_product_id" value="">
+								<button class="" type="button" onClick="SEARCHcollect()">検索</button>
+								<!--<button class="" type="button" onClick="clickEvent('searchform','1','1','confirm','『 検索 』','product_search','chkwrite')">検索</button>-->
+								</div>
+								@csrf 
+							</form>
+						</div>
+					</div>
+					<!-- /main contentns row -->
+
+					<div id="tbl_1">
+					<form id="newform" name="newform" method="POST">
+						<table>
+							<thead>
+							<tr>
+								<th>&emsp;</th>
+								<th>伝票番号</th>
+								<th>納期</th>
+								<th>得意先</th>
+								<th>品名</th>
+								<th>エンドユーザー</th>
+								<th>数量</th>
+
+							</tr>
+							</thead>
+							<tbody id="result_search_view">
+							@php //echo $html_result;
+							@endphp
+							</tbody>
+						</table>
+					</form>
 					<form id="setprocess" name="setprocess" method="POST">
 						<input type="hidden" name="s_product_code" value="" id="s_product_code">
 						@csrf
 					</form>
 					</div>
-
 
 
 					<div id="tbl_2" class="mgt40">
@@ -225,7 +268,8 @@ function appendListADD(dataarr,n) {
 			//$('#resultlist ul').prepend('<li><span>' + addcount + '</span>&emsp;<span class="txtcolor1">&#10004;</span>&emsp;No.&ensp;<span class="dtnum">' + data.product_code + '</span> ' + statusv + '</li>\n');
 			
 			document.getElementById('btn_cnt_new' + data.listcount).innerHTML = '<span class="color_green">' + '<button class="style5" type="button" disabled>登録完了</button>' + '</span>'+
-			'<button class="style3" type="button" onClick="clickEvent(\'setprocess\','+ n +',\'\',\'confirm_process\',\'下記の工程を作成します\',\'\',\'\')">工程作成</button>';
+			'';
+			//'<button class="style3" type="button" onClick="clickEvent(\'setprocess\','+ n +',\'\',\'confirm_process\',\'下記の工程を作成します\',\'\',\'\')">工程作成</button>';
 			$('#result_new_view').prepend('<tr><td>' + data.listcount + '</td><td class="txtcolor1">&#10004;</td><td>No.&ensp;<span class="dtnum">' + data.product_code + '</span></td><td>' + statusv + '</td></tr>\n');
 
 
