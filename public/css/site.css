@@ -1560,7 +1560,15 @@ html { scroll-behavior: smooth;}
 @media print {
   .print_view {display:block;}
   .print-none {display:none;}
+  
+  header  {position:static;}
+  .sticky {position:static;}
+  #tbl_1 th {position:static;}
+  #tbl_2 th {position:static;}
+  #confirm_area th  {position:static;}
+  .posi_class2  {position:static;}
 
+  .wlong {min-width: 960px;}
 
   select {
     -webkit-appearance: none;/* ベンダープレフィックス(Google Chrome、Safari用) */

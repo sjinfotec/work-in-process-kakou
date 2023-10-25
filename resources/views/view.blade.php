@@ -118,6 +118,16 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 
 }
 
+function WorkStr($arrdata,$valwkcode,$num,$pcode)	{
+	// 作業（加工）のテキスト
+	$html_text_work = "";
+		foreach ($arrdata as $arrgval)	{
+			if ($arrgval['id'] == $valwkcode) {
+				$html_text_work .= "".$arrgval['name']."";
+			} 
+		}
+	return $html_text_work;
+}
 
 
 ?>
@@ -407,7 +417,7 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 												@elseif($status == "1")
 													<div class="btn_result gc10">終了</div>
 												@else
-													<div class="btn_result">未確定</div>
+													<!--<div class="btn_result">未確定</div>-->
 												@endif
 											@else
 
@@ -456,6 +466,45 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 									@endforelse
 									</tbody>
 								</table>
+
+								<table>
+									<thead>
+										<tr>
+											<th>加工作業1</th>
+											<th>作業メモ1</th>
+											<th>加工作業2</th>
+											<th>作業メモ2</th>
+											<th>加工作業3</th>
+											<th>作業メモ3</th>
+											<th>加工作業4</th>
+											<th>作業メモ4</th>
+											<th>加工作業5</th>
+											<th>作業メモ5</th>
+										</tr>
+									</thead>
+									<tbody>
+									@forelse ($resultdata as $val)
+										<tr>
+											<td class="">@php echo WorkStr($arrdata,$val->wkcode01,'01',$val->product_code) @endphp</td>
+											<td class="">{{ $val->wkcom01 }}</td>
+											<td class="">@php echo WorkStr($arrdata,$val->wkcode02,'02',$val->product_code) @endphp</td>
+											<td class="">{{ $val->wkcom02 }}</td>
+											<td class="">@php echo WorkStr($arrdata,$val->wkcode03,'03',$val->product_code) @endphp</td>
+											<td class="">{{ $val->wkcom03 }}</td>
+											<td class="">@php echo WorkStr($arrdata,$val->wkcode04,'04',$val->product_code) @endphp</td>
+											<td class="">{{ $val->wkcom04 }}</td>
+											<td class="">@php echo WorkStr($arrdata,$val->wkcode05,'05',$val->product_code) @endphp</td>
+											<td class="">{{ $val->wkcom05 }}</td>
+										</tr>
+
+									@empty
+										<tr><td colspan="10">no data</td></tr>
+									@endforelse
+									</tbody>
+								</table>
+
+
+
 								@csrf
 								</form>
 							</div>
@@ -498,7 +547,7 @@ function WorkItem($arrdata,$valwkcode,$num,$pcode)	{
 						<div id="resultstr"></div>
 
 
-					{!! $html_cal_main !!}
+					<!--!! html_cal_main !! -->
 
 					@endif
 

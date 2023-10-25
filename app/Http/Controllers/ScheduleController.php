@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\CalendarAll;
 use App\Models\ProcessLog;
+use App\Models\GetWork;
 
 class ScheduleController extends Controller
 {
@@ -61,8 +62,13 @@ class ScheduleController extends Controller
             if($result_details['datacount'] > 0) {
                 $after_due_date = $result_details['after_due_date'];    // return $redata = [ の after_due_date を指す。
 
+                $s_department_code = 6;
+                $getwork_data = new GetWork();	// インスタンス作成
+                $result_getwork = $getwork_data->getWORK($s_department_code);
+       
+
                 $calendar_data = new CalendarAll();	// インスタンス作成
-                $html_cal .= $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode,$key);	//開始年月～何か月分
+                $html_cal .= $calendar_data->calendar($result_details,$after_due_date,$wd_result,$result_date,$viewmode,$key,$result_getwork);	//開始年月～何か月分
 
 
             }
@@ -154,6 +160,16 @@ class ScheduleController extends Controller
                     'platemake_date',
                     'work_need_days',
                     'category',
+                    'wkcom01',
+                    'wkcode01',
+                    'wkcom02',
+                    'wkcode02',
+                    'wkcom03',
+                    'wkcode03',
+                    'wkcom04',
+                    'wkcode04',
+                    'wkcom05',
+                    'wkcode05',
                     'status',
                     'comment',
                     'created_user',
