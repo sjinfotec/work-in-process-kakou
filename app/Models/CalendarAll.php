@@ -23,7 +23,7 @@ class CalendarAll extends Model
     }
 
 
-    public function calendar($result,$after_due_date,$wd_result,$result_date,$viewmode,$key) {
+    public function calendar($result,$after_due_date,$wd_result,$result_date,$viewmode,$key,$result_getwork) {
         //DateTimeインスタンスを作成
         //var_dump($result['result']);
 
@@ -42,6 +42,16 @@ class CalendarAll extends Model
         $end_user = $result['result'][$key]->end_user;
         //$pc = isset($resdate[$key]) ? $resdate[$key]->product_code : "";
         $category = $result['result'][$key]->category;
+        $wkcode01 = $result['result'][$key]->wkcode01;
+        $wkcom01 = $result['result'][$key]->wkcom01;
+        $wkcode02 = $result['result'][$key]->wkcode02;
+        $wkcom02 = $result['result'][$key]->wkcom02;
+        $wkcode03 = $result['result'][$key]->wkcode03;
+        $wkcom03 = $result['result'][$key]->wkcom03;
+        $wkcode04 = $result['result'][$key]->wkcode04;
+        $wkcom04 = $result['result'][$key]->wkcom04;
+        $wkcode05 = $result['result'][$key]->wkcode05;
+        $wkcom05 = $result['result'][$key]->wkcom05;
         $pc = isset($result['result'][$key]) ? $result['result'][$key]->product_code : "";
 
 
@@ -500,71 +510,6 @@ class CalendarAll extends Model
                 }
 
     
-                $workspace = sprintf('
-                    <div id="workin">
-                        <div class="line"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
-                        <div class="line he2"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
-                        <div class="line"><div class="%s">%s</div></div>
-                        '.$workdate_html.'
-                    </div>
-                    ',
-                    $pd8_class,
-                    $line8,
-                    $pd1_class,
-                    $line1,
-                    $pd2_class,
-                    $line2,
-                    $pd3_class,
-                    $line3,
-                    $pd4_class,
-                    $line4,
-                    $pd5_class,
-                    $line5,
-                    $pd6_class,
-                    $line6,
-                    $pd7_class,
-                    $line7,
-                    $day->format('j')
-                );
-    
-                /*
-                $body .= sprintf('
-                    <div class="day_cnt %s" style="%s">
-                    <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
-                    <div style="%s">%s</div><div class="datestyle %s %s">%s</div>
-                    </a>
-                    %s
-                    '.$workspace.'
-                    <a href="/work/day?pcode='.$res[0]->product_code.'&wday=%s">
-                    <div style="%s">%s</div><div class="datestyle %s %s">%s</div>
-                    </a>
-                    '.$wdterm.'
-                    </div>
-                    ',
-                    $todayback_class,
-                    $due_class,
-                    $day->format('Y-m-d'),
-                    $style_bg,
-                    $weekarr[$fdw],
-                    $company_class,
-                    $todaydate_class,
-                    $day->format('j'),
-                    $re_pl_html,
-                    $day->format('Y-m-d'),
-                    $style_bg,
-                    $weekarr[$fdw],
-                    $company_class,
-                    $todaydate_class,
-                    $day->format('j'),
-                );
-                */
-
-                //if($result_details_key == 0)
 
                 $body .= sprintf('
                 <div class="day_cnt_all %s" style="%s">
